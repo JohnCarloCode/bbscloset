@@ -1,0 +1,10 @@
+.next/
+node_modules/
+coverage/
+public/
+doc-ai/
+pruebas/
+pruebas-fotos/
+supabase/
+package-lock.json
+next-env.d.ts

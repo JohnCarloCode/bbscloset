@@ -11,3 +11,19 @@ pruebas-fotos/
 node_modules/
 .next/
 .vercel/
+
+# Next.js y build
+/out/
+/build
+*.tsbuildinfo
+next-env.d.ts
+
+# Tests
+/coverage
+
+# Logs y varios
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.pem
