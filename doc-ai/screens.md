@@ -23,7 +23,8 @@ Qué hay en cada pantalla, sus estados y cómo se comporta. El **qué hace la ap
 ## 2. Login
 
 - Nombre de la app, título "Entrar" y texto *"Usa el email al que te llegó la invitación."*
-- Campos email y contraseña; botón principal "Entrar".
+- Campos email y contraseña; botón principal "Entrar" y enlace **"¿Has olvidado la contraseña?"**: pide el email y responde siempre *"Si el email existe, te hemos enviado un enlace."*
+- **Nueva contraseña** (`/reset-password`, desde el enlace del email): dos campos y botón "Guardar contraseña"; al terminar, entra a la app.
 - Pie: *"bb's closet es solo con invitación."* + enlace "Apúntate a la lista de espera".
 - Sin registro abierto: las cuentas las crea John en Supabase. Reseteo de contraseña con el email de Supabase.
 
@@ -164,7 +165,7 @@ Lienzo a la izquierda y panel fijo a la derecha (340 px) *"Tu armario"*: chips d
 Desde el vestidor y desde el detalle del favorito.
 - Elección de proporción en tres tarjetas: **Cuadrado 1:1 · Vertical 4:5 · Story 9:16**, con un icono de la forma.
 - Vista previa con el conjunto reescalado (mantiene la composición y los ajustes manuales, con márgenes).
-- Línea técnica: *"PNG · 1080 × 1350 px · sin marca de agua"*. Botón principal "Descargar PNG".
+- Línea técnica según la proporción: *"PNG · 1080 × 1080 / 1080 × 1350 / 1080 × 1920 px · sin marca de agua"*. Botón principal "Descargar PNG".
 
 ## 10. Favoritos
 
@@ -183,7 +184,7 @@ Desde el vestidor y desde el detalle del favorito.
 ## 12. Ajustes
 
 Página propia, en grupos tipo lista con fondo gris claro:
-- **Etiquetas:** cada una con su número de prendas, "Renombrar" (en línea, con Guardar/Cancelar) y "Eliminar" (avisa a cuántas prendas afecta). Nota: *"Renombrar una etiqueta la cambia en todas las prendas. Las etiquetas nuevas se crean al añadirlas a una prenda."*
+- **Etiquetas:** cada una con su número de prendas, "Renombrar" (en línea, con Guardar/Cancelar; si el nombre ya existe, error en línea *"Ya tienes una etiqueta con ese nombre."* y no se guarda) y "Eliminar" (avisa a cuántas prendas afecta). Nota: *"Renombrar una etiqueta la cambia en todas las prendas. Las etiquetas nuevas se crean al añadirlas a una prenda."*
 - **Vestidor:** *"Joyas a la vez"* con − / + (3 por defecto, de 1 a 10). Al máximo, la nueva sustituye a la más antigua en silencio.
 - **Idioma:** control segmentado English · Español. Se traducen los textos de la app (incluidos huecos y tipos); lo que escribe el usuario no.
 - **Herramientas:** fila "Recortar fotos ›" con la nota *"Quita el fondo de muchas fotos a la vez y descárgalas en PNG. No se añaden a tu armario."*

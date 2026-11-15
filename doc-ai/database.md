@@ -166,9 +166,11 @@ alter table garments enable row level security;
 
 create policy "own rows" on garments
   for all
-  using      (user_id = auth.uid())
-  with check (user_id = auth.uid());
+  using      (user_id = (select auth.uid()))
+  with check (user_id = (select auth.uid()));
 ```
+
+`(select auth.uid())` en vez de `auth.uid()` hace que Postgres lo calcule una vez por consulta y no por fila (rendimiento).
 
 La misma política se repite en cada tabla de usuario (en `profiles`, comparando con `user_id` como clave primaria). Un bug en una consulta no puede mostrar el armario de otra persona: lo impide la base de datos.
 

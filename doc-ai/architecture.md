@@ -67,7 +67,7 @@ El recorte de fondo, el lienzo y la exportación siguen en el navegador.
 5. Se generan el **recorte** (WebP con transparencia) y una **miniatura** pequeña.
 6. El navegador pide a la API la subida. La API comprueba la sesión y el límite de 500 prendas y devuelve URLs de subida firmadas; ambos archivos van a Storage en una ruta prefijada por usuario: `{user_id}/{prenda_id}/…`.
 7. La API inserta la fila de la prenda en la base de datos.
-- **Las fotos se muestran con URLs firmadas que genera la API** (en lote, con caché corta). El navegador nunca habla con Supabase para datos ni fotos; solo para iniciar sesión.
+- **Las fotos se muestran con URLs firmadas que genera la API** (en lote, con caché corta). El navegador habla con Supabase solo para iniciar sesión y para **subir** los archivos con la URL firmada que da la API (así no pasan por las funciones de Vercel, limitadas a 4,5 MB por petición). Datos y lecturas siempre por la API.
 
 - **Solo se guarda el recorte**, no la foto original (spec 3.1).
 - **Lo pendiente vive en el dispositivo:** las prendas que aún se recortan y las de la subida masiva *por revisar* (sin tipo, que la base de datos exige) se guardan en el navegador (IndexedDB) y solo se suben a Storage y a la tabla `garments` cuando tienen recorte **y** tipo. Así no hace falta tocar el esquema; a cambio, lo pendiente no viaja entre dispositivos y se pierde si se borran los datos del navegador.

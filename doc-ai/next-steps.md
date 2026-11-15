@@ -10,6 +10,8 @@
 - Limitación aceptada: el recorte solo avanza con la app abierta.
 - Se mantiene PWA (no React Native): gratis en Android e iPhone sin cuenta de desarrollador.
 
+**Plan de construcción paso a paso:** [plan.md](plan.md) (9 fases, 58 pasos). Las dudas que salieron al escribirlo están resueltas (15-11-2026).
+
 ## Siguiente sesión, en orden
 
 1. **Crear los proyectos:** Supabase (plan gratuito), Vercel (Hobby) y el repo de Next.js + TypeScript + Tailwind.

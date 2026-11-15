@@ -119,6 +119,24 @@ Decisiones tomadas y pendientes. Ya existen el [architecture.md](architecture.md
 - [x] **¿Datos semilla (pesos de tamaño y orden de capas)?** → Los propone Claude y se ajustan viendo el collage real.
 - [x] **¿Recorte en lote con descarga?** → **Sí, en la v1**, como página aparte que reutiliza la cola.
 
+### Cierre del 15-11-2026 (dudas del plan)
+
+- [x] **Etiquetas sugeridas** → Son **solo sugerencias de la interfaz** (en `messages/`) hasta que se usan por primera vez; entonces se crea la fila en `tags`. No salen en Ajustes con 0 prendas.
+- [x] **Familia "multicolor"** → El selector de color tiene una **opción explícita "Multicolor"** (sin hex); el resto de familias se calcula desde el hex.
+- [x] **Límite de 500 y lo pendiente local** → Se comprueba **en el cliente** (servidor + pendientes locales) al elegir fotos y **otra vez en la API** al subir.
+- [x] **Contador del catálogo** → **Solo cuenta lo que está en el servidor.** Pendientes y "por revisar" se ven en la cola y en la franja.
+- [x] **Subida de archivos a Storage** → **Subida directa del navegador a Storage con URL firmada** que da la API (evita el límite de 4,5 MB de Vercel). Datos y lecturas siguen pasando por la API. Corregido en architecture.md.
+- [x] **Recuperar contraseña** → **Entra en la v1:** enlace "¿Has olvidado la contraseña?" en el login y pantalla `/reset-password`. Añadido a screens.md 2.
+- [x] **Favorito al que se le borra una prenda** → Las demás **conservan sus posiciones manuales**; las que no tenían ajustes se recolocan solas.
+- [x] **Mini collage del listado de favoritos** → Se **dibuja en el cliente** a partir de los items y las miniaturas; no se guarda imagen.
+- [x] **Outfit aleatorio y vestidos** → Si `full_body` está entre las predeterminadas, se decide **al azar al 50 %** entre vestido o capa base + parte inferior.
+- [x] **Borrador con prendas que ya no valen** → Se **quitan en silencio** al cargar.
+- [x] **Tamaños de exportación** → **1080 × 1080** (1:1), **1080 × 1350** (4:5) y **1080 × 1920** (9:16). Añadido a screens.md 9.
+- [x] **HEIC** → Se acepta; si el navegador no puede abrirla, se **pide otra foto** con un mensaje claro.
+- [x] **Persistencia del recorte en lote** → **Solo en memoria** mientras la página está abierta; al recargar o salir se pierde (de ahí el aviso).
+- [x] **`auth.uid()` en database.md** → database.md **actualizado** a `(select auth.uid())`.
+- [x] **Colisión al renombrar una etiqueta** → **No se permite:** si ya existe una etiqueta con ese nombre, error en línea *"Ya tienes una etiqueta con ese nombre."* y no se guarda. Añadido a screens.md 12.
+
 ## Abiertas
 
 ### Modo inteligente (para después de la v1)
