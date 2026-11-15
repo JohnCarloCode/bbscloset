@@ -1,0 +1,13 @@
+# Fotos reales de prueba (recorte de fondo): nunca al repo
+pruebas-fotos/
+
+# Secretos y entorno
+.env
+.env.*
+!.env.example
+
+# Sistema y dependencias
+.DS_Store
+node_modules/
+.next/
+.vercel/

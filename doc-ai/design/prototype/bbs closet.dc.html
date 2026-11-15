@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f5f5f7;color:#1d1d1f;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:"ss03";}
+a{color:#1d1d1f;text-decoration:underline;text-underline-offset:2px}
+a:hover{text-decoration:underline}
+button,input,select{font:inherit;color:inherit}
+input::placeholder{color:#7a7a7a}
+*::-webkit-scrollbar{width:0;height:0}
+</style>
+</helmet>
+<div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; box-sizing:border-box; background:#f5f5f7;">
+<div style="position:relative; flex-shrink:0; width:{{ boxW }}; height:{{ boxH }};">
+<div style="position:absolute; left:0; top:0; width:{{ frameW }}; height:{{ frameH }}; transform:{{ frameScale }}; transform-origin:0 0; background:#ffffff; border:1px solid #e0e0e0; border-radius:{{ frameR }}; overflow:hidden; display:flex; flex-direction:column;">
+
+<sc-if value="{{ isMobile }}" hint-placeholder-val="{{ true }}">
+<div style="height:44px; flex-shrink:0; display:flex; align-items:center; justify-content:space-between; padding:0 30px; font-size:15px; font-weight:600; letter-spacing:-0.2px;">
+<span>9:41</span>
+<span style="display:flex; gap:6px; align-items:center;"><span style="width:18px; height:10px; border-radius:3px; border:1.5px solid #1d1d1f; box-sizing:border-box;"></span></span>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLogin }}">
+<div style="flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 24px; box-sizing:border-box;">
+<div style="width:100%; max-width:360px; display:flex; flex-direction:column; gap:28px;">
+<div style="font-size:21px; font-weight:600; letter-spacing:-0.2px;">bb's closet</div>
+<div style="display:flex; flex-direction:column; gap:8px;">
+<h1 style="margin:0; font-size:34px; font-weight:600; letter-spacing:-0.374px; line-height:1.1;">Sign in</h1>
+<p style="margin:0; font-size:17px; line-height:1.47; letter-spacing:-0.374px; color:#333333;">Use the email your invite was sent to.</p>
+</div>
+<div style="display:flex; flex-direction:column; gap:12px;">
+<input type="email" placeholder="Email" value="{{ loginEmail }}" onInput="{{ onLoginEmail }}" style="height:44px; padding:0 20px; border-radius:999px; border:1px solid rgba(0,0,0,0.12); background:#fff; font-size:17px; outline:none; box-sizing:border-box;">
+<input type="password" placeholder="Password" value="{{ loginPw }}" onInput="{{ onLoginPw }}" style="height:44px; padding:0 20px; border-radius:999px; border:1px solid rgba(0,0,0,0.12); background:#fff; font-size:17px; outline:none; box-sizing:border-box;">
+<button onClick="{{ signIn }}" style="height:44px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer; margin-top:4px;" style-active="transform:scale(0.95)">Sign in</button>
+</div>
+<sc-if value="{{ showFlags }}"><div style="font-family:ui-monospace,Menlo,monospace; font-size:11px; line-height:1.5; color:#7a7a7a; border:1px dashed #cccccc; border-radius:8px; padding:8px 10px;">OPEN · Login method is on standby. Email + password shown as the simplest pattern.</div></sc-if>
+<div style="border-top:1px solid #e0e0e0; padding-top:20px; font-size:14px; letter-spacing:-0.224px; color:#333333; display:flex; flex-wrap:wrap; gap:4px;">
+<span>bb's closet is invite-only.</span><span onClick="{{ goWaitlist }}" style="color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer;">Join the waitlist</span>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isWaitlist }}">
+<div style="flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; align-items:center; padding:24px 24px 40px; box-sizing:border-box;">
+<div style="width:100%; max-width:400px; display:flex; flex-direction:column; align-items:center; gap:28px; text-align:center; margin:auto 0;">
+<div style="font-size:21px; font-weight:600; letter-spacing:-0.2px;">bb's closet</div>
+<div style="width:240px; border-radius:18px; overflow:hidden;">{{ waitHero }}</div>
+<div style="display:flex; flex-direction:column; gap:12px;">
+<h1 style="margin:0; font-size:34px; font-weight:600; letter-spacing:-0.374px; line-height:1.1; text-wrap:balance;">Your whole closet, ready for dress-up.</h1>
+<p style="margin:0; font-size:17px; line-height:1.47; letter-spacing:-0.374px; color:#333333; text-wrap:pretty;">bb's closet is invite-only for now. Leave your email and we'll write when there's a spot.</p>
+</div>
+<sc-if value="{{ waitForm }}" hint-placeholder-val="{{ true }}">
+<div style="width:100%; display:flex; flex-direction:column; gap:12px;">
+<input type="email" placeholder="Email" value="{{ waitEmail }}" onInput="{{ onWaitEmail }}" style="height:44px; padding:0 20px; border-radius:999px; border:1px solid rgba(0,0,0,0.12); background:#fff; font-size:17px; outline:none; box-sizing:border-box; text-align:left;">
+<button onClick="{{ joinWaitlist }}" style="height:44px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer; opacity:{{ waitBtnOp }};" style-active="transform:scale(0.95)">Join the waitlist</button>
+</div>
+</sc-if>
+<sc-if value="{{ waitDone }}">
+<div style="width:100%; background:#f5f5f7; border-radius:18px; padding:24px; box-sizing:border-box; display:flex; flex-direction:column; gap:6px;">
+<div style="font-size:17px; font-weight:600; letter-spacing:-0.374px;">You're on the list.</div>
+<div style="font-size:14px; color:#333333; letter-spacing:-0.224px;">We'll email {{ waitEmail }} when your invite is ready.</div>
+</div>
+</sc-if>
+<div style="font-size:14px; letter-spacing:-0.224px; color:#333333; display:flex; gap:4px;"><span>Already invited?</span><span onClick="{{ goLogin }}" style="color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer;">Sign in</span></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ true }}">
+<div style="flex:1; min-height:0; display:flex; flex-direction:{{ appDir }};">
+
+<sc-if value="{{ isDesk }}">
+<div style="width:232px; flex-shrink:0; background:#f5f5f7; border-right:1px solid #e0e0e0; display:flex; flex-direction:column; padding:24px 12px 20px; box-sizing:border-box; gap:4px;">
+<div style="font-size:21px; font-weight:600; letter-spacing:-0.2px; padding:0 12px 20px;">bb's closet</div>
+<div onClick="{{ navCat.go }}" style="height:44px; display:flex; align-items:center; gap:12px; padding:0 12px; border-radius:8px; cursor:pointer; color:{{ navCat.color }}; background:{{ navCat.bg }}; font-size:15px; font-weight:{{ navCat.weight }};"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="7" height="7" rx="1.5"></rect><rect x="13" y="4" width="7" height="7" rx="1.5"></rect><rect x="4" y="13" width="7" height="7" rx="1.5"></rect><rect x="13" y="13" width="7" height="7" rx="1.5"></rect></svg>Catalog</div>
+<div onClick="{{ navDre.go }}" style="height:44px; display:flex; align-items:center; gap:12px; padding:0 12px; border-radius:8px; cursor:pointer; color:{{ navDre.color }}; background:{{ navDre.bg }}; font-size:15px; font-weight:{{ navDre.weight }};"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2.5"></rect><rect x="8" y="7" width="7" height="8" rx="1.5" transform="rotate(-10 11.5 11)"></rect></svg>Dresser</div>
+<div onClick="{{ navFav.go }}" style="height:44px; display:flex; align-items:center; gap:12px; padding:0 12px; border-radius:8px; cursor:pointer; color:{{ navFav.color }}; background:{{ navFav.bg }}; font-size:15px; font-weight:{{ navFav.weight }};"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg>Favorites</div>
+<div onClick="{{ navSet.go }}" style="height:44px; display:flex; align-items:center; gap:12px; padding:0 12px; border-radius:8px; cursor:pointer; color:{{ navSet.color }}; background:{{ navSet.bg }}; font-size:15px; font-weight:{{ navSet.weight }};"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><circle cx="12" cy="12" r="8"></circle></svg>Settings</div>
+<div onClick="{{ navCut.go }}" style="height:44px; display:flex; align-items:center; gap:12px; padding:0 12px; border-radius:8px; cursor:pointer; color:{{ navCut.color }}; background:{{ navCut.bg }}; font-size:15px; font-weight:{{ navCut.weight }};"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"></path></svg>Cut out photos</div>
+<div style="flex:1;"></div>
+<button onClick="{{ openAdd }}" style="height:44px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:15px; cursor:pointer; margin:0 4px;" style-active="transform:scale(0.95)">Add garment</button>
+</div>
+</sc-if>
+
+<div style="flex:1; min-width:0; min-height:0; position:relative; display:flex; flex-direction:column;">
+
+<sc-if value="{{ isCatalog }}">
+<div style="flex:1; min-height:0; overflow-y:auto;">
+<div style="max-width:1200px; margin:0 auto; padding:8px 20px 32px; box-sizing:border-box; display:flex; flex-direction:column; gap:16px;">
+<div style="display:flex; align-items:flex-end; justify-content:space-between; gap:12px; padding-top:8px;">
+<div style="display:flex; flex-direction:column; gap:4px;">
+<h1 style="margin:0; font-size:28px; font-weight:600; letter-spacing:-0.28px; line-height:1.14;">Catalog</h1>
+<div style="font-size:14px; color:#7a7a7a; letter-spacing:-0.224px;">{{ catCount }}</div>
+</div>
+<div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+<sc-if value="{{ hasGarments }}"><button onClick="{{ toggleSelect }}" style="font-size:15px; border:none; background:transparent; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer; padding:8px 4px;">{{ selectLabel }}</button></sc-if>
+<button onClick="{{ openAdd }}" style="height:36px; padding:0 16px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:15px; display:flex; align-items:center; gap:6px; cursor:pointer;" style-active="transform:scale(0.95)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Add</button>
+</div>
+</div>
+
+<sc-if value="{{ hasReview }}">
+<div style="border:1px solid #1d1d1f; border-radius:18px; padding:14px 16px; display:flex; align-items:center; gap:12px;">
+<div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:2px;"><span style="font-size:15px; font-weight:600; letter-spacing:-0.224px;">{{ reviewBannerTitle }}</span><span style="font-size:13px; color:#333333;">Pick a type to add them to your closet.</span></div>
+<button onClick="{{ openReview }}" style="flex-shrink:0; height:36px; padding:0 16px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:15px; cursor:pointer;" style-active="transform:scale(0.95)">Review</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasGarments }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex; flex-direction:column; gap:12px;">
+<div style="display:flex; background:#f5f5f7; border-radius:999px; padding:3px; max-width:360px;">
+<div onClick="{{ segActive.onClick }}" style="flex:1; height:32px; display:flex; align-items:center; justify-content:center; border-radius:999px; font-size:14px; cursor:pointer; background:{{ segActive.bg }}; border:{{ segActive.border }}; box-sizing:border-box;">{{ segActive.label }}</div>
+<div onClick="{{ segArch.onClick }}" style="flex:1; height:32px; display:flex; align-items:center; justify-content:center; border-radius:999px; font-size:14px; cursor:pointer; background:{{ segArch.bg }}; border:{{ segArch.border }}; box-sizing:border-box;">{{ segArch.label }}</div>
+</div>
+<div style="display:flex; gap:8px; overflow-x:auto; margin:0 -20px; padding:0 20px;">
+<div onClick="{{ openFilters }}" style="flex-shrink:0; display:flex; align-items:center; gap:6px; padding:{{ filterBtn.pad }}; border:{{ filterBtn.border }}; background:{{ filterBtn.bg }}; border-radius:999px; font-size:14px; cursor:pointer; white-space:nowrap;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"></path><circle cx="16" cy="7" r="2"></circle><circle cx="10" cy="17" r="2"></circle></svg>{{ filterBtn.label }}</div>
+<div style="width:1px; background:#e0e0e0; flex-shrink:0; margin:6px 0;"></div>
+<sc-for list="{{ slotChips }}" as="c" hint-placeholder-count="6">
+<div onClick="{{ c.onClick }}" style="flex-shrink:0; padding:{{ c.pad }}; border:{{ c.border }}; background:{{ c.bg }}; border-radius:999px; font-size:14px; cursor:pointer; white-space:nowrap; display:flex; gap:6px;"><span>{{ c.label }}</span><span style="color:#7a7a7a;">{{ c.count }}</span></div>
+</sc-for>
+</div>
+<sc-if value="{{ hasActiveFilters }}">
+<div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+<sc-for list="{{ activeFilters }}" as="f">
+<div onClick="{{ f.remove }}" style="display:flex; align-items:center; gap:6px; padding:6px 10px 6px 12px; border-radius:999px; background:#f5f5f7; font-size:14px; cursor:pointer;"><span>{{ f.label }}</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></div>
+</sc-for>
+<span onClick="{{ clearFilters }}" style="font-size:14px; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer;">Clear all</span>
+</div>
+</sc-if>
+</div>
+
+<sc-if value="{{ hasCatResults }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px;">
+<sc-for list="{{ catGrid }}" as="g" hint-placeholder-count="6">
+<div onClick="{{ g.open }}" aria-pressed="{{ g.ariaSel }}" style="background:#fff; border:{{ g.cardBorder }}; border-radius:18px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column;" style-active="transform:scale(0.98)">
+<div style="position:relative; aspect-ratio:1 / 1; background:#f5f5f7; display:flex; align-items:center; justify-content:center;">
+<sc-if value="{{ g.selecting }}"><span aria-hidden="true" style="position:absolute; right:8px; top:8px; z-index:1; width:24px; height:24px; border-radius:50%; border:2px solid #1d1d1f; box-sizing:border-box; background:{{ g.checkBg }}; color:#1d1d1f; display:flex; align-items:center; justify-content:center;"><sc-if value="{{ g.selected }}"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"></path></svg></sc-if></span></sc-if>
+<sc-if value="{{ g.pending }}"><span style="position:absolute; left:8px; top:8px; z-index:1; display:flex; align-items:center; gap:4px; padding:3px 8px 3px 6px; border-radius:999px; background:#fff; border:1px solid #e0e0e0; font-size:11px; color:#1d1d1f;"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>Cutting out</span></sc-if>
+<div style="opacity:{{ g.op }}; width:{{ g.tw }}; height:{{ g.th }}; background-color:{{ g.color }}; background-image:{{ g.stripes }}; border-radius:{{ g.rad }}; border:1px solid rgba(0,0,0,0.05); box-sizing:border-box; display:flex; align-items:center; justify-content:center;"><span style="font-family:ui-monospace,Menlo,monospace; font-size:10px; color:{{ g.ink }};">{{ g.label }}</span></div>
+</div>
+<div style="padding:10px 14px 14px; display:flex; flex-direction:column; gap:2px; min-width:0;">
+<div style="font-size:14px; font-weight:600; letter-spacing:-0.224px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ g.display }}</div>
+<div style="font-size:12px; color:#7a7a7a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ g.meta }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ noCatResults }}">
+<div style="padding:48px 16px; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center;">
+<div style="font-size:17px; font-weight:600; letter-spacing:-0.374px;">{{ noResultsTitle }}</div>
+<div style="font-size:14px; color:#7a7a7a; max-width:280px;">{{ noResultsBody }}</div>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ noGarments }}">
+<div style="padding:56px 8px; display:flex; flex-direction:column; align-items:center; gap:20px; text-align:center;">
+<div style="width:180px; height:180px; border-radius:18px; background:#f5f5f7; display:flex; align-items:center; justify-content:center; background-image:repeating-linear-gradient(135deg, rgba(0,0,0,0.035) 0 6px, transparent 6px 12px);"><span style="font-family:ui-monospace,Menlo,monospace; font-size:11px; color:#7a7a7a;">your first garment</span></div>
+<div style="display:flex; flex-direction:column; gap:8px; max-width:300px;">
+<div style="font-size:21px; font-weight:600; letter-spacing:0.231px;">Your closet is empty</div>
+<div style="font-size:17px; line-height:1.47; letter-spacing:-0.374px; color:#333333;">Take a photo of a garment and pick its type. We'll cut it out for the Dresser.</div>
+</div>
+<button onClick="{{ openAdd }}" style="height:44px; padding:0 22px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer;" style-active="transform:scale(0.95)">Add your first garment</button>
+</div>
+</sc-if>
+</div>
+</div>
+<sc-if value="{{ selecting }}">
+<div style="flex-shrink:0; border-top:1px solid #e0e0e0; background:#fff; padding:10px 16px; display:flex; align-items:center; gap:12px;">
+<button onClick="{{ selectAll }}" style="font-size:15px; border:none; background:transparent; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer; padding:8px 4px;">{{ selectAllLabel }}</button>
+<span style="flex:1; text-align:center; font-size:14px; color:#333333;">{{ selCountLabel }}</span>
+<button onClick="{{ bulkArchive }}" style="height:40px; padding:0 18px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:15px; cursor:pointer; opacity:{{ bulkOp }};" style-active="transform:scale(0.95)">{{ bulkActionLabel }}</button>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ isDresser }}" hint-placeholder-val="{{ true }}">
+<div style="flex:1; min-height:0; display:flex; flex-direction:{{ dresserDir }};">
+<div style="flex:1; min-width:0; min-height:0; display:flex; flex-direction:column; position:relative;">
+<div style="height:52px; flex-shrink:0; display:flex; align-items:center; justify-content:space-between; padding:0 10px 0 20px;">
+<div style="font-size:21px; font-weight:600; letter-spacing:0.231px;">Dresser</div>
+<div style="display:flex; align-items:center; gap:2px;">
+<button onClick="{{ undo }}" title="Undo" style="width:40px; height:40px; border-radius:999px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; opacity:{{ undoOp }};"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"></path><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"></path></svg></button>
+<button onClick="{{ redo }}" title="Redo" style="width:40px; height:40px; border-radius:999px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; opacity:{{ redoOp }};"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"></path><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"></path></svg></button>
+<div style="width:1px; height:20px; background:#e0e0e0; margin:0 4px;"></div>
+<button onClick="{{ openSaveFav }}" title="Save to Favorites" style="width:40px; height:40px; border-radius:999px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; opacity:{{ canvasOp }};"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg></button>
+<button onClick="{{ openExportDresser }}" title="Save as image" style="width:40px; height:40px; border-radius:999px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; opacity:{{ canvasOp }};"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg></button>
+</div>
+</div>
+<div style="flex:1; min-height:0; padding:0 16px;">
+<div ref="{{ stageRef }}" onPointerDown="{{ stageDown }}" style="position:relative; width:100%; height:100%; background:#f5f5f7; border-radius:18px; overflow:hidden; touch-action:none; container-type:inline-size;">
+{{ stageItems }}
+<sc-if value="{{ stageEmpty }}">
+<div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:24px; text-align:center; pointer-events:none;">
+<div style="font-size:17px; font-weight:600; letter-spacing:-0.374px;">{{ emptyStageTitle }}</div>
+<div style="font-size:14px; color:#7a7a7a; max-width:240px; letter-spacing:-0.224px;">{{ emptyStageBody }}</div>
+</div>
+</sc-if>
+<sc-if value="{{ noWardrobe }}">
+<div style="position:absolute; left:0; right:0; bottom:28%; display:flex; justify-content:center;"><button onClick="{{ goCatalogAdd }}" style="height:36px; padding:0 16px; border-radius:999px; border:1px solid #1d1d1f; background:transparent; color:#1d1d1f; font-size:15px; cursor:pointer;">Add a garment</button></div>
+</sc-if>
+<sc-if value="{{ showAutoBtn }}">
+<button onClick="{{ resetAuto }}" style="position:absolute; top:10px; right:10px; z-index:2000; height:32px; padding:0 12px; border-radius:11px; border:3px solid #f0f0f0; background:#fafafc; color:#333333; font-size:13px; cursor:pointer;" style-active="transform:scale(0.95)">Auto layout</button>
+</sc-if>
+<sc-if value="{{ hasSelDresser }}">
+<div style="position:absolute; left:50%; bottom:10px; transform:translateX(-50%); z-index:2000; display:flex; gap:6px;">
+<button onClick="{{ forward }}" style="height:34px; padding:0 12px; border-radius:11px; border:3px solid #f0f0f0; background:#fafafc; color:#333333; font-size:13px; white-space:nowrap; cursor:pointer;">Bring forward</button>
+<button onClick="{{ backward }}" style="height:34px; padding:0 12px; border-radius:11px; border:3px solid #f0f0f0; background:#fafafc; color:#333333; font-size:13px; white-space:nowrap; cursor:pointer;">Send back</button>
+<button onClick="{{ removeSel }}" style="height:34px; padding:0 12px; border-radius:11px; border:3px solid #f0f0f0; background:#fafafc; color:#333333; font-size:13px; white-space:nowrap; cursor:pointer;">Remove</button>
+</div>
+</sc-if>
+</div>
+</div>
+<sc-if value="{{ drawerNotFull }}">
+<sc-if value="{{ defaultsOpen }}">
+<div style="padding:12px 16px 0; display:flex; flex-direction:column; gap:8px;">
+<div style="font-size:12px; color:#7a7a7a;">Random outfit picks one garment from each:</div>
+<div style="display:flex; gap:6px; flex-wrap:wrap;">
+<sc-for list="{{ defaultChips }}" as="c">
+<div onClick="{{ c.onClick }}" style="padding:{{ c.pad }}; border:{{ c.border }}; background:{{ c.bg }}; border-radius:999px; font-size:13px; cursor:pointer; white-space:nowrap;">{{ c.label }}</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px; gap:8px; padding:12px 16px; max-width:560px; width:100%; box-sizing:border-box; align-self:center;">
+<button onClick="{{ replace }}" style="height:44px; border-radius:999px; border:1px solid #1d1d1f; background:transparent; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer; opacity:{{ replaceOp }};" style-active="transform:scale(0.95)">Replace</button>
+<button onClick="{{ randomOutfit }}" style="height:44px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer; white-space:nowrap; opacity:{{ randomOp }};" style-active="transform:scale(0.95)">Random outfit</button>
+<button onClick="{{ toggleDefaults }}" title="Random outfit categories" style="width:44px; height:44px; border-radius:999px; border:none; background:{{ defaultsBtnBg }}; color:{{ defaultsBtnColor }}; display:flex; align-items:center; justify-content:center; cursor:pointer;" style-active="transform:scale(0.95)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"></path><circle cx="16" cy="7" r="2"></circle><circle cx="10" cy="17" r="2"></circle></svg></button>
+</div>
+</sc-if>
+
+<sc-if value="{{ notDesk }}" hint-placeholder-val="{{ true }}">
+<div style="{{ drawerStyle }}">
+<button onClick="{{ drawerHandleClick }}" onPointerDown="{{ drawerDown }}" onPointerUp="{{ drawerUp }}" aria-label="{{ drawerHandleLabel }}" style="display:block; width:100%; height:24px; flex-shrink:0; border:none; background:transparent; padding:0; cursor:grab; touch-action:none;"><span aria-hidden="true" style="display:block; width:36px; height:5px; border-radius:999px; background:#7a7a7a; margin:9px auto 0;"></span></button>
+<div style="display:flex; align-items:center; justify-content:space-between; padding:0 16px 10px; flex-shrink:0;">
+<button onClick="{{ toggleSlotMenu }}" style="height:36px; display:flex; align-items:center; gap:8px; padding:0 12px 0 16px; border-radius:999px; border:1px solid #e0e0e0; background:#fff; cursor:pointer;"><span style="font-size:15px; font-weight:600; letter-spacing:-0.224px;">{{ panelSlotLabel }}</span><span style="font-size:14px; color:#7a7a7a;">{{ panelCount }}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ slotMenuChevron }}"></path></svg></button>
+<button onClick="{{ drawerAction }}" style="border:none; background:transparent; font-size:14px; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer; padding:8px 0;">{{ drawerActionLabel }}</button>
+</div>
+<sc-if value="{{ slotMenu }}">
+<div style="position:absolute; left:12px; {{ drawerMenuPos }} width:248px; background:#fff; border:1px solid #e0e0e0; border-radius:18px; padding:6px; z-index:3000; box-sizing:border-box;">
+<sc-for list="{{ slotTabs }}" as="t">
+<div onClick="{{ t.onClick }}" style="height:44px; display:flex; align-items:center; justify-content:space-between; padding:0 12px; border-radius:11px; cursor:pointer; background:{{ t.bg }}; color:{{ t.color }}; font-size:15px;"><span>{{ t.label }}</span><span style="color:#7a7a7a; font-size:14px;">{{ t.count }}</span></div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ panelOpen }}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{ panelHasItems }}" hint-placeholder-val="{{ true }}">
+<div style="{{ drawerGridWrap }}">
+<div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px 10px;">
+<sc-for list="{{ panelItems }}" as="p" hint-placeholder-count="8">
+<button onClick="{{ p.add }}" aria-label="{{ p.display }}" style="min-width:0; display:flex; flex-direction:column; gap:6px; border:none; background:transparent; padding:0; font:inherit; text-align:left; cursor:pointer;">
+<span style="width:100%; aspect-ratio:1 / 1; border-radius:18px; background:#f5f5f7; border:{{ p.border }}; box-sizing:border-box; display:flex; align-items:center; justify-content:center;">
+<span aria-hidden="true" style="width:{{ p.tw }}; height:{{ p.th }}; background-color:{{ p.color }}; background-image:{{ p.stripes }}; border-radius:{{ p.rad }}; border:1px solid rgba(0,0,0,0.05); box-sizing:border-box;"></span>
+</span>
+<span style="display:block; width:100%; font-size:12px; color:{{ p.textColor }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ p.display }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ panelEmpty }}">
+<div style="padding:4px 16px 18px; font-size:14px; color:#7a7a7a; display:flex; gap:6px; flex-wrap:wrap;"><span>{{ panelEmptyMsg }}</span><span onClick="{{ goCatalogAdd }}" style="color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer;">Add one</span></div>
+</sc-if>
+</sc-if>
+</div>
+</sc-if>
+</div>
+
+<sc-if value="{{ isDesk }}">
+<div style="width:340px; flex-shrink:0; border-left:1px solid #e0e0e0; display:flex; flex-direction:column; min-height:0;">
+<div style="padding:16px 20px 12px; display:flex; flex-direction:column; gap:12px;">
+<div style="font-size:17px; font-weight:600; letter-spacing:-0.374px;">Your closet</div>
+<div style="display:flex; gap:6px; flex-wrap:wrap;">
+<sc-for list="{{ slotTabs }}" as="t">
+<div onClick="{{ t.onClick }}" style="padding:{{ t.pad }}; border:{{ t.border }}; background:{{ t.bg }}; border-radius:999px; font-size:13px; cursor:pointer; white-space:nowrap;">{{ t.label }}</div>
+</sc-for>
+</div>
+</div>
+<div style="flex:1; min-height:0; overflow-y:auto; padding:0 20px 20px;">
+<sc-if value="{{ panelHasItems }}">
+<div style="display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px;">
+<sc-for list="{{ panelItems }}" as="p">
+<div onClick="{{ p.add }}" style="display:flex; flex-direction:column; gap:6px; cursor:pointer; min-width:0;">
+<div style="aspect-ratio:1 / 1; border-radius:18px; background:#f5f5f7; border:{{ p.border }}; box-sizing:border-box; display:flex; align-items:center; justify-content:center;">
+<div style="width:{{ p.tw }}; height:{{ p.th }}; background-color:{{ p.color }}; background-image:{{ p.stripes }}; border-radius:{{ p.rad }}; border:1px solid rgba(0,0,0,0.05); box-sizing:border-box;"></div>
+</div>
+<div style="font-size:12px; color:{{ p.textColor }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ p.display }}</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ panelEmpty }}">
+<div style="padding:8px 0; font-size:14px; color:#7a7a7a; display:flex; gap:6px; flex-wrap:wrap;"><span>{{ panelEmptyMsg }}</span><span onClick="{{ openAdd }}" style="color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer;">Add one</span></div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isFavorites }}">
+<div style="flex:1; min-height:0; overflow-y:auto;">
+<div style="max-width:1200px; margin:0 auto; padding:16px 20px 32px; box-sizing:border-box; display:flex; flex-direction:column; gap:16px;">
+<div style="display:flex; align-items:flex-end; justify-content:space-between; gap:12px;">
+<div style="display:flex; flex-direction:column; gap:4px;">
+<h1 style="margin:0; font-size:28px; font-weight:600; letter-spacing:-0.28px; line-height:1.14;">Favorites</h1>
+<div style="font-size:14px; color:#7a7a7a;">{{ favCount }}</div>
+</div>
+<sc-if value="{{ hasFavs }}"><span onClick="{{ toggleFavEdit }}" style="font-size:17px; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer; padding:4px 0;">{{ favEditLabel }}</span></sc-if>
+</div>
+<sc-if value="{{ hasFavs }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px;">
+<sc-for list="{{ favCards }}" as="f" hint-placeholder-count="3">
+<div onClick="{{ f.open }}" style="position:relative; background:#fff; border:1px solid #e0e0e0; border-radius:18px; overflow:hidden; cursor:pointer;" style-active="transform:scale(0.98)">
+{{ f.mini }}
+<div style="padding:10px 14px 14px; display:flex; flex-direction:column; gap:2px; min-width:0;">
+<div style="font-size:14px; font-weight:600; letter-spacing:-0.224px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ f.title }}</div>
+<div style="font-size:12px; color:#7a7a7a;">{{ f.sub }}</div>
+</div>
+<sc-if value="{{ f.editing }}">
+<button onClick="{{ f.remove }}" style="position:absolute; top:8px; right:8px; height:32px; padding:0 12px; border-radius:11px; border:3px solid #f0f0f0; background:#fafafc; color:#333333; font-size:13px; cursor:pointer;">Delete</button>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ noFavs }}">
+<div style="padding:56px 8px; display:flex; flex-direction:column; align-items:center; gap:20px; text-align:center;">
+<div style="width:150px; aspect-ratio:4 / 5; border-radius:18px; background:#f5f5f7; border:1px dashed #cccccc; box-sizing:border-box;"></div>
+<div style="display:flex; flex-direction:column; gap:8px; max-width:300px;">
+<div style="font-size:21px; font-weight:600; letter-spacing:0.231px;">No favorites yet</div>
+<div style="font-size:17px; line-height:1.47; letter-spacing:-0.374px; color:#333333;">Outfits you save from the Dresser show up here, exactly as you arranged them.</div>
+</div>
+<button onClick="{{ goDresser }}" style="height:44px; padding:0 22px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer;" style-active="transform:scale(0.95)">Open the Dresser</button>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isFav }}">
+<div style="flex:1; min-height:0; display:flex; flex-direction:column; position:relative;">
+<div style="height:48px; flex-shrink:0; display:flex; align-items:center; justify-content:space-between; padding:0 10px 0 12px;">
+<div onClick="{{ goFavorites }}" style="display:flex; align-items:center; gap:2px; color:#1d1d1f; font-size:17px; cursor:pointer; padding:8px 4px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"></path></svg>Favorites</div>
+<button onClick="{{ openExportFav }}" title="Save as image" style="width:40px; height:40px; border-radius:999px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg></button>
+</div>
+<div style="padding:0 20px 12px; display:flex; flex-direction:column; gap:4px;">
+<h1 style="margin:0; font-size:28px; font-weight:600; letter-spacing:-0.28px; line-height:1.14;">{{ favTitle }}</h1>
+<div style="font-size:14px; color:#7a7a7a;">{{ favSub }}</div>
+</div>
+<div style="flex:1; min-height:0; padding:0 16px;">
+<div ref="{{ stageRef }}" onPointerDown="{{ stageDown }}" style="position:relative; width:100%; height:100%; background:#f5f5f7; border-radius:18px; overflow:hidden; touch-action:none; container-type:inline-size;">
+{{ favStageItems }}
+<sc-if value="{{ hasSelFav }}">
+<div style="position:absolute; left:50%; bottom:10px; transform:translateX(-50%); z-index:2000; display:flex; gap:6px;">
+<button onClick="{{ forward }}" style="height:34px; padding:0 12px; border-radius:11px; border:3px solid #f0f0f0; background:#fafafc; color:#333333; font-size:13px; white-space:nowrap; cursor:pointer;">Bring forward</button>
+<button onClick="{{ backward }}" style="height:34px; padding:0 12px; border-radius:11px; border:3px solid #f0f0f0; background:#fafafc; color:#333333; font-size:13px; white-space:nowrap; cursor:pointer;">Send back</button>
+</div>
+</sc-if>
+</div>
+</div>
+<div style="padding:12px 20px 16px; font-size:14px; color:#7a7a7a; letter-spacing:-0.224px; min-height:64px; box-sizing:border-box;">Drag to move. Pinch, or use the handles, to resize and rotate. To change garments, build a new outfit in the Dresser.</div>
+<sc-if value="{{ favDirty }}">
+<div style="position:absolute; left:0; right:0; bottom:0; height:64px; padding:0 16px 0 20px; box-sizing:border-box; display:flex; align-items:center; justify-content:space-between; gap:12px; background:rgba(245,245,247,0.8); backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px); border-top:1px solid rgba(0,0,0,0.08); z-index:10;">
+<span style="font-size:14px; color:#333333;">Unsaved changes</span>
+<div style="display:flex; gap:8px;">
+<button onClick="{{ cancelFav }}" style="height:40px; padding:0 18px; border-radius:999px; border:1px solid #1d1d1f; background:transparent; color:#1d1d1f; font-size:15px; cursor:pointer;" style-active="transform:scale(0.95)">Cancel</button>
+<button onClick="{{ saveFavDetail }}" style="height:40px; padding:0 18px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:15px; cursor:pointer;" style-active="transform:scale(0.95)">Save</button>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isCutout }}">
+<div style="flex:1; min-height:0; overflow-y:auto;">
+<div style="max-width:1000px; margin:0 auto; padding:8px 20px 32px; box-sizing:border-box; display:flex; flex-direction:column; gap:20px;">
+<sc-if value="{{ notDesk }}"><button onClick="{{ goSettings }}" style="align-self:flex-start; border:none; background:transparent; padding:8px 0 0; font-size:17px; color:#1d1d1f; display:flex; align-items:center; gap:2px; cursor:pointer;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"></path></svg>Settings</button></sc-if>
+<div style="display:flex; align-items:flex-end; justify-content:space-between; gap:12px; padding-top:8px;">
+<div style="display:flex; flex-direction:column; gap:4px; min-width:0;"><h1 style="margin:0; font-size:28px; font-weight:600; letter-spacing:-0.28px; line-height:1.14;">Cut out photos</h1><span style="font-size:14px; color:#7a7a7a;">{{ batchSub }}</span></div>
+<sc-if value="{{ batchHas }}"><button onClick="{{ batchAdd }}" style="flex-shrink:0; height:36px; padding:0 16px; border-radius:999px; border:1px solid #1d1d1f; background:transparent; color:#1d1d1f; font-size:15px; cursor:pointer; opacity:{{ batchAddOp }};" style-active="transform:scale(0.95)">Add photos</button></sc-if>
+</div>
+<sc-if value="{{ batchEmpty }}">
+<div style="border:1.5px dashed #cccccc; border-radius:18px; padding:48px 20px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center;">
+<svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"></rect><circle cx="9" cy="10" r="1.6"></circle><path d="m21 16-5-5-8 8"></path></svg>
+<div style="display:flex; flex-direction:column; gap:6px; max-width:320px;"><span style="font-size:17px; font-weight:600; letter-spacing:-0.374px;">Upload several photos</span><span style="font-size:14px; line-height:1.43; color:#333333;">We remove the background and you download them as PNG.{{ batchDropHint }}</span></div>
+<button onClick="{{ batchAdd }}" style="height:44px; padding:0 22px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer;" style-active="transform:scale(0.95)">Choose photos</button>
+<span style="font-size:12px; color:#7a7a7a;">Up to 30 photos per batch. They are not added to your closet.</span>
+</div>
+</sc-if>
+<sc-if value="{{ batchHas }}">
+<div style="display:grid; grid-template-columns:repeat({{ batchCols }}, minmax(0, 1fr)); gap:10px;">
+<sc-for list="{{ batchCells }}" as="b" hint-placeholder-count="6">
+<button onClick="{{ b.open }}" aria-label="{{ b.aria }}" style="position:relative; aspect-ratio:1 / 1; border-radius:18px; border:1px solid #e0e0e0; padding:0; overflow:hidden; cursor:pointer; {{ b.bg }} display:flex; align-items:center; justify-content:center;">
+<span aria-hidden="true" style="width:{{ b.tw }}; height:{{ b.th }}; background-color:{{ b.color }}; border-radius:{{ b.rad }}; opacity:{{ b.op }};"></span>
+<sc-if value="{{ b.running }}"><span style="position:absolute; left:10px; right:10px; bottom:10px; height:4px; border-radius:999px; background:rgba(255,255,255,0.8); overflow:hidden;"><span style="display:block; height:100%; width:{{ b.pw }}; background:#1d1d1f;"></span></span></sc-if>
+<sc-if value="{{ b.badge }}"><span style="position:absolute; left:8px; top:8px; padding:3px 8px; border-radius:999px; background:{{ b.badgeBg }}; color:{{ b.badgeColor }}; font-size:11px;">{{ b.badge }}</span></sc-if>
+</button>
+</sc-for>
+</div>
+<sc-if value="{{ batchDoneState }}">
+<div style="display:flex; flex-direction:column; gap:4px; max-width:420px; width:100%; align-self:center;">
+<button onClick="{{ batchDownloadAll }}" style="width:100%; height:48px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer;" style-active="transform:scale(0.97)">{{ downloadAllLabel }}</button>
+<button onClick="{{ batchStartOver }}" style="height:44px; font-size:15px; border:none; background:transparent; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer; padding:8px 4px;">Start over</button>
+</div>
+</sc-if>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSettings }}">
+<div style="flex:1; min-height:0; overflow-y:auto; background:#f5f5f7;">
+<div style="max-width:640px; margin:0 auto; padding:16px 20px 40px; box-sizing:border-box; display:flex; flex-direction:column; gap:28px;">
+<h1 style="margin:0; font-size:28px; font-weight:600; letter-spacing:-0.28px; line-height:1.14;">Settings</h1>
+
+<div style="display:flex; flex-direction:column; gap:8px;">
+<div style="font-size:14px; font-weight:600; letter-spacing:-0.224px; padding:0 4px;">Tags</div>
+<div style="background:#fff; border:1px solid #e0e0e0; border-radius:18px; overflow:hidden;">
+<sc-for list="{{ tagRows }}" as="t" hint-placeholder-count="5">
+<div style="min-height:52px; display:flex; align-items:center; gap:12px; padding:8px 16px; border-top:{{ t.divider }}; box-sizing:border-box;">
+<sc-if value="{{ t.editing }}">
+<input value="{{ tagEditVal }}" onInput="{{ onTagEdit }}" onKeyDown="{{ onTagKey }}" autofocus style="flex:1; min-width:0; height:36px; padding:0 14px; border-radius:999px; border:1px solid #1d1d1f; font-size:15px; outline:none;">
+<span onClick="{{ saveRename }}" style="font-size:15px; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer;">Save</span>
+<span onClick="{{ cancelRename }}" style="font-size:15px; color:#7a7a7a; cursor:pointer;">Cancel</span>
+</sc-if>
+<sc-if value="{{ t.idle }}" hint-placeholder-val="{{ true }}">
+<div style="flex:1; min-width:0; display:flex; flex-direction:column;">
+<span style="font-size:17px; letter-spacing:-0.374px;">{{ t.name }}</span>
+<span style="font-size:12px; color:#7a7a7a;">{{ t.count }}</span>
+</div>
+<span onClick="{{ t.rename }}" style="font-size:15px; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer; padding:8px 4px;">Rename</span>
+<span onClick="{{ t.remove }}" style="font-size:15px; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer; padding:8px 4px;">Delete</span>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<div style="font-size:12px; line-height:1.5; color:#7a7a7a; padding:0 4px;">Renaming a tag updates every garment that has it. New tags are created when you add them to a garment.</div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:8px;">
+<div style="font-size:14px; font-weight:600; letter-spacing:-0.224px; padding:0 4px;">Dresser</div>
+<div style="background:#fff; border:1px solid #e0e0e0; border-radius:18px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+<span style="font-size:17px; letter-spacing:-0.374px;">Jewelry pieces at once</span>
+<div style="display:flex; align-items:center; gap:4px;">
+<button onClick="{{ jewMinus }}" style="width:36px; height:36px; border-radius:999px; border:none; background:#f5f5f7; font-size:20px; cursor:pointer; opacity:{{ jewMinusOp }};">−</button>
+<span style="min-width:32px; text-align:center; font-size:17px; font-weight:600;">{{ jewelryMax }}</span>
+<button onClick="{{ jewPlus }}" style="width:36px; height:36px; border-radius:999px; border:none; background:#f5f5f7; font-size:20px; cursor:pointer; opacity:{{ jewPlusOp }};">+</button>
+</div>
+</div>
+<div style="font-size:12px; line-height:1.5; color:#7a7a7a; padding:0 4px;">3 by default, up to 10. At the limit, a new piece replaces the oldest one.</div>
+<sc-if value="{{ showFlags }}"><div style="font-family:ui-monospace,Menlo,monospace; font-size:11px; line-height:1.5; color:#7a7a7a; border:1px dashed #cccccc; border-radius:8px; padding:8px 10px;">OPEN · At the limit, replace the oldest piece silently or ask which one to remove? Prototype replaces silently and shows a short notice.</div></sc-if>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:8px;">
+<div style="font-size:14px; font-weight:600; letter-spacing:-0.224px; padding:0 4px;">Language</div>
+<div style="display:flex; background:#e8e8ed; border-radius:999px; padding:3px;">
+<div onClick="{{ langEn.onClick }}" style="flex:1; height:34px; display:flex; align-items:center; justify-content:center; border-radius:999px; font-size:14px; cursor:pointer; background:{{ langEn.bg }};">English</div>
+<div onClick="{{ langEs.onClick }}" style="flex:1; height:34px; display:flex; align-items:center; justify-content:center; border-radius:999px; font-size:14px; cursor:pointer; background:{{ langEs.bg }};">Español</div>
+</div>
+<sc-if value="{{ showFlags }}"><div style="font-family:ui-monospace,Menlo,monospace; font-size:11px; line-height:1.5; color:#7a7a7a; border:1px dashed #cccccc; border-radius:8px; padding:8px 10px;">OPEN · Are slot and type names translated too? User tags and brands assumed to stay as typed. Prototype copy is English only.</div></sc-if>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:8px;">
+<div style="font-size:14px; font-weight:600; letter-spacing:-0.224px; padding:0 4px;">Tools</div>
+<div style="background:#fff; border:1px solid #e0e0e0; border-radius:18px; overflow:hidden;">
+<button onClick="{{ goCutout }}" style="width:100%; height:52px; display:flex; align-items:center; justify-content:space-between; padding:0 16px; border:none; background:transparent; font-size:17px; letter-spacing:-0.374px; cursor:pointer; text-align:left;"><span>Cut out photos</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"></path></svg></button>
+</div>
+<div style="font-size:12px; line-height:1.5; color:#7a7a7a; padding:0 4px;">Remove the background from many photos at once and download them as PNG. They are not added to your closet.</div>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:8px;">
+<div style="font-size:14px; font-weight:600; letter-spacing:-0.224px; padding:0 4px;">Account</div>
+<div style="background:#fff; border:1px solid #e0e0e0; border-radius:18px; overflow:hidden;">
+<div style="height:52px; display:flex; align-items:center; justify-content:space-between; padding:0 16px;"><span style="font-size:17px; letter-spacing:-0.374px;">Email</span><span style="font-size:15px; color:#7a7a7a;">bb@example.com</span></div>
+<div onClick="{{ signOut }}" style="height:52px; display:flex; align-items:center; padding:0 16px; border-top:1px solid #f0f0f0; font-size:17px; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer;">Sign out</div>
+</div>
+</div>
+<sc-if value="{{ showFlags }}"><div style="font-family:ui-monospace,Menlo,monospace; font-size:11px; line-height:1.5; color:#7a7a7a; border:1px dashed #cccccc; border-radius:8px; padding:8px 10px;">OPEN · Full page or a panel? Designed as a page for now.</div></sc-if>
+</div>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{ notDesk }}" hint-placeholder-val="{{ true }}">
+<div style="flex-shrink:0; display:flex; justify-content:space-around; align-items:flex-start; padding:6px 8px {{ navPadBottom }}; background:rgba(250,250,252,0.92); backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px); border-top:1px solid rgba(0,0,0,0.08);">
+<div onClick="{{ navCat.go }}" style="flex:1; max-width:120px; height:50px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; color:{{ navCat.color }}; cursor:pointer; font-size:10px; font-weight:{{ navCat.weight }};"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="7" height="7" rx="1.5"></rect><rect x="13" y="4" width="7" height="7" rx="1.5"></rect><rect x="4" y="13" width="7" height="7" rx="1.5"></rect><rect x="13" y="13" width="7" height="7" rx="1.5"></rect></svg>Catalog</div>
+<div onClick="{{ navDre.go }}" style="flex:1; max-width:120px; height:50px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; color:{{ navDre.color }}; cursor:pointer; font-size:10px; font-weight:{{ navDre.weight }};"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2.5"></rect><rect x="8" y="7" width="7" height="8" rx="1.5" transform="rotate(-10 11.5 11)"></rect></svg>Dresser</div>
+<div onClick="{{ navFav.go }}" style="flex:1; max-width:120px; height:50px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; color:{{ navFav.color }}; cursor:pointer; font-size:10px; font-weight:{{ navFav.weight }};"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg>Favorites</div>
+<div onClick="{{ navSet.go }}" style="flex:1; max-width:120px; height:50px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; color:{{ navSet.color }}; cursor:pointer; font-size:10px; font-weight:{{ navSet.weight }};"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><circle cx="12" cy="12" r="8"></circle></svg>Settings</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ sheetOpen }}">
+<div onClick="{{ backdropClick }}" style="position:absolute; inset:0; z-index:5000; background:rgba(0,0,0,0.32); display:flex; align-items:{{ sheetAlign }}; justify-content:center; padding:{{ sheetOuterPad }}; box-sizing:border-box;">
+<div style="width:100%; max-width:{{ sheetMaxW }}; height:{{ sheetH }}; max-height:{{ sheetMaxH }}; background:#fff; border-radius:{{ sheetRadius }}; overflow:hidden; display:flex; flex-direction:column;">
+
+<sc-if value="{{ isCamera }}">
+<div style="flex:1; min-height:560px; background:#000; color:#fff; display:flex; flex-direction:column; padding-top:{{ camPadTop }};">
+<div style="height:56px; display:flex; align-items:center; justify-content:space-between; padding:0 12px;">
+<button onClick="{{ closeCamera }}" style="width:44px; height:44px; border-radius:999px; border:none; background:rgba(210,210,215,0.24); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+<span style="font-size:17px; font-weight:600;">{{ cameraTitle }}</span>
+<span style="width:44px;"></span>
+</div>
+<div style="flex:1; margin:4px 16px; border-radius:18px; position:relative; overflow:hidden; background-color:#161617; background-image:repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0 10px, transparent 10px 20px); display:flex; align-items:center; justify-content:center;">
+<div style="position:absolute; inset:14% 16%; border:1.5px dashed rgba(255,255,255,0.45); border-radius:18px;"></div>
+<span style="font-family:ui-monospace,Menlo,monospace; font-size:11px; color:#cccccc;">camera viewfinder</span>
+</div>
+<div style="padding:14px 32px 6px; text-align:center; font-size:14px; color:#cccccc; letter-spacing:-0.224px;">Plain background that contrasts with the garment, and good light.</div>
+<div style="height:120px; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; padding:0 28px;">
+<button onClick="{{ pickLibrary }}" style="justify-self:start; border:none; background:transparent; padding:8px 0; font-size:15px; color:#f0d7d7; cursor:pointer;">Library</button>
+<button onClick="{{ shutter }}" title="Take photo" style="width:74px; height:74px; border-radius:999px; border:4px solid #fff; background:transparent; padding:4px; cursor:pointer;" style-active="transform:scale(0.95)"><span style="display:block; width:100%; height:100%; border-radius:999px; background:#fff;"></span></button>
+<sc-if value="{{ isAddForm }}"><button onClick="{{ pickSeveral }}" style="justify-self:end; border:none; background:transparent; padding:8px 0; font-size:15px; color:#f0d7d7; cursor:pointer;">Several</button></sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isChoose }}">
+<div style="flex:1; min-height:0; display:flex; flex-direction:column; padding-top:{{ camPadTop }};">
+<div style="height:56px; flex-shrink:0; display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 20px;">
+<span style="font-size:21px; font-weight:600; letter-spacing:0.231px;">{{ cameraTitle }}</span>
+<button onClick="{{ backToCamera }}" aria-label="Close" style="width:40px; height:40px; border-radius:999px; border:none; background:#f5f5f7; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+</div>
+<div style="flex:1; min-height:0; overflow-y:auto; padding:8px 20px 24px; display:flex; flex-direction:column; gap:24px;">
+<div style="display:flex; gap:16px; align-items:center;">
+<div style="width:96px; height:96px; flex-shrink:0; border-radius:18px; {{ chooseThumbBg }} display:flex; align-items:center; justify-content:center;"><span aria-hidden="true" style="width:58px; height:58px; border-radius:22%; background-color:{{ draftColor }};"></span></div>
+<div style="display:flex; flex-direction:column; gap:4px; min-width:0;"><span style="font-size:17px; font-weight:600; letter-spacing:-0.374px;">{{ chooseFileLabel }}</span><span style="font-size:14px; line-height:1.43; color:#7a7a7a;">{{ chooseDetect }}</span></div>
+</div>
+<div style="display:flex; flex-direction:column; gap:8px;">
+<span style="font-size:14px; font-weight:600; letter-spacing:-0.224px;">Background</span>
+<div style="display:flex; background:#e8e8ed; border-radius:999px; padding:3px;">
+<button onClick="{{ modeCut.onClick }}" aria-pressed="{{ modeCut.on }}" style="flex:1; height:38px; border:none; border-radius:999px; font-size:14px; cursor:pointer; background:{{ modeCut.bg }}; font-weight:{{ modeCut.weight }};">Remove background</button>
+<button onClick="{{ modeReady.onClick }}" aria-pressed="{{ modeReady.on }}" style="flex:1; height:38px; border:none; border-radius:999px; font-size:14px; cursor:pointer; background:{{ modeReady.bg }}; font-weight:{{ modeReady.weight }};">Already cut out</button>
+</div>
+<span style="font-size:12px; line-height:1.5; color:#7a7a7a;">{{ chooseHint }}</span>
+</div>
+<sc-if value="{{ chooseWarn }}">
+<div style="border:1px solid #1d1d1f; border-radius:11px; padding:12px 14px; display:flex; gap:10px; align-items:flex-start;"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:1px;"><path d="M12 3 2 20h20L12 3z"></path><path d="M12 10v4M12 17h.01"></path></svg><span style="font-size:14px; line-height:1.43;">This photo has a background. In the collage it will show as a box. You can still use it.</span></div>
+</sc-if>
+</div>
+<div style="flex-shrink:0; padding:12px 20px {{ formFooterPad }}; border-top:1px solid #f0f0f0;">
+<button onClick="{{ continueChoose }}" style="width:100%; height:48px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer;" style-active="transform:scale(0.97)">Continue</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isBulk }}">
+<div style="flex:1; min-height:0; display:flex; flex-direction:column; padding-top:{{ camPadTop }};">
+<div style="height:56px; flex-shrink:0; display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 20px;">
+<span style="font-size:21px; font-weight:600; letter-spacing:0.231px;">{{ bulkTitle }}</span>
+<button onClick="{{ backToCamera }}" aria-label="Close" style="width:40px; height:40px; border-radius:999px; border:none; background:#f5f5f7; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+</div>
+<div style="flex:1; min-height:0; overflow-y:auto; padding:8px 20px 24px; display:flex; flex-direction:column; gap:20px;">
+<div style="display:flex; flex-direction:column; gap:8px;">
+<span style="font-size:14px; font-weight:600; letter-spacing:-0.224px;">Background</span>
+<div style="display:flex; background:#e8e8ed; border-radius:999px; padding:3px;">
+<button onClick="{{ bulkAllCut.onClick }}" aria-pressed="{{ bulkAllCut.on }}" style="flex:1; height:38px; border:none; border-radius:999px; font-size:14px; cursor:pointer; background:{{ bulkAllCut.bg }}; font-weight:{{ bulkAllCut.weight }};">Remove from all</button>
+<button onClick="{{ bulkAllReady.onClick }}" aria-pressed="{{ bulkAllReady.on }}" style="flex:1; height:38px; border:none; border-radius:999px; font-size:14px; cursor:pointer; background:{{ bulkAllReady.bg }}; font-weight:{{ bulkAllReady.weight }};">All already cut out</button>
+</div>
+<span style="font-size:12px; line-height:1.5; color:#7a7a7a;">We detected each photo. Tap one to change just that one.</span>
+</div>
+<div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px;">
+<sc-for list="{{ bulkCells }}" as="b" hint-placeholder-count="8">
+<button onClick="{{ b.toggle }}" aria-label="{{ b.aria }}" style="position:relative; aspect-ratio:1 / 1; border-radius:14px; border:1px solid #e0e0e0; padding:0; overflow:hidden; cursor:pointer; {{ b.bg }} display:flex; align-items:center; justify-content:center;">
+<span aria-hidden="true" style="width:58%; height:58%; border-radius:22%; background-color:{{ b.color }};"></span>
+<span style="position:absolute; left:4px; right:4px; bottom:4px; padding:2px 4px; border-radius:999px; background:{{ b.badgeBg }}; color:{{ b.badgeColor }}; font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ b.badge }}</span>
+</button>
+</sc-for>
+</div>
+<sc-if value="{{ bulkWarn }}">
+<div style="border:1px solid #1d1d1f; border-radius:11px; padding:12px 14px; display:flex; gap:10px; align-items:flex-start;"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:1px;"><path d="M12 3 2 20h20L12 3z"></path><path d="M12 10v4M12 17h.01"></path></svg><span style="font-size:14px; line-height:1.43;">{{ bulkWarnText }}</span></div>
+</sc-if>
+</div>
+<div style="flex-shrink:0; padding:12px 20px {{ formFooterPad }}; border-top:1px solid #f0f0f0; display:flex; flex-direction:column; gap:8px;">
+<span style="font-size:12px; line-height:1.5; color:#7a7a7a; text-align:center;">They go to the cut-out queue and wait in Catalog → To review. About 30 s each, with the app open.</span>
+<button onClick="{{ confirmBulk }}" style="width:100%; height:48px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer;" style-active="transform:scale(0.97)">{{ bulkCta }}</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isProcessing }}">
+<div style="flex:1; min-height:420px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; padding:32px;">
+<div style="width:200px; height:200px; border-radius:18px; background:#f5f5f7; display:flex; align-items:center; justify-content:center;">
+<div style="width:120px; height:120px; border-radius:22%; background-color:{{ draftColor }}; background-image:repeating-linear-gradient(135deg, rgba(0,0,0,0.04) 0 6px, transparent 6px 12px); opacity:{{ procOpacity }};"></div>
+</div>
+<div style="display:flex; flex-direction:column; align-items:center; gap:12px; width:220px;">
+<div style="font-size:17px; letter-spacing:-0.374px;">Removing background…</div>
+<div style="width:100%; height:4px; border-radius:999px; background:#f0f0f0; overflow:hidden;"><div style="height:100%; width:{{ progressW }}; background:#f0d7d7; border-radius:999px;"></div></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isForm }}">
+<div style="flex:1; min-height:0; display:flex; flex-direction:column; padding-top:{{ camPadTop }};">
+<div style="height:56px; flex-shrink:0; display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 20px;">
+<span style="font-size:21px; font-weight:600; letter-spacing:0.231px;">{{ formTitle }}</span>
+<button onClick="{{ closeSheet }}" style="width:40px; height:40px; border-radius:999px; border:none; background:#f5f5f7; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+</div>
+<div style="flex:1; min-height:0; overflow-y:auto; padding:0 20px 24px; display:flex; flex-direction:column; gap:24px;">
+<div style="display:flex; flex-direction:column; gap:8px;">
+<div style="height:200px; border-radius:18px; {{ fpBg }} display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+<div style="width:{{ fp.w }}; height:{{ fp.h }}; background-color:{{ fp.color }}; background-image:{{ fp.stripes }}; border-radius:{{ fp.rad }}; opacity:{{ fpOpacity }}; border:1px solid rgba(0,0,0,0.05); box-sizing:border-box; box-shadow:rgba(0,0,0,0.22) 3px 5px 30px 0; display:flex; align-items:center; justify-content:center;"><span style="font-family:ui-monospace,Menlo,monospace; font-size:11px; color:{{ fp.ink }};">{{ fp.label }}</span></div>
+</div>
+<div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:12px; line-height:1.5; color:#7a7a7a;">{{ cutStatusText }}</span><span onClick="{{ changePhoto }}" style="font-size:14px; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer; white-space:nowrap;">{{ photoLinkLabel }}</span></div>
+<sc-if value="{{ cutRunning }}"><div style="height:4px; border-radius:999px; background:#f0f0f0; overflow:hidden;"><div style="height:100%; width:{{ cutPW }}; background:#f0d7d7; border-radius:999px;"></div></div></sc-if>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:12px;">
+<div style="display:flex; align-items:baseline; gap:8px;"><span style="font-size:17px; font-weight:600; letter-spacing:-0.374px;">Type</span><span style="font-size:12px; color:#7a7a7a;">Required</span></div>
+<sc-for list="{{ typeGroups }}" as="grp">
+<div style="display:flex; flex-direction:column; gap:6px;">
+<span style="font-size:12px; color:#7a7a7a;">{{ grp.label }}</span>
+<div style="display:flex; flex-wrap:wrap; gap:6px;">
+<sc-for list="{{ grp.chips }}" as="c">
+<div onClick="{{ c.onClick }}" style="padding:{{ c.pad }}; border:{{ c.border }}; background:{{ c.bg }}; border-radius:999px; font-size:14px; cursor:pointer;">{{ c.label }}</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+
+<div style="display:flex; flex-direction:column; gap:20px; border-top:1px solid #f0f0f0; padding-top:20px;">
+<span style="font-size:12px; color:#7a7a7a;">Everything below is optional.</span>
+<div style="display:flex; flex-direction:column; gap:6px;">
+<span style="font-size:14px; font-weight:600; letter-spacing:-0.224px;">Name</span>
+<input value="{{ draftName }}" onInput="{{ onDraftName }}" placeholder="{{ namePlaceholder }}" style="height:44px; padding:0 20px; border-radius:999px; border:1px solid rgba(0,0,0,0.12); font-size:17px; outline:none;">
+</div>
+<div style="display:flex; flex-direction:column; gap:8px;">
+<span style="font-size:14px; font-weight:600; letter-spacing:-0.224px;">Season</span>
+<div style="display:flex; flex-wrap:wrap; gap:6px;">
+<sc-for list="{{ seasonChips }}" as="c"><div onClick="{{ c.onClick }}" style="padding:{{ c.pad }}; border:{{ c.border }}; background:{{ c.bg }}; border-radius:999px; font-size:14px; cursor:pointer;">{{ c.label }}</div></sc-for>
+</div>
+</div>
+<div style="display:flex; flex-direction:column; gap:8px;">
+<span style="font-size:14px; font-weight:600; letter-spacing:-0.224px;">Brand</span>
+<input value="{{ draftBrand }}" onInput="{{ onDraftBrand }}" placeholder="e.g. Zara, vintage" style="height:44px; padding:0 20px; border-radius:999px; border:1px solid rgba(0,0,0,0.12); font-size:17px; outline:none;">
+<div style="display:flex; flex-wrap:wrap; gap:6px;">
+<sc-for list="{{ brandSugg }}" as="b"><div onClick="{{ b.onClick }}" style="padding:6px 12px; border-radius:999px; background:#f5f5f7; font-size:13px; cursor:pointer;">{{ b.label }}</div></sc-for>
+</div>
+</div>
+<div style="display:flex; flex-direction:column; gap:8px;">
+<span style="font-size:14px; font-weight:600; letter-spacing:-0.224px;">Tags</span>
+<div style="display:flex; flex-wrap:wrap; gap:6px;">
+<sc-for list="{{ tagChips }}" as="c"><div onClick="{{ c.onClick }}" style="padding:{{ c.pad }}; border:{{ c.border }}; background:{{ c.bg }}; border-radius:999px; font-size:14px; cursor:pointer;">{{ c.label }}</div></sc-for>
+</div>
+<input value="{{ tagInput }}" onInput="{{ onTagInput }}" onKeyDown="{{ onTagInputKey }}" placeholder="Add a tag and press Enter" style="height:40px; padding:0 18px; border-radius:999px; border:1px solid rgba(0,0,0,0.12); font-size:15px; outline:none;">
+</div>
+<sc-if value="{{ isEditForm }}">
+<div style="display:flex; gap:16px; border-top:1px solid #f0f0f0; padding-top:20px;">
+<span onClick="{{ toggleArchive }}" style="font-size:15px; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer;">{{ archiveLabel }}</span>
+<span onClick="{{ deleteGarment }}" style="font-size:15px; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer;">Delete garment</span>
+</div>
+</sc-if>
+</div>
+</div>
+<div style="flex-shrink:0; padding:12px 20px {{ formFooterPad }}; border-top:1px solid #f0f0f0;">
+<button onClick="{{ submitForm }}" style="width:100%; height:48px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer; opacity:{{ submitOp }};" style-active="transform:scale(0.97)">{{ submitLabel }}</button>
+<sc-if value="{{ isAddForm }}"><button onClick="{{ submitAnother }}" style="width:100%; height:40px; margin-top:4px; font-size:15px; opacity:{{ submitOp }}; border:none; background:transparent; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer; padding:8px 4px;">Save and add another</button></sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSaveFav }}">
+<div style="padding:8px 20px 28px; display:flex; flex-direction:column; gap:20px;">
+<div style="width:36px; height:5px; border-radius:999px; background:#e0e0e0; align-self:center;"></div>
+<div style="display:flex; align-items:center; justify-content:space-between;"><span style="font-size:21px; font-weight:600; letter-spacing:0.231px;">Save to Favorites</span><button onClick="{{ closeSheet }}" style="width:36px; height:36px; border-radius:999px; border:none; background:#f5f5f7; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div>
+<div style="width:150px; align-self:center; border-radius:18px; overflow:hidden; border:1px solid #e0e0e0;">{{ saveFavPreview }}</div>
+<div style="display:flex; flex-direction:column; gap:6px;">
+<span style="font-size:14px; font-weight:600; letter-spacing:-0.224px;">Name</span>
+<input value="{{ favName }}" onInput="{{ onFavName }}" placeholder="e.g. Friday dinner" style="height:44px; padding:0 20px; border-radius:999px; border:1px solid rgba(0,0,0,0.12); font-size:17px; outline:none;">
+<span style="font-size:12px; color:#7a7a7a; padding:0 4px;">Optional. If left blank, it's saved as {{ todayLabel }}.</span>
+</div>
+<button onClick="{{ saveFavorite }}" style="height:48px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer;" style-active="transform:scale(0.97)">Save favorite</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isExport }}">
+<div style="padding:8px 20px 28px; display:flex; flex-direction:column; gap:20px; overflow-y:auto;">
+<div style="width:36px; height:5px; border-radius:999px; background:#e0e0e0; align-self:center;"></div>
+<div style="display:flex; align-items:center; justify-content:space-between;"><span style="font-size:21px; font-weight:600; letter-spacing:0.231px;">Save as image</span><button onClick="{{ closeSheet }}" style="width:36px; height:36px; border-radius:999px; border:none; background:#f5f5f7; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div>
+<div style="display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px;">
+<sc-for list="{{ ratioChips }}" as="r">
+<div onClick="{{ r.onClick }}" style="padding:{{ r.pad }}; border:{{ r.border }}; background:{{ r.bg }}; border-radius:18px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px;">
+<div style="width:{{ r.iw }}; height:{{ r.ih }}; border:1.5px solid #1d1d1f; border-radius:3px; box-sizing:border-box;"></div>
+<div style="display:flex; flex-direction:column; align-items:center;"><span style="font-size:14px;">{{ r.label }}</span><span style="font-size:12px; color:#7a7a7a;">{{ r.sub }}</span></div>
+</div>
+</sc-for>
+</div>
+<div style="height:{{ exportBoxH }}; display:flex; align-items:center; justify-content:center;">
+<div style="width:{{ exportPrevW }}; border-radius:8px; overflow:hidden; border:1px solid #e0e0e0;">{{ exportPreview }}</div>
+</div>
+<div style="font-size:12px; color:#7a7a7a; text-align:center;">{{ exportMeta }}</div>
+<sc-if value="{{ showFlags }}"><div style="font-family:ui-monospace,Menlo,monospace; font-size:11px; line-height:1.5; color:#7a7a7a; border:1px dashed #cccccc; border-radius:8px; padding:8px 10px;">OPEN · How the collage recomposes for other ratios. Preview scales the whole arrangement to fit, so manual tweaks survive.</div></sc-if>
+<button onClick="{{ downloadPng }}" style="height:48px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer;" style-active="transform:scale(0.97)">Download PNG</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isReview }}">
+<div style="flex:1; min-height:0; display:flex; flex-direction:column;">
+<div style="padding:20px 12px 4px 20px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;"><div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:21px; font-weight:600; letter-spacing:0.231px;">To review</span><span style="font-size:14px; color:#7a7a7a;">{{ reviewPos }}</span></div><button onClick="{{ closeSheet }}" aria-label="Close" style="width:40px; height:40px; border-radius:999px; border:none; background:#f5f5f7; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div>
+<div style="flex:1; min-height:0; overflow-y:auto; padding:12px 20px 20px; display:flex; flex-direction:column; gap:20px;">
+<div style="display:flex; flex-direction:column; gap:8px;">
+<div style="height:180px; border-radius:18px; {{ reviewBg }} display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span aria-hidden="true" style="width:{{ fp.w }}; height:{{ fp.h }}; background-color:{{ fp.color }}; border-radius:{{ fp.rad }}; opacity:{{ reviewOp }};"></span></div>
+<span style="font-size:12px; line-height:1.5; color:#7a7a7a;">{{ reviewStatus }}</span>
+<sc-if value="{{ reviewRunning }}"><div style="height:4px; border-radius:999px; background:#f0f0f0; overflow:hidden;"><div style="height:100%; width:{{ reviewPW }}; background:#f0d7d7; border-radius:999px;"></div></div></sc-if>
+</div>
+<div style="display:flex; flex-direction:column; gap:12px;">
+<div style="display:flex; align-items:baseline; gap:8px;"><span style="font-size:17px; font-weight:600; letter-spacing:-0.374px;">Type</span><span style="font-size:12px; color:#7a7a7a;">Required</span></div>
+<sc-for list="{{ typeGroups }}" as="grp">
+<div style="display:flex; flex-direction:column; gap:6px;">
+<span style="font-size:12px; color:#7a7a7a;">{{ grp.label }}</span>
+<div style="display:flex; flex-wrap:wrap; gap:6px;">
+<sc-for list="{{ grp.chips }}" as="c">
+<button onClick="{{ c.onClick }}" style="padding:{{ c.pad }}; border:{{ c.border }}; background:{{ c.bg }}; border-radius:999px; font-size:14px; cursor:pointer;">{{ c.label }}</button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+<button onClick="{{ toggleReviewMore }}" style="align-self:flex-start; font-size:15px; border:none; background:transparent; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer; padding:8px 4px;">{{ reviewMoreLabel }}</button>
+<sc-if value="{{ reviewMore }}">
+<div style="display:flex; flex-direction:column; gap:16px;">
+<div style="display:flex; flex-direction:column; gap:6px;">
+<label for="rv-name" style="font-size:14px; font-weight:600; letter-spacing:-0.224px;">Name</label>
+<input id="rv-name" value="{{ draftName }}" onInput="{{ onDraftName }}" placeholder="{{ namePlaceholder }}" style="height:44px; padding:0 20px; border-radius:999px; border:1px solid rgba(0,0,0,0.12); font-size:17px; outline:none;">
+</div>
+<div style="display:flex; flex-direction:column; gap:8px;">
+<span style="font-size:14px; font-weight:600; letter-spacing:-0.224px;">Season</span>
+<div style="display:flex; flex-wrap:wrap; gap:6px;"><sc-for list="{{ seasonChips }}" as="c"><button onClick="{{ c.onClick }}" style="padding:{{ c.pad }}; border:{{ c.border }}; background:{{ c.bg }}; border-radius:999px; font-size:14px; cursor:pointer;">{{ c.label }}</button></sc-for></div>
+</div>
+<div style="display:flex; flex-direction:column; gap:6px;">
+<label for="rv-brand" style="font-size:14px; font-weight:600; letter-spacing:-0.224px;">Brand</label>
+<input id="rv-brand" value="{{ draftBrand }}" onInput="{{ onDraftBrand }}" placeholder="e.g. Zara, vintage" style="height:44px; padding:0 20px; border-radius:999px; border:1px solid rgba(0,0,0,0.12); font-size:17px; outline:none;">
+</div>
+</div>
+</sc-if>
+</div>
+<div style="flex-shrink:0; padding:12px 20px {{ formFooterPad }}; border-top:1px solid #f0f0f0; display:flex; flex-direction:column; gap:4px;">
+<button onClick="{{ reviewSave }}" style="width:100%; height:48px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer; opacity:{{ submitOp }};" style-active="transform:scale(0.97)">{{ reviewSaveLabel }}</button>
+<div style="display:flex; justify-content:space-between;">
+<button onClick="{{ reviewSkip }}" style="font-size:15px; border:none; background:transparent; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer; padding:8px 4px;">Skip</button>
+<button onClick="{{ reviewDiscard }}" style="font-size:15px; border:none; background:transparent; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer; padding:8px 4px;">Discard photo</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isQueue }}">
+<div style="padding:20px 12px 4px 20px; display:flex; align-items:center; justify-content:space-between;"><span style="font-size:21px; font-weight:600; letter-spacing:0.231px;">Cut-out queue</span><button onClick="{{ closeSheet }}" aria-label="Close" style="width:40px; height:40px; border-radius:999px; border:none; background:#f5f5f7; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div>
+<div style="padding:0 20px; font-size:14px; color:#7a7a7a;">{{ queueSub }}</div>
+<div style="min-height:0; overflow-y:auto; padding:8px 20px 28px; display:flex; flex-direction:column;">
+<sc-for list="{{ queueRows }}" as="q" hint-placeholder-count="3">
+<div style="display:flex; align-items:center; gap:12px; padding:10px 0; border-top:{{ q.divider }};">
+<span style="width:48px; height:48px; flex-shrink:0; border-radius:11px; {{ q.thumbBg }} display:flex; align-items:center; justify-content:center;"><span aria-hidden="true" style="width:30px; height:30px; border-radius:22%; background-color:{{ q.color }}; opacity:{{ q.op }};"></span></span>
+<span style="flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;">
+<span style="font-size:15px; font-weight:600; letter-spacing:-0.224px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ q.name }}</span>
+<span style="font-size:13px; color:#7a7a7a;">{{ q.status }}</span>
+<sc-if value="{{ q.running }}"><span style="display:block; height:4px; border-radius:999px; background:#f0f0f0; overflow:hidden;"><span style="display:block; height:100%; width:{{ q.pw }}; background:#f0d7d7;"></span></span></sc-if>
+</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isBatchItem }}">
+<div style="padding:20px 12px 12px 20px; display:flex; align-items:center; justify-content:space-between;"><span style="font-size:21px; font-weight:600; letter-spacing:0.231px;">{{ batchItem.name }}</span><button onClick="{{ closeSheet }}" aria-label="Close" style="width:40px; height:40px; border-radius:999px; border:none; background:#f5f5f7; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div>
+<div style="margin:0 20px; height:300px; border-radius:18px; {{ checker }} display:flex; align-items:center; justify-content:center;"><span aria-hidden="true" style="width:{{ batchItem.bw }}; height:{{ batchItem.bh }}; background-color:{{ batchItem.color }}; border-radius:{{ batchItem.rad }}; box-shadow:rgba(0,0,0,0.22) 3px 5px 30px 0;"></span></div>
+<div style="padding:8px 20px 0; font-size:12px; color:#7a7a7a;">PNG with transparency</div>
+<div style="padding:16px 20px 28px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+<button onClick="{{ batchItemRemove }}" style="height:48px; border-radius:999px; border:1px solid #1d1d1f; background:transparent; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer;" style-active="transform:scale(0.97)">Remove</button>
+<button onClick="{{ batchItemDownload }}" style="height:48px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer;" style-active="transform:scale(0.97)">Download PNG</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isFilters }}">
+<div style="padding:8px 20px 0; display:flex; flex-direction:column; gap:20px; overflow-y:auto; flex:1; min-height:0;">
+<div style="width:36px; height:5px; border-radius:999px; background:#e0e0e0; align-self:center;"></div>
+<div style="display:flex; align-items:center; justify-content:space-between;"><span style="font-size:21px; font-weight:600; letter-spacing:0.231px;">Filters</span><span onClick="{{ clearFilters }}" style="font-size:15px; color:#1d1d1f; text-decoration:underline; text-underline-offset:2px; cursor:pointer;">Clear</span></div>
+<div style="display:flex; flex-direction:column; gap:8px;">
+<span style="font-size:14px; font-weight:600; letter-spacing:-0.224px;">Type</span>
+<div style="display:flex; flex-wrap:wrap; gap:6px;"><sc-for list="{{ fTypeChips }}" as="c"><div onClick="{{ c.onClick }}" style="padding:{{ c.pad }}; border:{{ c.border }}; background:{{ c.bg }}; border-radius:999px; font-size:14px; cursor:pointer;">{{ c.label }}</div></sc-for></div>
+</div>
+<div style="display:flex; flex-direction:column; gap:8px;">
+<span style="font-size:14px; font-weight:600; letter-spacing:-0.224px;">Brand</span>
+<div style="display:flex; flex-wrap:wrap; gap:6px;"><sc-for list="{{ fBrandChips }}" as="c"><div onClick="{{ c.onClick }}" style="padding:{{ c.pad }}; border:{{ c.border }}; background:{{ c.bg }}; border-radius:999px; font-size:14px; cursor:pointer;">{{ c.label }}</div></sc-for></div>
+</div>
+<div style="display:flex; flex-direction:column; gap:8px;">
+<span style="font-size:14px; font-weight:600; letter-spacing:-0.224px;">Tags</span>
+<div style="display:flex; flex-wrap:wrap; gap:6px;"><sc-for list="{{ fTagChips }}" as="c"><div onClick="{{ c.onClick }}" style="padding:{{ c.pad }}; border:{{ c.border }}; background:{{ c.bg }}; border-radius:999px; font-size:14px; cursor:pointer;">{{ c.label }}</div></sc-for></div>
+<span style="font-size:12px; color:#7a7a7a;">With several tags, only garments that have all of them are shown.</span>
+</div>
+</div>
+<div style="padding:16px 20px 28px;"><button onClick="{{ closeSheet }}" style="width:100%; height:48px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer;" style-active="transform:scale(0.97)">{{ showResultsLabel }}</button></div>
+</sc-if>
+
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showPill }}">
+<div style="position:absolute; {{ pillPos }} z-index:4500; display:flex; justify-content:center; pointer-events:none;">
+<button onClick="{{ openQueue }}" style="pointer-events:auto; height:40px; padding:0 16px 0 10px; border-radius:999px; border:1px solid #1d1d1f; background:#f0d7d7; color:#1d1d1f; font-size:14px; letter-spacing:-0.224px; display:flex; align-items:center; gap:8px; cursor:pointer;" style-active="transform:scale(0.95)">
+<span aria-hidden="true" style="width:20px; height:20px; border-radius:50%; background:{{ pillRing }}; display:flex; align-items:center; justify-content:center;"><span style="width:14px; height:14px; border-radius:50%; background:#f0d7d7;"></span></span>
+<span>{{ pillLabel }}</span>
+</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasConfirm }}">
+<div style="position:absolute; inset:0; z-index:6000; background:rgba(0,0,0,0.32); display:flex; align-items:center; justify-content:center; padding:24px;">
+<div style="width:100%; max-width:320px; background:#fff; border-radius:18px; padding:24px 20px 16px; display:flex; flex-direction:column; gap:8px; text-align:center;">
+<div style="font-size:17px; font-weight:600; letter-spacing:-0.374px;">{{ confirm.title }}</div>
+<div style="font-size:14px; line-height:1.43; color:#333333; letter-spacing:-0.224px; text-wrap:pretty;">{{ confirm.body }}</div>
+<div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+<button onClick="{{ confirmOk }}" style="height:44px; border-radius:999px; border:none; background:#f0d7d7; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer;" style-active="transform:scale(0.95)">{{ confirm.ok }}</button>
+<button onClick="{{ confirmCancel }}" style="height:44px; border-radius:999px; border:none; background:transparent; color:#1d1d1f; font-size:17px; letter-spacing:-0.374px; cursor:pointer;">{{ confirm.cancel }}</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasToast }}">
+<div style="position:absolute; left:16px; right:16px; bottom:{{ toastBottom }}; z-index:7000; display:flex; justify-content:center; pointer-events:none;">
+<div style="max-width:420px; background:#1d1d1f; color:#fff; border-radius:18px; padding:12px 16px; display:flex; align-items:center; gap:16px; pointer-events:auto;">
+<div style="display:flex; flex-direction:column; gap:4px;">
+<span style="font-size:14px; line-height:1.43; letter-spacing:-0.224px;">{{ toast.msg }}</span>
+<sc-if value="{{ toast.flag }}"><span style="font-family:ui-monospace,Menlo,monospace; font-size:10px; color:#cccccc;">{{ toast.flag }}</span></sc-if>
+</div>
+<sc-if value="{{ toast.actionLabel }}"><span onClick="{{ toastAction }}" style="font-size:14px; color:#f0d7d7; cursor:pointer; white-space:nowrap;">{{ toast.actionLabel }}</span></sc-if>
+</div>
+</div>
+</sc-if>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;device&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Mobile&quot;,&quot;Tablet&quot;,&quot;Desktop&quot;],&quot;default&quot;:&quot;Mobile&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Dresser&quot;,&quot;Catalog&quot;,&quot;Favorites&quot;,&quot;Favorite detail&quot;,&quot;Settings&quot;,&quot;Login&quot;,&quot;Waitlist&quot;,&quot;Cut out photos&quot;],&quot;default&quot;:&quot;Dresser&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;sampleData&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Full closet&quot;,&quot;Empty closet&quot;],&quot;default&quot;:&quot;Full closet&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;showFlags&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const h = React.createElement;
+const MONO = "ui-monospace, SFMono-Regular, Menlo, monospace";
+const BLUE = '#1d1d1f';
+const SLOTS = [
+  {id:'base', label:'Base layer', plural:'tops', types:['T-shirt','Shirt','Top','Bodysuit']},
+  {id:'mid', label:'Mid layer', plural:'mid layers', types:['Sweater','Sweatshirt','Cardigan','Vest']},
+  {id:'outer', label:'Outerwear', plural:'outerwear', types:['Jacket','Coat','Bomber','Trench coat']},
+  {id:'bottom', label:'Bottoms', plural:'bottoms', types:['Trousers','Jeans','Skirt','Shorts']},
+  {id:'full', label:'Full body', plural:'dresses or jumpsuits', types:['Dress','Jumpsuit']},
+  {id:'shoes', label:'Shoes', plural:'shoes', types:['Sneakers','Boots','Sandals','Heels']},
+  {id:'bag', label:'Bag', plural:'bags', types:['Handbag','Backpack','Crossbody']},
+  {id:'jewelry', label:'Jewelry', plural:'jewelry', types:['Necklace','Earrings','Ring','Bracelet']},
+  {id:'acc', label:'Accessories', plural:'accessories', types:['Hat','Sunglasses','Belt','Scarf']},
+];
+const SLOT = Object.fromEntries(SLOTS.map(s => [s.id, s]));
+const TYPE_SLOT = {}; SLOTS.forEach(s => s.types.forEach(t => TYPE_SLOT[t] = s.id));
+const SHAPE = {
+  base:{ratio:1, rad:'26% 26% 12% 12% / 22% 22% 10% 10%'},
+  mid:{ratio:1.05, rad:'22% 22% 16% 16% / 18% 18% 12% 12%'},
+  outer:{ratio:1.25, rad:'20% 20% 8% 8% / 14% 14% 6% 6%'},
+  bottom:{ratio:1.75, rad:'14% 14% 8% 8% / 6% 6% 4% 4%'},
+  full:{ratio:1.9, rad:'34% 34% 14% 14% / 16% 16% 8% 8%'},
+  shoes:{ratio:0.5, rad:'999px'},
+  bag:{ratio:0.9, rad:'40% 40% 14% 14% / 34% 34% 12% 12%'},
+  jewelry:{ratio:1, rad:'50%'},
+  acc:{ratio:0.5, rad:'40% 40% 30% 30% / 60% 60% 40% 40%'},
+};
+const ANCH = {acc:{x:16,y:12,w:26,r:-8}, outer:{x:30,y:40,w:40,r:-4}, mid:{x:47,y:36,w:38,r:3}, base:{x:62,y:33,w:34,r:-2}, full:{x:50,y:58,w:36,r:1}, bottom:{x:50,y:84,w:30,r:1}, bag:{x:84,y:74,w:24,r:6}, shoes:{x:74,y:120,w:30,r:-5}, jewelry:{x:86,y:14,w:12,r:0}};
+const ZDEF = {bottom:1, full:1, base:2, mid:3, outer:4, shoes:5, bag:6, jewelry:7, acc:8};
+const SEASONS = ['Spring','Summer','Autumn','Winter'];
+const SUGGESTED = ['elegant','comfy','work','party','weekend'];
+const RATIOS = [{id:'1:1',label:'Square',a:1,px:'1080 × 1080'},{id:'4:5',label:'Portrait',a:1.25,px:'1080 × 1350'},{id:'9:16',label:'Story',a:16/9,px:'1080 × 1920'}];
+const PALETTE = ['#D9C4B0','#9FB3C8','#C7B8D6','#B9C7A8','#E2C6A0','#A89F96'];
+const TODAY = '2026-10-01';
+const DEVICES = {Mobile:{w:402,h:874,r:'48px'}, Tablet:{w:834,h:1112,r:'32px'}, Desktop:{w:1280,h:820,r:'14px'}};
+const SCREENS = {'Catalog':'catalog','Dresser':'dresser','Favorites':'favorites','Favorite detail':'fav','Settings':'settings','Login':'login','Waitlist':'waitlist','Cut out photos':'cutout'};
+const CHECKER = 'background-color:#fff; background-image:conic-gradient(#ececec 25%, #fff 0 50%, #ececec 0 75%, #fff 0); background-size:16px 16px;';
+const PHOTO_BG = 'background:#d9d4cc;';
+const BATCH_TYPES = ['T-shirt','Shirt','Sweater','Jacket','Jeans','Skirt','Dress','Sneakers','Boots','Handbag','Hat','Scarf'];
+const BATCH_COLORS = ['#E8C9C1','#7C93B5','#2F2F31','#C49A6C','#B9C7A8','#F2F2F0','#9E2B3A','#CDB592','#5B6B5A','#C7B8D6'];
+const KEY = 'bbcloset.dresser.v1';
+const ALL = SEASONS;
+const G0 = [
+  ['g1','','T-shirt','#ECE9E2','Uniqlo',['Spring','Summer'],['comfy','weekend']],
+  ['g2','Striped shirt','Shirt','#C9D6E3','vintage',['Spring','Autumn'],['work']],
+  ['g3','','Top','#3A3A3C','Zara',['Summer'],['party']],
+  ['g4','The flower shirt','Shirt','#E8C9C1','Bershka',['Summer'],['weekend']],
+  ['g5','','Sweatshirt','#B8B8BC','',['Autumn','Winter'],['comfy']],
+  ['g6','Cream cardigan','Cardigan','#EADFC8','Mango',['Spring','Autumn'],['elegant']],
+  ['g7','','Sweater','#3D4A66','COS',['Winter'],['work']],
+  ['g8','Denim jacket','Jacket','#7C93B5',"Levi's",['Spring','Autumn'],['weekend']],
+  ['g9','Camel coat','Coat','#C49A6C','Zara',['Winter'],['elegant'],true],
+  ['g10','','Trench coat','#CDB592','Mango',['Spring','Autumn'],['work','elegant']],
+  ['g11','Ripped jeans','Jeans','#6E86AB',"Levi's",ALL,['weekend']],
+  ['g12','Black trousers','Trousers','#2F2F31','COS',ALL,['work','elegant']],
+  ['g13','','Skirt','#B5A1C2','Zara',['Spring','Summer'],['party']],
+  ['g14','','Shorts','#8FA6C6','Bershka',['Summer'],[],true],
+  ['g15','Slip dress','Dress','#D9B8A0','vintage',['Summer'],['party','elegant']],
+  ['g16','','Jumpsuit','#A7B49A','Mango',['Summer'],['comfy']],
+  ['g17','White sneakers','Sneakers','#F2F2F0','Veja',ALL,['comfy','weekend']],
+  ['g18','','Boots','#4A3B32','',['Autumn','Winter'],['elegant']],
+  ['g19','','Sandals','#C8A27E','',['Summer'],[],true],
+  ['g20','Shoulder bag','Handbag','#8B5E3C','vintage',[],['elegant']],
+  ['g21','','Backpack','#5B6B5A','Eastpak',[],['work']],
+  ['g22','Pearl necklace','Necklace','#F3EFE6','',[],['elegant']],
+  ['g23','Gold hoops','Earrings','#D8B65A','',[],['party']],
+  ['g24','','Ring','#C9CCD1','',[],[]],
+  ['g25','','Sunglasses','#2A2A2C','Ray-Ban',['Summer'],['weekend']],
+  ['g26','','Hat','#B04A3F','',['Winter'],['comfy']],
+  ['g27','Basic white tee','T-shirt','#FAFAF7','Uniqlo',['Spring','Summer'],['comfy']],
+  ['g28','','T-shirt','#1F1F21','H&M',ALL,['weekend']],
+  ['g29','Oxford shirt','Shirt','#DCE4EE','COS',['Spring','Autumn'],['work']],
+  ['g30','','Shirt','#F4E9D8','Mango',['Spring','Summer'],['elegant']],
+  ['g31','Satin top','Top','#E7D3C9','Zara',['Summer'],['party']],
+  ['g32','','Top','#9E2B3A','Zara',['Summer'],['party']],
+  ['g33','Lace bodysuit','Bodysuit','#2B2B2D','',ALL,['party']],
+  ['g34','','Bodysuit','#EFE3D3','Mango',['Spring','Summer'],[]],
+  ['g35','Linen shirt','Shirt','#E9E4D6','Mango',['Summer'],['weekend']],
+  ['g36','Grey hoodie','Sweatshirt','#A9A9AE','H&M',['Autumn','Winter'],['comfy']],
+  ['g37','','Sweater','#C9A47A','Uniqlo',['Autumn','Winter'],['comfy']],
+  ['g38','Cable knit','Sweater','#F1EBDD','Mango',['Winter'],['elegant']],
+  ['g39','','Cardigan','#6F7F67','COS',['Spring','Autumn'],['work']],
+  ['g40','Knit vest','Vest','#8C7B6B','vintage',['Spring','Autumn'],['work']],
+  ['g41','','Vest','#2E3440','Zara',['Autumn','Winter'],[]],
+  ['g42','Mohair jumper','Sweater','#E6B8C2','',['Winter'],['party']],
+  ['g43','Black blazer','Jacket','#232325','Zara',ALL,['work','elegant']],
+  ['g44','Leather jacket','Jacket','#1B1B1C','vintage',['Spring','Autumn'],['party']],
+  ['g45','','Bomber','#4F5B3E','Bershka',['Spring','Autumn'],['weekend']],
+  ['g46','','Bomber','#C8B9A6','H&M',['Spring','Autumn'],[]],
+  ['g47','Wool coat','Coat','#5E5B57','COS',['Winter'],['elegant']],
+  ['g48','Puffer','Coat','#ECE9E4','Uniqlo',['Winter'],['comfy']],
+  ['g49','','Trench coat','#A88F6A','vintage',['Spring','Autumn'],['elegant']],
+  ['g50','Wide-leg jeans','Jeans','#8DA3C2','Zara',ALL,['weekend']],
+  ['g51','','Jeans','#2E3A55','COS',ALL,['work']],
+  ['g52','Linen trousers','Trousers','#E4DCCB','Mango',['Summer'],['weekend']],
+  ['g53','','Trousers','#7A6A58','vintage',['Autumn','Winter'],['work']],
+  ['g54','Pleated skirt','Skirt','#2B2B2D','COS',['Spring','Autumn'],['work']],
+  ['g55','Midi skirt','Skirt','#D8C3A5','Mango',['Spring','Summer'],['elegant']],
+  ['g56','','Shorts','#F0ECE3','H&M',['Summer'],['weekend']],
+  ['g57','Denim shorts','Shorts','#7E97BC','Bershka',['Summer'],['weekend']],
+  ['g58','Black dress','Dress','#1E1E20','Zara',ALL,['party','elegant']],
+  ['g59','Floral dress','Dress','#E3C4C9','Mango',['Spring','Summer'],['weekend']],
+  ['g60','','Dress','#6E8DA8','',['Summer'],[]],
+  ['g61','Knit dress','Dress','#BFA88E','COS',['Autumn','Winter'],['comfy']],
+  ['g62','','Jumpsuit','#2F2F31','Zara',ALL,['elegant']],
+  ['g63','Denim jumpsuit','Jumpsuit','#5F7799','vintage',['Spring','Autumn'],['weekend']],
+  ['g64','Black sneakers','Sneakers','#2A2A2C','',ALL,['comfy']],
+  ['g65','','Sneakers','#C9C5BC','',['Spring','Summer'],['weekend']],
+  ['g66','Chelsea boots','Boots','#2B2420','',['Autumn','Winter'],['work']],
+  ['g67','Knee boots','Boots','#5A3E2E','',['Winter'],['elegant']],
+  ['g68','','Sandals','#1D1D1F','',['Summer'],['party']],
+  ['g69','Black heels','Heels','#1A1A1C','',ALL,['party','elegant']],
+  ['g70','','Heels','#E2C2B0','',['Spring','Summer'],['elegant']],
+  ['g71','Tote bag','Handbag','#D7C3A3','',[],['work']],
+  ['g72','','Handbag','#1E1E20','',[],['elegant']],
+  ['g73','Mini crossbody','Crossbody','#B04A3F','',[],['party']],
+  ['g74','','Crossbody','#C7B299','Mango',[],['weekend']],
+  ['g75','Canvas backpack','Backpack','#E3DCCB','',[],['weekend']],
+  ['g76','','Handbag','#9B7A5C','vintage',[],[]],
+  ['g77','Basket bag','Handbag','#CFAE7C','',['Summer'],['weekend']],
+  ['g78','Gold chain','Necklace','#D4AF55','',[],['elegant']],
+  ['g79','','Necklace','#C9CCD1','',[],[]],
+  ['g80','Pearl studs','Earrings','#F5F1E8','',[],['elegant']],
+  ['g81','','Earrings','#C9CCD1','',[],['party']],
+  ['g82','Signet ring','Ring','#D8B65A','',[],[]],
+  ['g83','','Bracelet','#D4AF55','',[],['elegant']],
+  ['g84','Silver bangle','Bracelet','#BFC3C9','',[],[]],
+  ['g85','','Ring','#E7C9C9','',[],['party']],
+  ['g86','Black belt','Belt','#1F1F21','',[],['work']],
+  ['g87','','Belt','#8B5E3C','vintage',[],[]],
+  ['g88','Silk scarf','Scarf','#E8C9C1','vintage',['Spring','Summer'],['elegant']],
+  ['g89','Wool scarf','Scarf','#7A5A4A','',['Winter'],['comfy']],
+  ['g90','Cap','Hat','#2E3440','',['Spring','Summer'],['weekend']],
+  ['g91','','Sunglasses','#6B4A2F','Mango',['Summer'],[]],
+  ['g92','Bucket hat','Hat','#E9E4D6','',['Summer'],['weekend']],
+];
+let UID = 1000; const uid = p => p + (UID++);
+const fmtDate = d => { const [y,m,dd] = d.split('-').map(Number); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1] + ' ' + dd + ', ' + y; };
+const lum = hex => { const n = parseInt(hex.slice(1),16); return (0.299*((n>>16)&255) + 0.587*((n>>8)&255) + 0.114*(n&255))/255; };
+const inkFor = hex => lum(hex) < 0.5 ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.5)';
+const stripesFor = hex => lum(hex) < 0.5 ? 'repeating-linear-gradient(135deg, rgba(255,255,255,0.07) 0 6px, transparent 6px 12px)' : 'repeating-linear-gradient(135deg, rgba(0,0,0,0.035) 0 6px, transparent 6px 12px)';
+const disp = g => g ? (g.name || g.type) : '';
+const chip = (label, on, onClick, extra) => ({label, on, onClick, bg: on ? '#f0d7d7' : 'transparent', border: on ? '2px solid #1d1d1f' : '1px solid #e0e0e0', pad: on ? '7px 13px' : '8px 14px', ...(extra||{})});
+
+function autoLayout(items, aspect) {
+  const jew = items.filter(i => i.slot === 'jewelry').sort((a,b) => a.t - b.t).map(i => i.id);
+  const boxes = {};
+  items.forEach(it => { if (it.manual) return; const a = ANCH[it.slot]; const j = jew.indexOf(it.id); const w = a.w; boxes[it.id] = {x:a.x, y:a.y + (j > 0 ? j*15 : 0), w, h:w*SHAPE[it.slot].ratio, r:a.r}; });
+  const ids = Object.keys(boxes); if (!ids.length) return items;
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  ids.forEach(id => { const b = boxes[id]; x0=Math.min(x0,b.x-b.w/2); x1=Math.max(x1,b.x+b.w/2); y0=Math.min(y0,b.y-b.h/2); y1=Math.max(y1,b.y+b.h/2); });
+  const p = 0.08, aw = 1-2*p, ah = aspect-2*p;
+  const base = Math.min(aw/100, ah/130);
+  const s = Math.min(aw/(x1-x0), ah/(y1-y0), base*1.5);
+  const bx = (x0+x1)/2, by = (y0+y1)/2;
+  return items.map(it => { const b = boxes[it.id]; if (!b) return it; return {...it, cx:0.5+(b.x-bx)*s, cy:aspect/2+(b.y-by)*s, w:b.w*s, h:b.h*s, rot:b.r, z: it.zManual ? it.z : ZDEF[it.slot] + Math.max(0, jew.indexOf(it.id))*0.01}; });
+}
+function fitItems(items, aspect, p) {
+  p = p ?? 0.09; if (!items.length) return [];
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  items.forEach(it => { const r = it.rot*Math.PI/180, c = Math.abs(Math.cos(r)), sn = Math.abs(Math.sin(r)); const hw = (c*it.w+sn*it.h)/2, hh = (sn*it.w+c*it.h)/2; x0=Math.min(x0,it.cx-hw); x1=Math.max(x1,it.cx+hw); y0=Math.min(y0,it.cy-hh); y1=Math.max(y1,it.cy+hh); });
+  const s = Math.min((1-2*p)/(x1-x0), (aspect-2*p)/(y1-y0), 3);
+  const bx = (x0+x1)/2, by = (y0+y1)/2;
+  return items.map(it => ({...it, cx:0.5+(it.cx-bx)*s, cy:aspect/2+(it.cy-by)*s, w:it.w*s, h:it.h*s}));
+}
+function letterbox(items, fromA, toA) {
+  const s = Math.min(1, toA/fromA), ox = (1-s)/2, oy = (toA - fromA*s)/2;
+  return items.map(it => ({...it, cx:it.cx*s+ox, cy:it.cy*s+oy, w:it.w*s, h:it.h*s}));
+}
+function makeItems(gids, garments, aspect) {
+  const items = gids.map((gid, i) => { const g = garments.find(x => x.id === gid); return {id:uid('i'), gid, slot:g.slot, cx:.5, cy:.5, w:.3, h:.3, rot:0, z:ZDEF[g.slot], locked:false, manual:false, t:i}; });
+  return autoLayout(items, aspect);
+}
+
+class Component extends DCLogic {
+  state = this.makeState(this.props.sampleData, this.props.startScreen);
+
+  makeState(sample, start) {
+    const full = (sample ?? 'Full closet') !== 'Empty closet';
+    const garments = full ? G0.map(([id,name,type,color,brand,seasons,tags,archived]) => ({id,name,type,slot:TYPE_SLOT[type],color,brand,seasons:[...seasons],tags:[...tags],archived:!!archived})) : [];
+    const favorites = full ? [
+      {id:'f1', name:'Friday dinner', date:'2026-09-26', aspect:1.25, items:makeItems(['g15','g18','g20','g23','g8'], garments, 1.25)},
+      {id:'f2', name:'', date:'2026-09-24', aspect:1.25, items:makeItems(['g1','g11','g17','g21'], garments, 1.25)},
+      {id:'f3', name:'Interview', date:'2026-09-15', aspect:1.25, items:makeItems(['g2','g12','g10','g18','g20','g22'], garments, 1.25)},
+    ] : [];
+    let canvas = [], defaults = ['base','bottom','shoes','bag'];
+    if (full) {
+      canvas = makeItems(['g1','g11','g17','g20','g23','g8'], garments, 1.25);
+      try { const d = JSON.parse(localStorage.getItem(KEY) || 'null'); if (d && Array.isArray(d.canvas) && d.canvas.every(i => garments.some(g => g.id === i.gid))) { canvas = d.canvas; if (Array.isArray(d.defaults)) defaults = d.defaults; } } catch (e) {}
+    }
+    const vocab = [...new Set([...SUGGESTED, ...garments.flatMap(g => g.tags)])];
+    let screen = SCREENS[start ?? 'Dresser'] || 'dresser';
+    let favId = null;
+    if (screen === 'fav') { if (favorites.length) favId = favorites[0].id; else screen = 'favorites'; }
+    return {screen, favId, garments, favorites, canvas, defaults, vocab, hist:[], fut:[], sel:null, stageAspect:1.25,
+      panelSlot:'base', panelOpen:true, panelFull:false, slotMenu:false, defaultsOpen:false,
+      catView:'active', catSlot:'all', fTypes:[], fBrands:[], fTags:[],
+      sheet:null, addStep:'camera', formMode:'add', draft:null, tagInput:'', progress:0,
+      queue:[], draftJob:null, bulk:[], review:[], reviewIdx:0, reviewMore:false, reviewAdded:0, selecting:false, selIds:[], chooseAlpha:false, chooseMode:'cut', modelReady:false, batchDownloaded:false, batchSel:null,
+      favName:'', exportRatio:'4:5', exportFrom:'dresser', favDraft:null, favBase:null, favDirty:false, favEdit:false,
+      toast:null, confirm:null, jewelryMax:3, lang:'en', tagEdit:null, tagEditVal:'',
+      loginEmail:'', loginPw:'', waitEmail:'', waitDone:false,
+      vw: typeof window !== 'undefined' ? window.innerWidth : 1200, vh: typeof window !== 'undefined' ? window.innerHeight : 900};
+  }
+
+  componentDidMount() {
+    this._mv = e => this.onMove(e); this._up = e => this.onUp(e);
+    this._rs = () => this.setState({vw:window.innerWidth, vh:window.innerHeight});
+    window.addEventListener('pointermove', this._mv); window.addEventListener('pointerup', this._up); window.addEventListener('pointercancel', this._up); window.addEventListener('resize', this._rs);
+    this._rs();
+  }
+  componentWillUnmount() {
+    window.removeEventListener('pointermove', this._mv); window.removeEventListener('pointerup', this._up); window.removeEventListener('pointercancel', this._up); window.removeEventListener('resize', this._rs);
+    if (this._ro) this._ro.disconnect(); clearTimeout(this._tt); clearInterval(this._pi); clearInterval(this._qi);
+  }
+  componentDidUpdate(prev) {
+    if (prev.sampleData !== this.props.sampleData) { try { localStorage.removeItem(KEY); } catch (e) {} this.setState(this.makeState(this.props.sampleData, this.props.startScreen)); }
+    else if (prev.startScreen !== this.props.startScreen) { const sc = SCREENS[this.props.startScreen] || 'dresser'; if (sc === 'fav') { if (this.state.favorites[0]) this.openFav(this.state.favorites[0].id); } else this.setState({screen:sc, sel:null, sheet:null, favDirty:false}); }
+  }
+
+  // ---------- helpers
+  G(id) { return this.state.garments.find(g => g.id === id); }
+  active() { return this.state.garments.filter(g => !g.archived && !g.pending); }
+  valid(items) { return items.filter(i => this.G(i.gid)); }
+  persist() { try { localStorage.setItem(KEY, JSON.stringify({canvas:this.state.canvas, defaults:this.state.defaults})); } catch (e) {} }
+  toast(msg, actionLabel, action, flag, ms) {
+    clearTimeout(this._tt);
+    this.setState({toast:{msg, actionLabel:actionLabel||'', action, flag: (this.props.showFlags ?? true) ? (flag||'') : ''}});
+    this._tt = setTimeout(() => this.setState({toast:null}), ms || 3500);
+  }
+  ask(c) { this.setState({confirm:c}); }
+
+  stageRef = el => {
+    if (this._ro) { this._ro.disconnect(); this._ro = null; }
+    this._stageEl = el;
+    if (el && window.ResizeObserver) { this._ro = new ResizeObserver(() => this.measure()); this._ro.observe(el); }
+  };
+  measure() {
+    const el = this._stageEl; if (!el) return;
+    const r = el.getBoundingClientRect(); if (!r.width || !r.height) return;
+    const a = r.height / r.width; const s = this.state;
+    if (s.screen === 'fav') {
+      const f = s.favorites.find(x => x.id === s.favId);
+      if (f && (!s.favDraft || Math.abs(a - s.stageAspect) > 0.01)) {
+        const items = letterbox(this.valid(f.items), f.aspect, a);
+        this.setState({stageAspect:a, favDraft:items, favBase:items, favDirty:false});
+      }
+      return;
+    }
+    if (Math.abs(a - s.stageAspect) > 0.01) this.setState(st => ({stageAspect:a, canvas:autoLayout(st.canvas, a)}));
+  }
+
+  itemsOf(t) { return t === 'dresser' ? this.state.canvas : (this.state.favDraft || []); }
+  setCanvas(items, hist) {
+    this.setState(s => ({canvas:items, ...(hist === false ? {} : {hist:[...s.hist.slice(-49), s.canvas], fut:[]})}), () => this.persist());
+  }
+
+  // ---------- gestures
+  down(e, target, id, mode) {
+    e.stopPropagation();
+    const p = {x:e.clientX, y:e.clientY};
+    if (this.g && this.g.id === id && this.g.pointers.size === 1) { this.g.pointers.set(e.pointerId, p); this.startPinch(); return; }
+    const items = this.itemsOf(target); const it = items.find(i => i.id === id); if (!it || !this._stageEl) return;
+    this.g = {target, id, mode, pointers:new Map([[e.pointerId, p]]), p0:p, start:{...it}, rect:this._stageEl.getBoundingClientRect(), before:items, moved:false};
+    if (this.state.sel !== id) this.setState({sel:id, slotMenu:false});
+  }
+  stageDown = e => {
+    if (this.g && this.g.pointers.size === 1) { this.g.pointers.set(e.pointerId, {x:e.clientX, y:e.clientY}); this.startPinch(); return; }
+    const t = e.target;
+    if (t === e.currentTarget || (t.getAttribute && t.getAttribute('data-stagebg'))) this.setState({sel:null, slotMenu:false});
+  };
+  startPinch() {
+    const g = this.g; const it = this.itemsOf(g.target).find(i => i.id === g.id); const [a,b] = [...g.pointers.values()];
+    g.mode = 'pinch'; g.start = {...it}; g.d0 = Math.max(1, Math.hypot(b.x-a.x, b.y-a.y)); g.a0 = Math.atan2(b.y-a.y, b.x-a.x); g.m0 = {x:(a.x+b.x)/2, y:(a.y+b.y)/2};
+  }
+  onMove(e) {
+    const g = this.g; if (!g || !g.pointers.has(e.pointerId)) return;
+    g.pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+    const R = g.rect, W = R.width, s = g.start; const n = {...s};
+    if (g.mode === 'move') {
+      if (!g.moved && Math.hypot(e.clientX-g.p0.x, e.clientY-g.p0.y) < 4) return;
+      n.cx = s.cx + (e.clientX-g.p0.x)/W; n.cy = s.cy + (e.clientY-g.p0.y)/W;
+    } else if (g.mode === 'resize' || g.mode === 'rotate') {
+      const c = {x:R.left + s.cx*W, y:R.top + s.cy*W};
+      if (g.mode === 'resize') { let k = Math.hypot(e.clientX-c.x, e.clientY-c.y) / Math.max(1, Math.hypot(g.p0.x-c.x, g.p0.y-c.y)); k = Math.max(0.05/s.w, Math.min(1.4/s.w, k)); n.w = s.w*k; n.h = s.h*k; }
+      else n.rot = s.rot + (Math.atan2(e.clientY-c.y, e.clientX-c.x) - Math.atan2(g.p0.y-c.y, g.p0.x-c.x))*180/Math.PI;
+    } else if (g.mode === 'pinch') {
+      const [a,b] = [...g.pointers.values()];
+      let k = Math.hypot(b.x-a.x, b.y-a.y)/g.d0; k = Math.max(0.05/s.w, Math.min(1.4/s.w, k));
+      n.w = s.w*k; n.h = s.h*k; n.rot = s.rot + (Math.atan2(b.y-a.y, b.x-a.x) - g.a0)*180/Math.PI;
+      n.cx = s.cx + ((a.x+b.x)/2 - g.m0.x)/W; n.cy = s.cy + ((a.y+b.y)/2 - g.m0.y)/W;
+    }
+    n.manual = true; g.moved = true;
+    const items = this.itemsOf(g.target).map(i => i.id === g.id ? n : i);
+    if (g.target === 'dresser') this.setState({canvas:items}); else this.setState({favDraft:items});
+  }
+  onUp(e) {
+    const g = this.g; if (!g) return;
+    g.pointers.delete(e.pointerId);
+    if (g.pointers.size > 0) { if (g.mode === 'pinch') { const it = this.itemsOf(g.target).find(i => i.id === g.id); g.mode = 'move'; g.start = {...it}; g.p0 = [...g.pointers.values()][0]; } return; }
+    this.g = null;
+    if (!g.moved) return;
+    if (g.target === 'dresser') this.setState(s => ({hist:[...s.hist.slice(-49), g.before], fut:[]}), () => this.persist());
+    else this.setState({favDirty:true});
+  }
+
+  // ---------- canvas rendering
+  garmentEl(g, mini) {
+    return h('div', {key:'g', style:{position:'absolute', inset:0, backgroundColor:g.color, backgroundImage:stripesFor(g.color), borderRadius:SHAPE[g.slot].rad, boxShadow: mini ? 'rgba(0,0,0,0.22) 1px 2px 8px 0' : 'rgba(0,0,0,0.22) 3px 5px 30px 0', border:'1px solid rgba(0,0,0,0.05)', boxSizing:'border-box', display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden', pointerEvents:'none'}},
+      h('span', {style:{fontFamily:MONO, fontSize: mini ? 'max(6px, 2.6cqw)' : 'max(9px, 2.2cqw)', color:inkFor(g.color), whiteSpace:'nowrap'}}, g.type.toLowerCase()));
+  }
+  handle(target, id, mode, pos) {
+    return h('div', {key:mode, onPointerDown:e => this.down(e, target, id, mode), style:{position:'absolute', width:36, height:36, display:'flex', alignItems:'center', justifyContent:'center', cursor: mode === 'rotate' ? 'grab' : 'nwse-resize', touchAction:'none', zIndex:3, ...pos}},
+      h('div', {style:{width:18, height:18, borderRadius:'50%', background:'#fff', border:'2px solid ' + BLUE, boxSizing:'border-box', pointerEvents:'none'}}));
+  }
+  lockEl(it) {
+    const L = it.locked;
+    return h('div', {key:'lock', title: L ? 'Locked: Replace keeps it' : 'Lock', onPointerDown:e => e.stopPropagation(), onClick:e => { e.stopPropagation(); this.toggleLock(it.id); },
+      style:{position:'absolute', top:-14, left:-14, width:32, height:32, borderRadius:'50%', background: L ? '#1d1d1f' : 'rgba(210,210,215,0.72)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', color: L ? '#fff' : '#1d1d1f', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', zIndex:4, transform:`rotate(${-it.rot}deg)`}},
+      h('svg', {width:14, height:14, viewBox:'0 0 24 24', fill:'none', stroke:'currentColor', strokeWidth:2.2, strokeLinecap:'round'}, h('rect', {x:5, y:11, width:14, height:9, rx:2}), h('path', {d: L ? 'M8 11V8a4 4 0 0 1 8 0v3' : 'M8 11V8a4 4 0 0 1 7.6-1.8'})));
+  }
+  layer(items, aspect, o) {
+    o = o || {};
+    return h('div', {'data-stagebg':'1', style:{position:'absolute', inset:0}}, items.map(it => {
+      const g = this.G(it.gid); if (!g) return null;
+      const sel = o.interactive && this.state.sel === it.id;
+      const kids = [this.garmentEl(g, o.mini)];
+      if (sel) {
+        kids.push(h('div', {key:'f', style:{position:'absolute', inset:-6, border:'1.5px solid ' + BLUE, borderRadius:8, pointerEvents:'none'}}));
+        kids.push(h('div', {key:'rl', style:{position:'absolute', left:'50%', top:-26, width:1.5, height:20, background:BLUE, transform:'translateX(-50%)', pointerEvents:'none'}}));
+        kids.push(this.handle(o.target, it.id, 'rotate', {left:'50%', top:-44, marginLeft:-18}));
+        kids.push(this.handle(o.target, it.id, 'resize', {right:-24, bottom:-24}));
+      }
+      if (o.locks) kids.push(this.lockEl(it));
+      return h('div', {key:it.id, onPointerDown: o.interactive ? e => this.down(e, o.target, it.id, 'move') : undefined,
+        style:{position:'absolute', left:((it.cx-it.w/2)*100)+'%', top:((it.cy-it.h/2)/aspect*100)+'%', width:(it.w*100)+'%', height:(it.h/aspect*100)+'%', transform:`rotate(${it.rot}deg)`, zIndex:Math.round(it.z*100), touchAction:'none', cursor: o.interactive ? 'grab' : 'default'}}, kids);
+    }));
+  }
+  mini(items, aspect) {
+    return h('div', {style:{position:'relative', width:'100%', aspectRatio:`1 / ${aspect}`, containerType:'inline-size', background:'#f5f5f7', overflow:'hidden'}}, this.layer(fitItems(this.valid(items), aspect), aspect, {mini:true}));
+  }
+
+  // ---------- dresser actions
+  place(g) {
+    const s = this.state; let items = s.canvas.slice();
+    const ex = items.find(i => i.gid === g.id);
+    if (ex) { this.setCanvas(autoLayout(items.filter(i => i !== ex), s.stageAspect)); this.setState({sel:null}); return; }
+    const removed = [];
+    const rm = pred => { items = items.filter(i => { if (pred(i)) { removed.push(i); return false; } return true; }); };
+    if (g.slot === 'full') rm(i => ['full','base','bottom'].includes(i.slot));
+    else if (g.slot === 'base' || g.slot === 'bottom') rm(i => i.slot === g.slot || i.slot === 'full');
+    else if (g.slot === 'jewelry') { const jw = items.filter(i => i.slot === 'jewelry').sort((a,b) => a.t-b.t); if (jw.length >= s.jewelryMax) rm(i => i.id === jw[0].id); }
+    else rm(i => i.slot === g.slot);
+    items.push({id:uid('i'), gid:g.id, slot:g.slot, cx:.5, cy:.5, w:.3, h:.3, rot:0, z:ZDEF[g.slot], locked:false, manual:false, t:Date.now()});
+    this.setCanvas(autoLayout(items, s.stageAspect));
+    this.setState({sel:null});
+    const cross = removed.filter(r => r.slot !== g.slot);
+    if (cross.length) this.toast(`${disp(g)} replaced ${cross.map(r => disp(this.G(r.gid))).join(' and ')}.`, 'Undo', () => this.undo(), 'OPEN · notify, or swap silently?');
+    else if (g.slot === 'jewelry' && removed.length) this.toast(`Up to ${s.jewelryMax} jewelry pieces. ${disp(this.G(removed[0].gid))} was taken off.`, 'Undo', () => this.undo(), 'OPEN · replace oldest silently, or ask?');
+  }
+  drawerStep(dir) {
+    const s = this.state; const lvl = !s.panelOpen ? 0 : s.panelFull ? 2 : 1;
+    const n = Math.max(0, Math.min(2, lvl + dir));
+    this.setState({panelOpen: n > 0, panelFull: n === 2, slotMenu:false});
+  }
+  undo = () => { const s = this.state; if (!s.hist.length) return; this.setState({canvas:s.hist[s.hist.length-1], hist:s.hist.slice(0,-1), fut:[s.canvas, ...s.fut], sel:null}, () => this.persist()); };
+  redo = () => { const s = this.state; if (!s.fut.length) return; this.setState({canvas:s.fut[0], fut:s.fut.slice(1), hist:[...s.hist, s.canvas], sel:null}, () => this.persist()); };
+  replace = () => {
+    const s = this.state; if (!s.canvas.length) return;
+    const used = new Set(s.canvas.map(i => i.gid)); let changed = 0;
+    const items = s.canvas.map(it => { if (it.locked) return it; const pool = this.active().filter(g => g.slot === it.slot && !used.has(g.id)); if (!pool.length) return it; const ng = pool[Math.floor(Math.random()*pool.length)]; used.add(ng.id); changed++; return {...it, gid:ng.id}; });
+    if (!changed) { this.toast('Nothing to swap. Every piece is locked or the only one in its category.'); return; }
+    this.setCanvas(items); this.setState({sel:null});
+  };
+  randomOutfit = () => {
+    const s = this.state; const act = this.active(); if (!act.length) { this.toast('Your closet is empty.', 'Add a garment', () => this.goCatalogAdd()); return; }
+    const by = sl => act.filter(g => g.slot === sl);
+    let slots = s.defaults.slice(); if (!slots.length) { this.setState({defaultsOpen:true}); this.toast('Pick at least one category for Random outfit.'); return; }
+    const hasFull = by('full').length > 0, wantsBB = slots.includes('base') || slots.includes('bottom');
+    let useFull = false;
+    if (slots.includes('full')) useFull = hasFull && (!wantsBB || Math.random() < 0.5);
+    else if (slots.includes('base') && slots.includes('bottom') && hasFull) useFull = Math.random() < 0.3;
+    if (useFull) { slots = slots.filter(x => x !== 'base' && x !== 'bottom'); if (!slots.includes('full')) slots.push('full'); }
+    else if (wantsBB) slots = slots.filter(x => x !== 'full');
+    const missing = [], items = [];
+    slots.forEach((sl, k) => { const pool = by(sl); if (!pool.length) { missing.push(sl); return; } const g = pool[Math.floor(Math.random()*pool.length)]; items.push({id:uid('i'), gid:g.id, slot:sl, cx:.5, cy:.5, w:.3, h:.3, rot:0, z:ZDEF[sl], locked:false, manual:false, t:k}); });
+    this.setCanvas(autoLayout(items, s.stageAspect)); this.setState({sel:null});
+    if (missing.length) this.toast(`You don't have any ${missing.map(m => SLOT[m].plural).join(' or ')} yet.`, 'Add one', () => this.goCatalogAdd(), null, 6000);
+  };
+  resetAuto = () => { this.setCanvas(autoLayout(this.state.canvas.map(i => ({...i, manual:false, zManual:false})), this.state.stageAspect)); };
+  toggleLock(id) { this.setState(s => ({canvas:s.canvas.map(i => i.id === id ? {...i, locked:!i.locked} : i)}), () => this.persist()); }
+  zMove(dir) {
+    const s = this.state, t = s.screen === 'fav' ? 'fav' : 'dresser'; const items = this.itemsOf(t); if (!s.sel) return;
+    const zs = items.map(i => i.z); const nz = dir > 0 ? Math.max(...zs) + 1 : Math.min(...zs) - 1;
+    const next = items.map(i => i.id === s.sel ? {...i, z:nz, zManual:true} : i);
+    if (t === 'dresser') this.setCanvas(next); else this.setState({favDraft:next, favDirty:true});
+  }
+  removeSel = () => { const s = this.state; if (!s.sel) return; this.setCanvas(autoLayout(s.canvas.filter(i => i.id !== s.sel), s.stageAspect)); this.setState({sel:null}); };
+  goCatalogAdd = () => { this.go('catalog'); this.openAdd(); };
+
+  // ---------- navigation
+  go(screen, extra) {
+    const s = this.state;
+    if (s.screen === 'fav' && s.favDirty && screen !== 'fav') {
+      this.ask({title:'Discard changes?', body:'You rearranged this favorite. Leave without saving?', ok:'Discard changes', cancel:'Keep editing', onOk:() => { this.setState({favDirty:false}, () => this.go(screen, extra)); }});
+      return;
+    }
+    const batchLeft = s.queue.filter(j => j.kind === 'batch' && j.status === 'done').length;
+    if (s.screen === 'cutout' && screen !== 'cutout' && batchLeft && !s.batchDownloaded) {
+      this.ask({title:'Leave without downloading?', body:`${batchLeft} cut-out${batchLeft > 1 ? 's are' : ' is'} not saved anywhere. Download them first or they will be lost.`, ok:'Leave', cancel:'Stay', onOk:() => { this.setState(st => ({queue:st.queue.filter(j => j.kind !== 'batch'), batchDownloaded:true}), () => this.go(screen, extra)); }});
+      return;
+    }
+    if (s.screen === 'cutout' && screen !== 'cutout' && s.batchDownloaded) this.setState(st => ({queue:st.queue.filter(j => j.kind !== 'batch' || j.status === 'queued' || j.status === 'running')}));
+    this.setState({screen, sel:null, slotMenu:false, favEdit:false, ...(extra||{})});
+  }
+  openFav(id) { this.setState({screen:'fav', favId:id, favDraft:null, favBase:null, favDirty:false, sel:null}, () => this.measure()); }
+
+  // ---------- garment form
+  openAdd = () => { this.setState({sheet:'add', addStep:'camera', formMode:'add', draftJob:null, tagInput:'', draft:{type:null, name:'', seasons:[], brand:'', tags:[], color:PALETTE[Math.floor(Math.random()*PALETTE.length)]}}); };
+  openEdit(g) { if (this.state.selecting) { this.setState(st => ({selIds: st.selIds.includes(g.id) ? st.selIds.filter(x => x !== g.id) : [...st.selIds, g.id]})); return; } if (g.pending) { this.setState({sheet:'queue'}); return; } this.setState({sheet:'add', addStep:'form', formMode:'edit', draftJob:null, tagInput:'', draft:{...g, seasons:[...g.seasons], tags:[...g.tags]}}); }
+  setDraft(p) { this.setState(s => ({draft:{...s.draft, ...p}})); }
+  shutter = () => this.setState({addStep:'choose', chooseAlpha:false, chooseMode:'cut'});
+  pickLibrary = () => this.setState({addStep:'choose', chooseAlpha:true, chooseMode:'ready'});
+  pickSeveral = () => {
+    const s = this.state; const room = Math.min(30, 500 - s.garments.length - s.review.length);
+    if (room <= 0) { this.toast('Your closet is full (500 garments).'); return; }
+    const n = Math.min(8, room);
+    const bulk = Array.from({length:n}, (_, i) => { const alpha = i % 4 === 3; return {id:uid('b'), color:PALETTE[Math.floor(Math.random()*PALETTE.length)], alpha, mode: alpha ? 'ready' : 'cut'}; });
+    this.setState({addStep:'bulk', bulk});
+  };
+  confirmBulk = () => {
+    const s = this.state; const jobs = [], items = [];
+    s.bulk.forEach(b => {
+      const it = {id:uid('r'), color:b.color, hasBg: b.mode === 'ready' && !b.alpha, jobId:null};
+      if (b.mode === 'cut') { const j = {id:uid('j'), kind:'garment', review:true, gid:null, color:b.color, status:'queued', progress:0, first:!s.modelReady && !s.queue.length && !jobs.length}; jobs.push(j); it.jobId = j.id; }
+      items.push(it);
+    });
+    this.setState(st => ({queue:[...st.queue, ...jobs], review:[...st.review, ...items], bulk:[], sheet:null, draftJob:null, screen:'catalog'}), () => this.startQueue());
+    this.toast(`${items.length} photos added. Review them in the Catalog.`, 'Review', () => this.openReview());
+  };
+  openReview = () => { const s = this.state; if (!s.review.length) return; this.loadReview(Math.min(s.reviewIdx, s.review.length - 1), {reviewAdded:0}); };
+  loadReview(idx, extra) {
+    const it = this.state.review[idx]; if (!it) return;
+    this.setState({sheet:'review', reviewIdx:idx, reviewMore:false, tagInput:'', draft:{type:null, name:'', seasons:[], brand:'', tags:[], color:it.color}, ...(extra||{})});
+  }
+  reviewNext(review, added) {
+    const s = this.state;
+    if (!review.length) { this.setState({review, sheet:null, reviewIdx:0}); if (added) this.toast(`${added} garment${added > 1 ? 's' : ''} added to your closet.`); return; }
+    const idx = Math.min(s.reviewIdx, review.length - 1);
+    this.setState({review}, () => this.loadReview(idx, {reviewAdded:added}));
+  }
+  reviewSave = () => {
+    const s = this.state, d = s.draft, it = s.review[s.reviewIdx]; if (!it || !d || !d.type) return;
+    const job = s.queue.find(j => j.id === it.jobId); const pending = !!job && job.status !== 'done';
+    const g = {id:uid('g'), name:d.name.trim(), type:d.type, slot:TYPE_SLOT[d.type], color:d.color, brand:d.brand.trim(), seasons:d.seasons, tags:d.tags, archived:false, pending};
+    this.setState(st => ({garments:[g, ...st.garments], catView:'active',
+      queue: job ? (pending ? st.queue.map(j => j.id === job.id ? {...j, gid:g.id, review:false} : j) : st.queue.filter(j => j.id !== job.id)) : st.queue}));
+    this.reviewNext(s.review.filter(x => x.id !== it.id), s.reviewAdded + 1);
+  };
+  reviewSkip = () => { const s = this.state; if (s.review.length < 2) { this.setState({sheet:null}); this.toast('Still to review: ' + s.review.length + '.'); return; } this.loadReview((s.reviewIdx + 1) % s.review.length); };
+  reviewDiscard = () => {
+    const s = this.state, it = s.review[s.reviewIdx]; if (!it) return;
+    this.setState(st => ({queue:st.queue.filter(j => j.id !== it.jobId)}));
+    this.reviewNext(s.review.filter(x => x.id !== it.id), s.reviewAdded);
+  };
+  bulkArchive = () => {
+    const s = this.state; if (!s.selIds.length) return;
+    const arch = s.catView !== 'archived'; const ids = s.selIds;
+    const prev = s.garments.filter(g => ids.includes(g.id)).map(g => [g.id, g.archived]);
+    this.setState(st => ({garments:st.garments.map(g => ids.includes(g.id) ? {...g, archived:arch} : g), selecting:false, selIds:[]}));
+    this.toast(`${ids.length} garment${ids.length > 1 ? 's' : ''} ${arch ? 'archived' : 'back in rotation'}.`, 'Undo', () => this.setState(st => ({garments:st.garments.map(g => { const p = prev.find(x => x[0] === g.id); return p ? {...g, archived:p[1]} : g; })})));
+  };
+  continueChoose = () => {
+    const s = this.state, d = s.draft, edit = s.formMode === 'edit';
+    this.dropDraftJob();
+    if (s.chooseMode === 'ready') { this.setState({addStep:'form', draftJob:null, draft:{...d, hasBg:!s.chooseAlpha}}); return; }
+    const job = {id:uid('j'), kind:'garment', gid: edit ? d.id : null, edit, color:d.color, newColor: edit ? PALETTE[Math.floor(Math.random()*PALETTE.length)] : null, status:'queued', progress:0, first:!s.modelReady && !s.queue.some(j => j.first)};
+    this.setState(st => ({queue:[...st.queue, job], draftJob:job.id, addStep:'form', draft:{...st.draft, hasBg:false}}), () => this.startQueue());
+  };
+  dropDraftJob() { const s = this.state; const j = s.queue.find(x => x.id === s.draftJob); if (j && !j.gid) this.setState(st => ({queue:st.queue.filter(x => x.id !== j.id)})); }
+  closeAddSheet = () => { if (this.state.sheet === 'add' && this.state.formMode === 'add') this.dropDraftJob(); this.setState({sheet:null, draftJob:null}); };
+  startQueue() { if (this._qi) return; this._qi = setInterval(() => this.tickQueue(), 120); }
+  tickQueue() {
+    const s = this.state;
+    const cur = s.queue.find(j => j.status === 'running') || s.queue.find(j => j.status === 'queued');
+    if (!cur) { clearInterval(this._qi); this._qi = null; return; }
+    const step = cur.first && !s.modelReady ? 2.5 : 5;
+    const p = Math.min(100, cur.progress + step);
+    if (p < 100) { this.setState(st => ({queue:st.queue.map(j => j.id === cur.id ? {...j, status:'running', progress:p} : j)})); return; }
+    const status = cur.fail ? 'error' : 'done';
+    this.setState(st => {
+      let garments = st.garments, draft = st.draft;
+      if (status === 'done' && cur.gid) garments = garments.map(g => g.id === cur.gid ? {...g, pending:false, ...(cur.edit ? {color:cur.newColor} : {})} : g);
+      if (status === 'done' && cur.edit && st.draftJob === cur.id && draft) draft = {...draft, color:cur.newColor};
+      return {garments, draft, modelReady:true, queue:st.queue.map(j => j.id === cur.id ? {...j, status, progress:100} : j)};
+    }, () => this.afterJob());
+  }
+  afterJob() {
+    const s = this.state;
+    const g = s.queue.filter(j => j.kind === 'garment');
+    if (g.some(j => j.status === 'queued' || j.status === 'running')) return;
+    const ready = g.filter(j => j.status === 'done' && j.gid && j.id !== s.draftJob && !j.edit);
+    if (ready.length) {
+      this.setState(st => ({queue:st.queue.filter(j => !ready.some(r => r.id === j.id))}));
+      this.toast(ready.length === 1 ? `${disp(this.G(ready[0].gid))} is ready for the Dresser.` : `${ready.length} garments ready for the Dresser.`);
+    }
+    this.setState(st => ({queue:st.queue.filter(j => !(j.kind === 'garment' && j.edit && j.status === 'done' && j.id !== st.draftJob))}));
+  }
+  submitForm = again => {
+    const s = this.state, d = s.draft; if (!d || !d.type) return;
+    const job = s.queue.find(j => j.id === s.draftJob);
+    const pending = !!job && job.status !== 'done';
+    const slot = TYPE_SLOT[d.type];
+    const vocab = [...new Set([...s.vocab, ...d.tags])];
+    if (s.formMode === 'add') {
+      const g = {id:uid('g'), name:d.name.trim(), type:d.type, slot, color:d.color, brand:d.brand.trim(), seasons:d.seasons, tags:d.tags, archived:false, pending};
+      this.setState(st => ({garments:[g, ...st.garments], vocab, sheet:null, draftJob:null, catView:'active',
+        queue: job ? (pending ? st.queue.map(j => j.id === job.id ? {...j, gid:g.id} : j) : st.queue.filter(j => j.id !== job.id)) : st.queue}));
+      if (again === true) { this.openAdd(); this.toast(pending ? `Saved. ${disp(g)} will be ready when the cut-out finishes.` : `Added to ${SLOT[slot].label}.`); }
+      else this.toast(pending ? `Saved. ${disp(g)} will be ready when the cut-out finishes.` : `Added to ${SLOT[slot].label}.`, 'Add another', () => this.openAdd());
+    } else {
+      this.setState({garments:s.garments.map(g => g.id === d.id ? {...g, name:d.name.trim(), type:d.type, slot, color:d.color, brand:d.brand.trim(), seasons:d.seasons, tags:d.tags} : g), vocab, sheet:null, draftJob:null,
+        canvas: autoLayout(s.canvas.map(i => i.gid === d.id ? {...i, slot} : i), s.stageAspect)}, () => this.persist());
+      this.toast('Changes saved.');
+    }
+  };
+  addTag(t) { t = (t || '').trim().toLowerCase(); if (!t) return; const d = this.state.draft; if (!d.tags.includes(t)) this.setDraft({tags:[...d.tags, t]}); this.setState({tagInput:''}); }
+  toggleArchive = () => {
+    const d = this.state.draft; const arch = !d.archived;
+    this.setState(s => ({garments:s.garments.map(g => g.id === d.id ? {...g, archived:arch} : g), sheet:null}));
+    this.toast(arch ? 'Archived. It stays in your favorites but leaves the Dresser.' : 'Back in rotation.');
+  };
+  deleteGarment = () => {
+    const s = this.state, d = s.draft; const n = s.favorites.filter(f => f.items.some(i => i.gid === d.id)).length;
+    this.ask({title:`Delete ${disp(d)}?`, body: n ? `It's in ${n} favorite${n > 1 ? 's' : ''}. It will be removed from ${n > 1 ? 'them' : 'it'} and the collage will rearrange. The favorite${n > 1 ? 's stay' : ' stays'}.` : "This can't be undone.", ok:'Delete garment', cancel:'Cancel',
+      onOk:() => {
+        this.setState(st => ({garments:st.garments.filter(g => g.id !== d.id), sheet:null,
+          favorites:st.favorites.map(f => f.items.some(i => i.gid === d.id) ? {...f, items:autoLayout(f.items.filter(i => i.gid !== d.id), f.aspect)} : f),
+          canvas:autoLayout(st.canvas.filter(i => i.gid !== d.id), st.stageAspect)}), () => this.persist());
+        this.toast('Garment deleted.');
+      }});
+  };
+
+  // ---------- export
+  exportItems() { const s = this.state; return s.exportFrom === 'fav' ? (s.favDraft || []) : s.canvas; }
+  downloadPng = () => {
+    const s = this.state; const R = RATIOS.find(r => r.id === s.exportRatio); const W = 1080, H = Math.round(W*R.a);
+    const items = fitItems(this.valid(this.exportItems()), R.a).sort((a,b) => a.z - b.z);
+    const c = document.createElement('canvas'); c.width = W; c.height = H; const ctx = c.getContext('2d');
+    ctx.fillStyle = '#f5f5f7'; ctx.fillRect(0, 0, W, H);
+    items.forEach(it => {
+      const g = this.G(it.gid); const w = it.w*W, hh = it.h*W;
+      ctx.save(); ctx.translate(it.cx*W, it.cy*W); ctx.rotate(it.rot*Math.PI/180);
+      const rad = g.slot === 'jewelry' || g.slot === 'shoes' ? Math.min(w, hh)/2 : Math.min(w, hh)*0.16;
+      ctx.shadowColor = 'rgba(0,0,0,0.22)'; ctx.shadowOffsetX = 3; ctx.shadowOffsetY = 5; ctx.shadowBlur = 30;
+      ctx.fillStyle = g.color; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(-w/2, -hh/2, w, hh, rad); else ctx.rect(-w/2, -hh/2, w, hh); ctx.fill();
+      ctx.shadowColor = 'transparent'; ctx.fillStyle = inkFor(g.color); ctx.font = `${Math.max(18, W*0.022)}px ${MONO}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(g.type.toLowerCase(), 0, 0);
+      ctx.restore();
+    });
+    const name = `outfit-${s.exportRatio.replace(':','x')}.png`;
+    c.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); a.remove(); });
+    this.setState({sheet:null}); this.toast(`Saved ${name}`);
+  };
+
+  renderVals() {
+    const s = this.state, P = this.props;
+    const device = DEVICES[P.device] ? P.device : 'Mobile'; const dev = DEVICES[device];
+    const isMobile = device === 'Mobile', isDesk = device === 'Desktop';
+    const flags = P.showFlags ?? true;
+    const scale = Math.min(1, (s.vw-48)/dev.w, (s.vh-48)/dev.h);
+    const act = this.active();
+    const screen = s.screen;
+    const navItem = (id, fn) => { const on = screen === id || (id === 'favorites' && screen === 'fav') || (id === 'settings' && screen === 'cutout' && !isDesk); return {go:fn, color: on ? BLUE : (isDesk ? '#1d1d1f' : '#7a7a7a'), bg: on ? '#f0d7d7' : 'transparent', weight: on ? 600 : 400}; };
+
+    // dresser panel
+    const panelList = act.filter(g => g.slot === s.panelSlot);
+    const onCanvas = new Set(s.canvas.map(i => i.gid));
+    const deco = (g, big) => { const r = SHAPE[g.slot].ratio; const k = big ? 62 : 72; return {...g, display:disp(g), label:g.type.toLowerCase(), rad:SHAPE[g.slot].rad, stripes:stripesFor(g.color), ink:inkFor(g.color), tw: (r >= 1 ? k/r : k+4) + '%', th: (r >= 1 ? k : (k+4)*r) + '%'}; };
+    const panelItems = panelList.map(g => ({...deco(g), border: onCanvas.has(g.id) ? '2px solid #1d1d1f' : '1px solid transparent', textColor: onCanvas.has(g.id) ? BLUE : '#333333', add:() => this.place(g)}));
+    const slotTabs = SLOTS.map(sl => { const on = s.panelSlot === sl.id; return chip(sl.label, on, () => this.setState({panelSlot:sl.id, slotMenu:false, panelOpen:true}), {count: act.filter(g => g.slot === sl.id).length, bg: on ? '#f0d7d7' : 'transparent', color: on ? BLUE : '#1d1d1f'}); });
+    const canvasEmpty = s.canvas.length === 0;
+    const showAuto = s.canvas.some(i => i.manual || i.zManual);
+
+    // catalog
+    const inView = s.garments.filter(g => s.catView === 'archived' ? g.archived : !g.archived);
+    const slotFiltered = inView.filter(g => s.catSlot === 'all' || g.slot === s.catSlot);
+    const catList = slotFiltered.filter(g => (!s.fTypes.length || s.fTypes.includes(g.type)) && (!s.fBrands.length || s.fBrands.includes(g.brand)) && s.fTags.every(t => g.tags.includes(t)));
+    const archCount = s.garments.filter(g => g.archived).length;
+    const nFilters = s.fTypes.length + s.fBrands.length + s.fTags.length;
+    const toggleIn = (key, v) => this.setState(st => ({[key]: st[key].includes(v) ? st[key].filter(x => x !== v) : [...st[key], v]}));
+    const slotChips = [{id:'all', label:'All'}, ...SLOTS].map(sl => chip(sl.label, s.catSlot === sl.id, () => this.setState({catSlot:sl.id, fTypes:[]}), {count: sl.id === 'all' ? inView.length : inView.filter(g => g.slot === sl.id).length})).filter(c => c.count > 0 || c.on || c.label === 'All');
+    const activeFilters = [...s.fTypes.map(v => ({label:v, remove:() => toggleIn('fTypes', v)})), ...s.fBrands.map(v => ({label:v, remove:() => toggleIn('fBrands', v)})), ...s.fTags.map(v => ({label:'#' + v, remove:() => toggleIn('fTags', v)}))];
+    const typesAvail = [...new Set(slotFiltered.map(g => g.type))];
+    const brandsAvail = [...new Set(s.garments.map(g => g.brand).filter(Boolean))].sort();
+    const tagsAvail = s.vocab.filter(t => s.garments.some(g => g.tags.includes(t)));
+    const catGrid = catList.map(g => ({...deco(g, true), pending:!!g.pending, selecting:s.selecting && !g.pending, selected:s.selIds.includes(g.id), ariaSel: s.selecting ? String(s.selIds.includes(g.id)) : null, checkBg: s.selIds.includes(g.id) ? '#f0d7d7' : '#fff', cardBorder: s.selIds.includes(g.id) ? '2px solid #1d1d1f' : '1px solid #e0e0e0', op: g.pending ? 0.4 : 1, meta: g.pending ? 'Cutting out…' : [SLOT[g.slot].label, g.brand].filter(Boolean).join(' · '), open:() => this.openEdit(g)}));
+    const catArchived = s.catView === 'archived';
+
+    // form
+    const d = s.draft;
+    const dSlot = d && d.type ? TYPE_SLOT[d.type] : null;
+    const fpR = dSlot ? SHAPE[dSlot].ratio : 1;
+    const fp = d ? {color:d.color, stripes:stripesFor(d.color), ink:inkFor(d.color), rad: dSlot ? SHAPE[dSlot].rad : '22%', label: d.type ? d.type.toLowerCase() : 'cut-out', w: (fpR >= 1 ? 150/fpR : 160) + 'px', h: (fpR >= 1 ? 150 : 160*fpR) + 'px'} : {};
+    const tagQ = s.tagInput.trim().toLowerCase();
+    const tagPool = d ? [...new Set([...s.vocab, ...d.tags])] : [];
+    const tagChips = d ? tagPool.filter(t => !tagQ || t.startsWith(tagQ) || d.tags.includes(t)).map(t => chip(t, d.tags.includes(t), () => this.setDraft({tags: d.tags.includes(t) ? d.tags.filter(x => x !== t) : [...d.tags, t]}))) : [];
+    const bq = d ? (d.brand || '').trim().toLowerCase() : '';
+    const brandSugg = d ? brandsAvail.filter(b => b.toLowerCase() !== bq && (!bq || b.toLowerCase().startsWith(bq))).slice(0, 6).map(b => ({label:b, onClick:() => this.setDraft({brand:b})})) : [];
+
+    // favorites
+    const favCards = s.favorites.map(f => { const n = this.valid(f.items).length; return {title: f.name || fmtDate(f.date), sub: (f.name ? fmtDate(f.date) + ' · ' : '') + n + ' pieces', mini:this.mini(f.items, 1.25), editing:s.favEdit,
+      open:() => { if (!s.favEdit) this.openFav(f.id); },
+      remove:e => { e.stopPropagation(); this.ask({title:'Delete this favorite?', body:'The garments stay in your closet.', ok:'Delete favorite', cancel:'Cancel', onOk:() => { this.setState(st => ({favorites:st.favorites.filter(x => x.id !== f.id)})); this.toast('Favorite deleted.'); }}); }}; });
+    const fav = s.favorites.find(f => f.id === s.favId);
+
+    // export
+    const R = RATIOS.find(r => r.id === s.exportRatio);
+    const boxH = isMobile ? 280 : 320;
+    const sheetOpen = !!s.sheet;
+    const isAdd = s.sheet === 'add';
+    const isFull = isAdd || s.sheet === 'review';
+
+    // cut-out queue
+    const dJob = s.queue.find(j => j.id === s.draftJob);
+    const gJobs = s.queue.filter(j => j.kind === 'garment' && !j.edit && (j.gid || j.review || j.id === s.draftJob));
+    const gActive = gJobs.filter(j => j.status === 'queued' || j.status === 'running');
+    const gDone = gJobs.filter(j => j.status === 'done').length;
+    const gRun = gJobs.find(j => j.status === 'running');
+    const queuePos = j => { const open = s.queue.filter(x => x.status === 'queued' || x.status === 'running'); return open.findIndex(x => x.id === j.id); };
+    const ord = n => n + (n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th');
+    const jobStatus = j => j.status === 'running' ? (j.first && !s.modelReady ? 'Getting the cut-out tool ready (first time only)…' : `Removing background… ${Math.round(j.progress)}%`)
+      : j.status === 'queued' ? `${ord(queuePos(j) + 1)} in the queue` : j.status === 'done' ? 'Ready' : 'Couldn’t cut it out';
+    const cutStatusText = !d ? '' : dJob ? (dJob.status === 'done' ? 'Background removed. Only the cut-out is kept.' : dJob.status === 'running' ? jobStatus(dJob) + ' You can fill in the details meanwhile.' : jobStatus(dJob) + '. You can fill in the details meanwhile.')
+      : s.formMode === 'edit' ? 'Only the cut-out is kept.' : d.hasBg ? 'Used with its background, as you chose.' : 'Already cut out. Used as is.';
+
+    // batch page
+    const bJobs = s.queue.filter(j => j.kind === 'batch');
+    const bReady = bJobs.filter(j => j.status === 'done').length, bErr = bJobs.filter(j => j.status === 'error').length;
+    const bBusy = bJobs.some(j => j.status === 'queued' || j.status === 'running');
+    const shapeBox = (slot, k) => { const r = SHAPE[slot].ratio; return {tw: (r >= 1 ? k/r : k) + '%', th: (r >= 1 ? k : k*r) + '%', rad:SHAPE[slot].rad}; };
+    const batchCells = bJobs.map(j => { const b = shapeBox(j.slot, 62); const done = j.status === 'done', err = j.status === 'error';
+      return {...b, color:j.color, bg: done ? CHECKER : PHOTO_BG, op: j.status === 'queued' ? 0.55 : err ? 0.35 : 1, running: j.status === 'running', pw: j.progress + '%',
+        badge: j.status === 'queued' ? 'Queued' : err ? 'Couldn’t cut out' : '', badgeBg: err ? '#1d1d1f' : '#fff', badgeColor: err ? '#fff' : '#1d1d1f',
+        aria: `${j.name}: ${jobStatus(j)}`, open:() => { if (done) this.setState({sheet:'batchItem', batchSel:j.id}); else if (err) this.ask({title:'Couldn’t cut out this photo', body:'Try a photo with a plain background that contrasts with the garment.', ok:'Remove photo', cancel:'Keep', onOk:() => this.setState(st => ({queue:st.queue.filter(x => x.id !== j.id)}))}); }}; });
+    const bSel = bJobs.find(j => j.id === s.batchSel);
+    const bSelBox = bSel ? shapeBox(bSel.slot, 180) : null;
+
+    return {
+      boxW: dev.w*scale + 'px', boxH: dev.h*scale + 'px', frameW: dev.w + 'px', frameH: dev.h + 'px', frameScale:`scale(${scale})`, frameR: dev.r,
+      isMobile, isDesk, notDesk:!isDesk, showFlags:flags,
+      appDir: isDesk ? 'row' : 'column', dresserDir: isDesk ? 'row' : 'column', navPadBottom: isMobile ? '24px' : '10px',
+      isLogin: screen === 'login', isWaitlist: screen === 'waitlist', isApp: screen !== 'login' && screen !== 'waitlist',
+      isCatalog: screen === 'catalog', isDresser: screen === 'dresser', isFavorites: screen === 'favorites', isFav: screen === 'fav' && !!fav, isSettings: screen === 'settings',
+      isCutout: screen === 'cutout', navCut: navItem('cutout', () => this.go('cutout')), goCutout:() => this.go('cutout'), goSettings:() => this.go('settings'),
+      navCat: navItem('catalog', () => this.go('catalog')), navDre: navItem('dresser', () => this.go('dresser')), navFav: navItem('favorites', () => this.go('favorites')), navSet: navItem('settings', () => this.go('settings')),
+      goDresser:() => this.go('dresser'), goFavorites:() => this.go('favorites'), goWaitlist:() => this.go('waitlist'), goLogin:() => this.go('login'), goCatalogAdd:this.goCatalogAdd,
+
+      // auth
+      loginEmail:s.loginEmail, loginPw:s.loginPw, onLoginEmail:e => this.setState({loginEmail:e.target.value}), onLoginPw:e => this.setState({loginPw:e.target.value}),
+      signIn:() => this.go('dresser'), signOut:() => this.go('login'),
+      waitEmail:s.waitEmail, onWaitEmail:e => this.setState({waitEmail:e.target.value}), waitForm:!s.waitDone, waitDone:s.waitDone, waitBtnOp: s.waitEmail.includes('@') ? 1 : 0.4,
+      joinWaitlist:() => { if (s.waitEmail.includes('@')) this.setState({waitDone:true}); },
+      waitHero: screen === 'waitlist' ? this.mini(makeItems(['g15','g8','g18','g20','g23','g25'], G0.map(([id,,type,color]) => ({id, type, color, slot:TYPE_SLOT[type]})), 1), 1) : null,
+
+      // catalog
+      catCount: s.garments.length ? `${act.length} in rotation · ${archCount} archived` : 'No garments yet',
+      hasGarments: s.garments.length > 0, noGarments: s.garments.length === 0,
+      segActive: {label:'In rotation', onClick:() => this.setState({catView:'active', selIds:[]}), bg: !catArchived ? '#fff' : 'transparent', border: !catArchived ? '1px solid #e0e0e0' : '1px solid transparent'},
+      segArch: {label:`Archived (${archCount})`, onClick:() => this.setState({catView:'archived', selIds:[]}), bg: catArchived ? '#fff' : 'transparent', border: catArchived ? '1px solid #e0e0e0' : '1px solid transparent'},
+      slotChips, filterBtn: chip(nFilters ? `Filters · ${nFilters}` : 'Filters', nFilters > 0), openFilters:() => this.setState({sheet:'filters'}),
+      hasActiveFilters: activeFilters.length > 0, activeFilters, clearFilters:() => this.setState({fTypes:[], fBrands:[], fTags:[]}),
+      showArchFlag: flags && catArchived,
+      catGrid, hasCatResults: catList.length > 0, noCatResults: catList.length === 0,
+      noResultsTitle: catArchived && !nFilters ? 'Nothing archived' : 'No garments match', noResultsBody: catArchived && !nFilters ? 'Archive clothes that are out of season. They leave the Dresser but stay in your favorites.' : 'Try removing a filter or picking another category.',
+
+      // dresser
+      stageRef:this.stageRef, stageDown:this.stageDown,
+      stageItems: screen === 'dresser' ? this.layer(s.canvas, s.stageAspect, {interactive:true, target:'dresser', locks:true}) : null,
+      stageEmpty: canvasEmpty, noWardrobe: canvasEmpty && act.length === 0,
+      emptyStageTitle: act.length ? 'A blank canvas' : 'Your closet is empty',
+      emptyStageBody: act.length ? 'Tap a garment below to put it on, or try Random outfit.' : 'Add garments in the Catalog to start dressing up.',
+      showAutoBtn: showAuto, hasSelDresser: screen === 'dresser' && !!s.sel,
+      undo:this.undo, redo:this.redo, undoOp: s.hist.length ? 1 : 0.3, redoOp: s.fut.length ? 1 : 0.3, canvasOp: canvasEmpty ? 0.3 : 1,
+      resetAuto:this.resetAuto, forward:() => this.zMove(1), backward:() => this.zMove(-1), removeSel:this.removeSel,
+      replace:this.replace, randomOutfit:this.randomOutfit, replaceOp: canvasEmpty || s.canvas.every(i => i.locked) ? 0.35 : 1, randomOp: act.length ? 1 : 0.35,
+      defaultsOpen:s.defaultsOpen, toggleDefaults:() => this.setState({defaultsOpen:!s.defaultsOpen, slotMenu:false}), defaultsBtnBg: s.defaultsOpen ? '#1d1d1f' : '#f5f5f7', defaultsBtnColor: s.defaultsOpen ? '#fff' : '#1d1d1f',
+      defaultChips: SLOTS.map(sl => chip(sl.label, s.defaults.includes(sl.id), () => this.setState(st => ({defaults: st.defaults.includes(sl.id) ? st.defaults.filter(x => x !== sl.id) : [...st.defaults, sl.id]}), () => this.persist()))),
+      openSaveFav:() => { if (!canvasEmpty) this.setState({sheet:'saveFav', favName:'', sel:null}); },
+      openExportDresser:() => { if (!canvasEmpty) this.setState({sheet:'export', exportFrom:'dresser', sel:null}); },
+      panelSlotLabel: SLOT[s.panelSlot].label, panelCount: panelList.length, slotMenu:s.slotMenu, slotMenuChevron: s.slotMenu ? 'm6 15 6-6 6 6' : 'm6 9 6 6 6-6',
+      toggleSlotMenu:() => this.setState({slotMenu:!s.slotMenu, panelOpen:true}), panelOpen:s.panelOpen, togglePanel:() => this.setState({panelOpen:!s.panelOpen, panelFull:false, slotMenu:false}),
+      drawerNotFull: !(s.panelOpen && s.panelFull),
+      drawerStyle: s.panelOpen && s.panelFull
+        ? 'position:relative; flex:0 0 58%; min-height:0; margin-top:12px; border-top:1px solid #e0e0e0; background:#fff; display:flex; flex-direction:column;'
+        : 'position:relative; flex-shrink:0; border-top:1px solid #e0e0e0; background:#fff; display:flex; flex-direction:column;',
+      drawerGridWrap: s.panelFull ? 'flex:1; min-height:0; overflow-y:auto; padding:0 16px 20px;' : 'max-height:104px; overflow:hidden; padding:0 16px 14px;',
+      drawerMenuPos: s.panelFull ? 'top:68px;' : 'bottom:calc(100% - 74px);',
+      drawerActionLabel: !s.panelOpen ? 'Show garments' : s.panelFull ? 'Show less' : `See all${panelList.length > 4 ? ' (' + panelList.length + ')' : ''}`,
+      drawerAction:() => this.setState(!s.panelOpen ? {panelOpen:true, panelFull:false, slotMenu:false} : {panelFull:!s.panelFull, slotMenu:false}),
+      drawerHandleLabel: !s.panelOpen ? 'Show garments' : s.panelFull ? 'Show less' : 'See all garments',
+      drawerHandleClick:() => { if (this._drawerDragged) { this._drawerDragged = false; return; } this.drawerStep(!s.panelOpen || !s.panelFull ? 1 : -1); },
+      drawerDown:e => { this._drawerY = e.clientY; },
+      drawerUp:e => { if (this._drawerY == null) return; const dy = e.clientY - this._drawerY; this._drawerY = null; if (Math.abs(dy) < 24) return; this._drawerDragged = true; this.drawerStep(dy < 0 ? 1 : -1); },
+      slotTabs, panelItems, panelHasItems: panelItems.length > 0, panelEmpty: panelItems.length === 0,
+      panelEmptyMsg: act.length ? `No ${SLOT[s.panelSlot].plural} in rotation yet.` : 'Your closet is empty.',
+      openAdd:this.openAdd,
+
+      // favorites
+      favCards, hasFavs: s.favorites.length > 0, noFavs: s.favorites.length === 0, favCount: s.favorites.length ? `${s.favorites.length} saved outfit${s.favorites.length > 1 ? 's' : ''}` : 'Nothing saved yet',
+      favEditLabel: s.favEdit ? 'Done' : 'Edit', toggleFavEdit:() => this.setState({favEdit:!s.favEdit}),
+      favTitle: fav ? (fav.name || fmtDate(fav.date)) : '', favSub: fav ? `Saved ${fmtDate(fav.date)} · ${this.valid(fav.items).length} pieces` : '',
+      favStageItems: screen === 'fav' && s.favDraft ? this.layer(s.favDraft, s.stageAspect, {interactive:true, target:'fav'}) : null,
+      hasSelFav: screen === 'fav' && !!s.sel, favDirty:s.favDirty,
+      cancelFav:() => this.setState({favDraft:s.favBase, favDirty:false, sel:null}),
+      saveFavDetail:() => { this.setState(st => ({favorites:st.favorites.map(f => f.id === st.favId ? {...f, items:st.favDraft, aspect:st.stageAspect} : f), favBase:st.favDraft, favDirty:false, sel:null})); this.toast('Favorite updated.'); },
+      openExportFav:() => this.setState({sheet:'export', exportFrom:'fav', sel:null}),
+
+      // settings
+      tagRows: s.vocab.map((t, i) => { const n = s.garments.filter(g => g.tags.includes(t)).length; return {name:t, count: n === 1 ? '1 garment' : `${n} garments`, divider: i ? '1px solid #f0f0f0' : 'none', editing: s.tagEdit === t, idle: s.tagEdit !== t,
+        rename:() => this.setState({tagEdit:t, tagEditVal:t}),
+        remove:() => this.ask({title:`Delete “${t}”?`, body: n ? `It will be removed from ${n} garment${n > 1 ? 's' : ''}.` : 'No garments use it.', ok:'Delete tag', cancel:'Cancel', onOk:() => this.setState(st => ({vocab:st.vocab.filter(x => x !== t), garments:st.garments.map(g => ({...g, tags:g.tags.filter(x => x !== t)})), fTags:st.fTags.filter(x => x !== t)}))})}; }),
+      tagEditVal:s.tagEditVal, onTagEdit:e => this.setState({tagEditVal:e.target.value}),
+      onTagKey:e => { if (e.key === 'Enter') this.saveRename(); if (e.key === 'Escape') this.setState({tagEdit:null}); },
+      saveRename:() => this.saveRename(), cancelRename:() => this.setState({tagEdit:null}),
+      jewelryMax:s.jewelryMax, jewMinus:() => this.setState({jewelryMax:Math.max(1, s.jewelryMax-1)}), jewPlus:() => this.setState({jewelryMax:Math.min(10, s.jewelryMax+1)}), jewMinusOp: s.jewelryMax > 1 ? 1 : 0.35, jewPlusOp: s.jewelryMax < 10 ? 1 : 0.35,
+      langEn:{bg: s.lang === 'en' ? '#fff' : 'transparent', onClick:() => this.setState({lang:'en'})}, langEs:{bg: s.lang === 'es' ? '#fff' : 'transparent', onClick:() => this.setState({lang:'es'})},
+
+      // sheets
+      sheetOpen, sheetAlign: isMobile ? 'flex-end' : 'center', sheetOuterPad: isMobile ? '0' : '24px', sheetMaxW: isMobile ? '100%' : '520px',
+      sheetH: isFull && isMobile ? '100%' : 'auto', sheetMaxH: isFull && isMobile ? '100%' : '92%', sheetRadius: isFull && isMobile ? '0' : (isMobile ? '18px 18px 0 0' : '18px'),
+      backdropClick:e => { if (e.target === e.currentTarget && !isAdd) this.setState({sheet:null}); },
+      closeSheet:() => isAdd ? this.closeAddSheet() : this.setState({sheet:null}),
+
+      // choose step + cut-out status
+      isChoose: isAdd && s.addStep === 'choose' && !!d,
+      backToCamera:() => { this.setState({addStep:'camera'}); },
+      chooseThumbBg: s.chooseAlpha ? CHECKER : PHOTO_BG,
+      chooseFileLabel: s.chooseAlpha ? 'IMG_4821.png' : 'IMG_4822.jpg',
+      chooseDetect: s.chooseAlpha ? 'Transparent background detected. It looks already cut out.' : 'This photo has a background.',
+      modeCut: {on: s.chooseMode === 'cut', bg: s.chooseMode === 'cut' ? '#f0d7d7' : 'transparent', weight: s.chooseMode === 'cut' ? 600 : 400, onClick:() => this.setState({chooseMode:'cut'})},
+      modeReady: {on: s.chooseMode === 'ready', bg: s.chooseMode === 'ready' ? '#f0d7d7' : 'transparent', weight: s.chooseMode === 'ready' ? 600 : 400, onClick:() => this.setState({chooseMode:'ready'})},
+      chooseHint: s.chooseMode === 'cut' ? 'Takes about 30 seconds. It runs in the background while you fill in the details.' : 'The photo is used as it is.',
+      chooseWarn: s.chooseMode === 'ready' && !s.chooseAlpha,
+      continueChoose:this.continueChoose,
+      cutStatusText, cutRunning: !!dJob && (dJob.status === 'running' || dJob.status === 'queued'), cutPW: (dJob ? dJob.progress : 0) + '%',
+      fpOpacity: dJob && dJob.status !== 'done' ? 0.35 + dJob.progress/170 : 1,
+      fpBg: d && d.hasBg ? PHOTO_BG : 'background:#f5f5f7;',
+      isAddForm: s.formMode === 'add', submitAnother:() => this.submitForm(true),
+
+      // bulk upload + review
+      isBulk: isAdd && s.addStep === 'bulk', pickSeveral:this.pickSeveral, confirmBulk:this.confirmBulk,
+      bulkTitle: `${s.bulk.length} photos`,
+      bulkAllCut: (() => { const on = s.bulk.length > 0 && s.bulk.every(b => b.mode === 'cut'); return {on, bg: on ? '#f0d7d7' : 'transparent', weight: on ? 600 : 400, onClick:() => this.setState(st => ({bulk:st.bulk.map(b => ({...b, mode:'cut'}))}))}; })(),
+      bulkAllReady: (() => { const on = s.bulk.length > 0 && s.bulk.every(b => b.mode === 'ready'); return {on, bg: on ? '#f0d7d7' : 'transparent', weight: on ? 600 : 400, onClick:() => this.setState(st => ({bulk:st.bulk.map(b => ({...b, mode:'ready'}))}))}; })(),
+      bulkCells: s.bulk.map((b, i) => ({color:b.color, bg: b.alpha ? CHECKER : PHOTO_BG, badge: b.mode === 'cut' ? 'Remove bg' : 'As is', badgeBg: b.mode === 'cut' ? '#f0d7d7' : '#fff', badgeColor:'#1d1d1f',
+        aria: `Photo ${i + 1}: ${b.alpha ? 'transparent' : 'has a background'}, ${b.mode === 'cut' ? 'remove background' : 'use as is'}`,
+        toggle:() => this.setState(st => ({bulk:st.bulk.map(x => x.id === b.id ? {...x, mode: x.mode === 'cut' ? 'ready' : 'cut'} : x)}))})),
+      bulkWarn: s.bulk.some(b => b.mode === 'ready' && !b.alpha),
+      bulkWarnText: (() => { const n = s.bulk.filter(b => b.mode === 'ready' && !b.alpha).length; return `${n} photo${n > 1 ? 's have' : ' has'} a background. In the collage ${n > 1 ? 'they' : 'it'} will show as a box.`; })(),
+      bulkCta: `Add ${s.bulk.length} photos`,
+      hasReview: s.review.length > 0 && !s.selecting, reviewBannerTitle: `${s.review.length} garment${s.review.length > 1 ? 's' : ''} to review`, openReview:this.openReview,
+      isReview: s.sheet === 'review' && !!s.review[s.reviewIdx] && !!d,
+      reviewPos: `${Math.min(s.reviewIdx + 1, s.review.length)} of ${s.review.length}`,
+      reviewBg: (() => { const it = s.review[s.reviewIdx]; const j = it && s.queue.find(x => x.id === it.jobId); return !it ? '' : it.hasBg || (j && j.status !== 'done') ? PHOTO_BG : CHECKER; })(),
+      reviewOp: (() => { const it = s.review[s.reviewIdx]; const j = it && s.queue.find(x => x.id === it.jobId); return j && j.status !== 'done' ? 0.35 + j.progress/170 : 1; })(),
+      reviewStatus: (() => { const it = s.review[s.reviewIdx]; if (!it) return ''; const j = s.queue.find(x => x.id === it.jobId);
+        return j ? (j.status === 'done' ? 'Background removed.' : jobStatus(j) + (j.status === 'queued' ? '.' : '') + ' You can pick the type meanwhile.') : it.hasBg ? 'Used with its background, as you chose.' : 'Already cut out. Used as is.'; })(),
+      reviewRunning: (() => { const it = s.review[s.reviewIdx]; const j = it && s.queue.find(x => x.id === it.jobId); return !!j && j.status !== 'done'; })(),
+      reviewPW: (() => { const it = s.review[s.reviewIdx]; const j = it && s.queue.find(x => x.id === it.jobId); return (j ? j.progress : 0) + '%'; })(),
+      reviewMore:s.reviewMore, toggleReviewMore:() => this.setState({reviewMore:!s.reviewMore}), reviewMoreLabel: s.reviewMore ? 'Fewer details' : 'More details',
+      reviewSave:this.reviewSave, reviewSkip:this.reviewSkip, reviewDiscard:this.reviewDiscard,
+      reviewSaveLabel: d && d.type ? (s.review.length > 1 ? 'Save and next' : 'Save') : 'Pick a type to continue',
+
+      // bulk archive
+      selecting:s.selecting, selectLabel: s.selecting ? 'Cancel' : 'Select',
+      toggleSelect:() => this.setState({selecting:!s.selecting, selIds:[]}),
+      selectAllLabel: catList.filter(g => !g.pending).every(g => s.selIds.includes(g.id)) && catList.length ? 'Select none' : 'Select all',
+      selectAll:() => { const ids = catList.filter(g => !g.pending).map(g => g.id); this.setState({selIds: ids.every(id => s.selIds.includes(id)) ? [] : ids}); },
+      selCountLabel: s.selIds.length ? `${s.selIds.length} selected` : 'Tap garments to select',
+      bulkActionLabel: s.catView === 'archived' ? 'Unarchive' : 'Archive', bulkArchive:this.bulkArchive, bulkOp: s.selIds.length ? 1 : 0.4,
+
+      // queue pill + sheet
+      showPill: gActive.length > 0 && screen !== 'login' && screen !== 'waitlist',
+      pillLabel: `Cutting out ${Math.min(gJobs.length, gDone + 1)} of ${gJobs.length}`,
+      pillRing: `conic-gradient(#1d1d1f ${gRun ? gRun.progress : 0}%, rgba(0,0,0,0.15) 0)`,
+      pillPos: isDesk ? 'left:0; width:232px; bottom:76px;' : `left:0; right:0; bottom:${isMobile ? 92 : 78}px;`,
+      openQueue:() => this.setState({sheet:'queue'}),
+      isQueue: s.sheet === 'queue',
+      queueSub: gActive.length ? `${gDone} of ${gJobs.length} ready · one photo at a time` : 'All done.',
+      queueRows: gJobs.map((j, i) => { const g = j.gid ? this.G(j.gid) : null; return {name: g ? disp(g) : j.review ? 'Photo to review' : 'New garment (not saved yet)', status: jobStatus(j), running: j.status === 'running', pw: j.progress + '%',
+        color: g ? g.color : j.color, op: j.status === 'done' ? 1 : 0.4, thumbBg: j.status === 'done' ? CHECKER : PHOTO_BG, divider: i ? '1px solid #f0f0f0' : 'none'}; }),
+
+      // batch page
+      batchEmpty: bJobs.length === 0, batchHas: bJobs.length > 0, batchDoneState: bJobs.length > 0 && !bBusy && bReady > 0,
+      batchSub: !bJobs.length ? 'Remove the background from many photos at once.' : `${bReady} of ${bJobs.length} ready` + (bErr ? ` · ${bErr} couldn’t be cut out` : ''),
+      batchDropHint: isDesk ? ' You can also drop them here.' : '',
+      batchAdd:() => this.batchAdd(), batchAddOp: bJobs.length >= 30 ? 0.4 : 1,
+      batchCols: isDesk ? 6 : (isMobile ? 3 : 4), batchCells,
+      downloadAllLabel: `Download all (${bReady} PNG${bReady === 1 ? '' : 's'})`,
+      batchDownloadAll:() => { this.setState({batchDownloaded:true}); this.toast(`Downloaded cut-outs.zip · ${bReady} PNG${bReady === 1 ? '' : 's'}`); },
+      batchStartOver:() => this.ask({title:'Start over?', body: s.batchDownloaded ? 'The page will be emptied.' : 'You haven’t downloaded these cut-outs. They will be lost.', ok:'Start over', cancel:'Cancel', onOk:() => this.setState(st => ({queue:st.queue.filter(j => j.kind !== 'batch'), batchDownloaded:false}))}),
+      isBatchItem: s.sheet === 'batchItem' && !!bSel, checker: CHECKER,
+      batchItem: bSel ? {name:bSel.name + '.png', color:bSel.color, rad:bSelBox.rad, bw: bSelBox.tw.replace('%','px'), bh: bSelBox.th.replace('%','px')} : {name:'', color:'#fff', rad:'0', bw:'0', bh:'0'},
+      batchItemDownload:() => { this.setState({sheet:null}); this.toast(`Downloaded ${bSel ? bSel.name : ''}.png`); },
+      batchItemRemove:() => this.setState(st => ({sheet:null, queue:st.queue.filter(j => j.id !== st.batchSel)})),
+      camPadTop: isMobile ? '44px' : '0',
+      isCamera: isAdd && s.addStep === 'camera', isProcessing: isAdd && s.addStep === 'processing', isForm: isAdd && s.addStep === 'form' && !!d,
+      cameraTitle: s.formMode === 'edit' ? 'Change photo' : 'New garment', shutter:this.shutter, pickLibrary:this.pickLibrary,
+      closeCamera:() => s.formMode === 'edit' ? this.setState({addStep:'form'}) : this.closeAddSheet(),
+      draftColor: d ? d.color : '#ddd', progressW: s.progress + '%', procOpacity: 0.35 + s.progress/160,
+      formTitle: s.formMode === 'edit' ? 'Edit garment' : 'New garment', photoLinkLabel: s.formMode === 'edit' ? 'Change photo' : 'Retake', changePhoto:() => this.setState({addStep:'camera'}),
+      fp, typeGroups: SLOTS.map(sl => ({label:sl.label, chips:sl.types.map(t => chip(t, !!d && d.type === t, () => this.setDraft({type:t})))})),
+      draftName: d ? d.name : '', onDraftName:e => this.setDraft({name:e.target.value}), namePlaceholder: d && d.type ? `Shown as “${d.type}” if left blank` : 'e.g. the flower shirt',
+      seasonChips: SEASONS.map(x => chip(x, !!d && d.seasons.includes(x), () => this.setDraft({seasons: d.seasons.includes(x) ? d.seasons.filter(y => y !== x) : [...d.seasons, x]}))),
+      draftBrand: d ? d.brand : '', onDraftBrand:e => this.setDraft({brand:e.target.value}), brandSugg,
+      tagChips, tagInput:s.tagInput, onTagInput:e => this.setState({tagInput:e.target.value}), onTagInputKey:e => { if (e.key === 'Enter') { e.preventDefault(); this.addTag(s.tagInput); } },
+      isEditForm: s.formMode === 'edit', archiveLabel: d && d.archived ? 'Put back in rotation' : 'Archive', toggleArchive:this.toggleArchive, deleteGarment:this.deleteGarment,
+      submitForm:this.submitForm, submitOp: d && d.type ? 1 : 0.4, submitLabel: s.formMode === 'edit' ? 'Save changes' : (d && d.type ? `Add to ${SLOT[dSlot].label}` : 'Pick a type to continue'), formFooterPad: isMobile ? '30px' : '20px',
+      isSaveFav: s.sheet === 'saveFav', saveFavPreview: s.sheet === 'saveFav' ? this.mini(s.canvas, 1.25) : null, favName:s.favName, onFavName:e => this.setState({favName:e.target.value}), todayLabel: fmtDate(TODAY),
+      saveFavorite:() => { const f = {id:uid('f'), name:s.favName.trim(), date:TODAY, aspect:s.stageAspect, items:s.canvas.map(i => ({...i}))}; this.setState(st => ({favorites:[f, ...st.favorites], sheet:null})); this.toast('Saved to Favorites.', 'View', () => this.openFav(f.id)); },
+      isExport: s.sheet === 'export',
+      ratioChips: RATIOS.map(r => chip(r.label, s.exportRatio === r.id, () => this.setState({exportRatio:r.id}), {sub:r.id, iw: (r.a >= 1 ? 22/r.a : 22) + 'px', ih: (r.a >= 1 ? 22 : 22*r.a) + 'px', pad: s.exportRatio === r.id ? '11px 7px' : '12px 8px'})),
+      exportBoxH: boxH + 'px', exportPrevW: (boxH/R.a) + 'px', exportPreview: s.sheet === 'export' ? this.mini(this.exportItems(), R.a) : null,
+      exportMeta: `PNG · ${R.px} px · no watermark`, downloadPng:this.downloadPng,
+      isFilters: s.sheet === 'filters',
+      fTypeChips: typesAvail.map(t => chip(t, s.fTypes.includes(t), () => toggleIn('fTypes', t))),
+      fBrandChips: brandsAvail.map(b => chip(b, s.fBrands.includes(b), () => toggleIn('fBrands', b))),
+      fTagChips: tagsAvail.map(t => chip(t, s.fTags.includes(t), () => toggleIn('fTags', t))),
+      showResultsLabel: `Show ${catList.length} garment${catList.length === 1 ? '' : 's'}`,
+
+      // confirm + toast
+      hasConfirm: !!s.confirm, confirm: s.confirm || {title:'', body:'', ok:'', cancel:''},
+      confirmOk:() => { const c = s.confirm; this.setState({confirm:null}, () => c && c.onOk && c.onOk()); }, confirmCancel:() => this.setState({confirm:null}),
+      hasToast: !!s.toast, toast: s.toast || {msg:'', actionLabel:'', flag:''}, toastBottom: (isDesk ? 24 : (screen === 'dresser' || screen === 'fav' ? 96 : 100)) + (gActive.length && !isDesk ? 52 : 0) + 'px',
+      toastAction:() => { const t = s.toast; clearTimeout(this._tt); this.setState({toast:null}); t && t.action && t.action(); },
+    };
+  }
+
+  batchAdd() {
+    const s = this.state; const have = s.queue.filter(j => j.kind === 'batch').length;
+    if (have >= 30) { this.toast('Up to 30 photos per batch. Download these and start over.'); return; }
+    const n = Math.min(12, 30 - have);
+    const jobs = Array.from({length:n}, (_, i) => { const type = BATCH_TYPES[Math.floor(Math.random()*BATCH_TYPES.length)]; const k = have + i + 1;
+      return {id:uid('j'), kind:'batch', n:k, name:`IMG_${4800 + k}`, type, slot:TYPE_SLOT[type], color:BATCH_COLORS[Math.floor(Math.random()*BATCH_COLORS.length)], status:'queued', progress:0, fail: k % 7 === 0, first:!s.modelReady && !have && !i && !s.queue.length}; });
+    this.setState(st => ({queue:[...st.queue, ...jobs], batchDownloaded:false}), () => this.startQueue());
+  }
+
+  saveRename() {
+    const s = this.state, from = s.tagEdit, to = s.tagEditVal.trim().toLowerCase();
+    if (!from || !to || to === from) { this.setState({tagEdit:null}); return; }
+    this.setState({tagEdit:null, vocab:[...new Set(s.vocab.map(t => t === from ? to : t))], garments:s.garments.map(g => ({...g, tags:[...new Set(g.tags.map(t => t === from ? to : t))]})), fTags:s.fTags.map(t => t === from ? to : t)});
+  }
+}
+</script>
+</body>
+</html>

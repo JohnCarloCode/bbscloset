@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prueba de recorte</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 16px; background: #fafafa; }
+  label { margin-right: 12px; }
+  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top: 16px; }
+  .card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 8px; }
+  .pair { display: flex; gap: 8px; }
+  .pair img { width: 50%; object-fit: contain; }
+  .out { background: repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 16px 16px; }
+  small { color: #666; display: block; margin-top: 4px; }
+  #log { font: 12px ui-monospace, monospace; color: #555; white-space: pre-wrap; max-height: 140px; overflow: auto; }
+</style>
+</head>
+<body>
+<h1>Prueba de recorte de fondo</h1>
+<p>
+  <label>Dispositivo
+    <select id="device"><option value="cpu">cpu</option><option value="gpu">gpu</option></select>
+  </label>
+  <label>Modelo
+    <select id="model">
+      <option value="isnet_quint8" selected>isnet_quint8 (ligero)</option>
+      <option value="isnet_fp16">isnet_fp16</option>
+      <option value="isnet">isnet (pesado)</option>
+    </select>
+  </label>
+  <label>Reducir a (px)
+    <select id="maxpx"><option value="0">original</option><option value="1200" selected>1200</option><option value="800">800</option></select>
+  </label>
+  <label>Hilos (<span id="cores"></span> núcleos)</label>
+</p>
+<input id="files" type="file" accept="image/*" multiple>
+<p id="status"></p>
+<div id="log"></div>
+<div id="grid"></div>
+<script type="module">
+import { removeBackground, preload } from "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm";
+
+const $ = (id) => document.getElementById(id);
+const log = (m) => { $("log").textContent += m + "\n"; $("log").scrollTop = 1e9; };
+$("cores").textContent = navigator.hardwareConcurrency;
+log("crossOriginIsolated (hilos wasm): " + self.crossOriginIsolated + " | WebGPU: " + ("gpu" in navigator));
+
+const cfg = () => ({
+  device: $("device").value,
+  model: $("model").value,
+  progress: (key, cur, total) => {
+    if (key.startsWith("fetch")) log(`descarga ${key}: ${(cur / 1048576).toFixed(1)}/${(total / 1048576).toFixed(1)} MB`);
+  },
+});
+
+async function shrink(file, maxpx) {
+  const bmp = await createImageBitmap(file);
+  const info = `${bmp.width}x${bmp.height}`;
+  if (!maxpx || Math.max(bmp.width, bmp.height) <= maxpx) return { blob: file, info };
+  const k = maxpx / Math.max(bmp.width, bmp.height);
+  const c = new OffscreenCanvas(Math.round(bmp.width * k), Math.round(bmp.height * k));
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  return { blob: await c.convertToBlob({ type: "image/png" }), info: `${info} -> ${c.width}x${c.height}` };
+}
+
+let preloadedKey = "";
+async function ensurePreload() {
+  const key = $("device").value + $("model").value;
+  if (key === preloadedKey) return;
+  $("status").textContent = "Cargando modelo…";
+  const t = performance.now();
+  try {
+    await preload(cfg());
+  } catch (err) {
+    log(`preload ${key} FALLÓ: ${err.message}`);
+    $("status").textContent = "Fallo al cargar con esta combinación; elige otra.";
+    throw err;
+  }
+  log(`preload ${key}: ${((performance.now() - t) / 1000).toFixed(1)} s`);
+  preloadedKey = key;
+}
+
+$("files").addEventListener("change", async (e) => {
+  await ensurePreload();
+  for (const file of e.target.files) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<div class="pair"><img src="${URL.createObjectURL(file)}"><img class="out"></div><small>procesando…</small>`;
+    $("grid").prepend(card);
+    $("status").textContent = "Procesando " + file.name;
+    try {
+      const t0 = performance.now();
+      const { blob: input, info } = await shrink(file, +$("maxpx").value);
+      const t1 = performance.now();
+      const out = await removeBackground(input, cfg());
+      const t2 = performance.now();
+      card.querySelector(".out").src = URL.createObjectURL(out);
+      card.querySelector("small").textContent =
+        `${file.name} · ${info} · reducir ${((t1 - t0) / 1000).toFixed(1)} s · recorte ${((t2 - t1) / 1000).toFixed(1)} s · ${(out.size / 1024).toFixed(0)} KB`;
+    } catch (err) {
+      card.querySelector("small").textContent = "Error: " + err.message;
+    }
+  }
+  $("status").textContent = "Listo";
+  e.target.value = "";
+});
+</script>
+</body>
+</html>
