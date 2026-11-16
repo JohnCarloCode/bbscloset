@@ -48,6 +48,14 @@ export async function proxy(request: NextRequest) {
   const signedIn = Boolean(data?.claims?.sub);
 
   const { pathname } = request.nextUrl;
+
+  // Con sesión, el login no tiene sentido: directo al Vestidor. Solo al pedir
+  // la página (GET/HEAD): el formulario, ya con sesión, llama a la server
+  // action setLocaleCookie con un POST a /login que no se debe desviar.
+  const isPageRequest = request.method === "GET" || request.method === "HEAD";
+  if (signedIn && pathname === "/login" && isPageRequest) {
+    return withSupabaseCookies(NextResponse.redirect(new URL("/dresser", request.url)), response);
+  }
   if (signedIn || isPublicPath(pathname)) return response;
 
   const denied = pathname.startsWith("/api/")
@@ -57,9 +65,16 @@ export async function proxy(request: NextRequest) {
       )
     : NextResponse.redirect(new URL("/login", request.url));
 
-  // Conserva las cookies que haya escrito Supabase (p. ej. borrar una sesión caducada).
-  response.cookies.getAll().forEach((cookie) => denied.cookies.set(cookie));
-  return denied;
+  return withSupabaseCookies(denied, response);
+}
+
+/**
+ * Copia a una respuesta nueva las cookies que haya escrito Supabase en
+ * `response` (sesión renovada o borrado de una sesión caducada).
+ */
+function withSupabaseCookies(target: NextResponse, response: NextResponse): NextResponse {
+  response.cookies.getAll().forEach((cookie) => target.cookies.set(cookie));
+  return target;
 }
 
 export const config = {

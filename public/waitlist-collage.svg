@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 600" width="480" height="600" role="img" aria-label="Outfit">
+  <!-- Collage de ejemplo PROVISIONAL de la waitlist: siluetas planas de prendas con los colores de src/styles/tokens.css. Sin fotos reales. -->
+  <rect width="480" height="600" fill="#f5f5f7"/>
+  <g stroke-linejoin="round" stroke-linecap="round">
+    <!-- Gorra -->
+    <path d="M58 92a44 38 0 0 1 88 0z" fill="#d9d4cc" stroke="#d9d4cc" stroke-width="6"/>
+    <path d="M136 92h46" stroke="#d9d4cc" stroke-width="12"/>
+    <!-- Gafas de sol -->
+    <circle cx="372" cy="78" r="18" fill="#1d1d1f"/>
+    <circle cx="424" cy="78" r="18" fill="#1d1d1f"/>
+    <path d="M388 74q10-8 20 0" fill="none" stroke="#1d1d1f" stroke-width="5"/>
+    <!-- Camiseta -->
+    <path d="M196 126 156 140 116 186 146 214 174 196 174 288 306 288 306 196 334 214 364 186 324 140 284 126Q240 154 196 126z" fill="#f0d7d7" stroke="#f0d7d7" stroke-width="10"/>
+    <!-- Pantalón -->
+    <path d="M182 298 298 298 308 500 258 500 240 360 222 500 172 500z" fill="#1d1d1f" stroke="#1d1d1f" stroke-width="8"/>
+    <!-- Bolso -->
+    <path d="M378 330q0-48 32-48t32 48" fill="none" stroke="#333333" stroke-width="8"/>
+    <rect x="362" y="326" width="96" height="84" rx="14" fill="#333333"/>
+    <!-- Zapatillas -->
+    <path d="M150 548v-14q0-12 12-12h36q14 0 22 10l10 10v6z" fill="#d9d4cc" stroke="#d9d4cc" stroke-width="6"/>
+    <path d="M250 548v-14q0-12 12-12h36q14 0 22 10l10 10v6z" fill="#d9d4cc" stroke="#d9d4cc" stroke-width="6"/>
+  </g>
+</svg>

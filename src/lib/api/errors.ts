@@ -10,6 +10,8 @@ export type ApiErrorCode =
   | "not_found"
   | "conflict"
   | "limit_reached"
+  | "payload_too_large"
+  | "rate_limited"
   | "internal";
 
 export type ApiErrorBody = {

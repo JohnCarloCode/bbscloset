@@ -55,8 +55,49 @@ supabase gen types typescript --project-id <ref-del-proyecto> > src/lib/supabase
 
 `supabase start` levanta Supabase en local y aplica las migraciones; `supabase db reset` las vuelve a aplicar desde cero; `supabase stop` lo para. En `config.toml` el registro público está desactivado, igual que en el proyecto remoto.
 
+- Puertos locales en el rango **5562x** (API `http://127.0.0.1:55621`, BD `55622`, Studio `55623`, Mailpit `55624`) para no chocar con otros proyectos en los puertos por defecto.
+- `site_url` local: `http://localhost:3100` (arrancar la app con `npx next dev -p 3100`).
+- `seed.sql` crea dos usuarios de prueba **solo locales** (`test@bbscloset.test`, `test2@bbscloset.test`; contraseñas en el comentario del seed). `supabase db push` no aplica el seed.
+- Para que `next dev` use el local, crear `.env.development.local` (ignorado) con `NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:55621` y la `ANON_KEY` que imprime `supabase status`.
+
 ## Notas para la app
 
 - `color_hex` solo acepta minúsculas (`#aabbcc`): normalizar antes de guardar.
 - Waitlist: insertar sin pedir la fila de vuelta (sin `.select()`), porque no hay permiso de lectura.
 - El favorito vacío se borra al final de la transacción: si se reemplazan todos sus items, hacerlo en una sola transacción (función RPC) o insertar los nuevos antes de borrar los viejos.
+
+## Email de recuperar contraseña (paso 2.3) — [John]
+
+La app admite dos tipos de enlace en `/reset-password`:
+
+- **Plantilla por defecto** (`{{ .ConfirmationURL }}`, flujo PKCE): funciona, pero **solo si el enlace se abre en el mismo navegador** en el que se pidió (el `code_verifier` vive en una cookie de ese navegador). Si se abre en otro (p. ej. se pidió en el Safari del móvil y se abre en Gmail o en el portátil), la pantalla dice que el enlace ya no sirve.
+- **Plantilla propia con `token_hash`** (recomendada): la app la canjea con `verifyOtp` y funciona en cualquier navegador. Es la que usa el Supabase local (`config.toml` → `[auth.email.template.recovery]`, archivo `templates/recovery.html`).
+
+En el proyecto remoto, en *Authentication → Email Templates → Reset password*:
+
+- **Subject:** `Recupera tu contraseña de bb's closet`
+- **Body** (pegar tal cual):
+
+```html
+<h2>Recupera tu contraseña de bb's closet</h2>
+<p>Hemos recibido una petición para cambiar la contraseña de tu cuenta.</p>
+<p><a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=recovery">Crear una contraseña nueva</a></p>
+<p>El enlace caduca en una hora y solo se puede usar una vez. Si no has pedido el cambio, ignora este email: tu contraseña no cambia.</p>
+```
+
+Y en *Authentication → URL Configuration → Redirect URLs*, que estén las URLs de `/reset-password` de producción y de las previews de Vercel (p. ej. `https://<app>.vercel.app/**` y `https://*-<equipo>.vercel.app/**`). **Importante:** `{{ .RedirectTo }}` es la URL que pide la app (`<origen>/reset-password`); si no está permitida, Supabase pone la *Site URL* y el enlace llevaría a la portada sin poder cambiar la contraseña.
+
+Límite: con el email de Supabase (sin SMTP propio) se envían pocos emails por hora; vale para el uso actual (architecture.md 8).
+
+## Invitar a alguien de la waitlist (paso 2.5) — [John]
+
+El registro público está desactivado: las altas se hacen a mano desde el panel de Supabase.
+
+1. **Ver quién espera:** *Table Editor → waitlist* (ordenar por `created_at`). La app no puede leer esta tabla (sin policy de `select`); solo el panel o el SQL Editor.
+2. **Crear la cuenta**, una de dos:
+   - *Authentication → Users → Invite user* con su email: Supabase le envía un email para fijar la contraseña. El trigger crea su fila en `profiles` (idioma `es`, 3 joyas).
+   - *Authentication → Users → Add user* con email y contraseña, marcando **Auto Confirm User**, y pasarle la contraseña por un canal privado.
+3. **Quitarla de la waitlist:** borrar su fila en *Table Editor → waitlist* (no hay columna de estado).
+4. **Comprobar:** en *Table Editor → profiles* aparece su `user_id`. Al entrar en la app ve su armario vacío y nada del resto (RLS).
+
+Prueba recomendada (pendiente): invitar un segundo email propio, entrar con él y comprobar que no ve las prendas ni los favoritos del usuario de prueba. En local, la separación entre usuarios ya está comprobada por API con `test@` y `test2@` del `seed.sql`.

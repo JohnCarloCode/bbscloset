@@ -24,4 +24,13 @@ describe("parseBody", () => {
     expect(err).toMatchObject({ status: 400, code: "invalid_body" });
     expect((err as ApiError).details).toEqual([{ path: "n", message: expect.any(String) }]);
   });
+
+  it("cuerpo mayor que maxBytes → 413 payload_too_large", async () => {
+    const big = JSON.stringify({ n: 1, pad: "x".repeat(2000) });
+    await expect(parseBody(req(big), schema, { maxBytes: 1024 })).rejects.toMatchObject({
+      status: 413,
+      code: "payload_too_large",
+    });
+    await expect(parseBody(req('{"n":2}'), schema, { maxBytes: 1024 })).resolves.toEqual({ n: 2 });
+  });
 });

@@ -4,6 +4,7 @@
 // probar GET /api/me con las cookies de @supabase/ssr. Se borra en el paso 7.5;
 // como las demás páginas /dev, puede llevar textos escritos a mano.
 import { useState, type FormEvent } from "react";
+import { apiFetch } from "@/lib/api/client";
 import { createClient } from "@/lib/supabase/browser";
 
 export default function DevSessionPage() {
@@ -25,6 +26,15 @@ export default function DevSessionPage() {
   async function fetchMe() {
     const res = await fetch("/api/me");
     setOutput(`${res.status}\n${JSON.stringify(await res.json(), null, 2)}`);
+  }
+
+  // Prueba del paso 2.2: con la cookie de sesión borrada, un 401 manda a /login.
+  async function apiFetchMe() {
+    try {
+      setOutput(JSON.stringify(await apiFetch("/api/me"), null, 2));
+    } catch (err) {
+      setOutput(`Error: ${String(err)}`);
+    }
   }
 
   return (
@@ -53,6 +63,9 @@ export default function DevSessionPage() {
       <div className="flex gap-2">
         <button className="rounded border p-2" type="button" onClick={fetchMe}>
           GET /api/me
+        </button>
+        <button className="rounded border p-2" type="button" onClick={apiFetchMe}>
+          apiFetch /api/me
         </button>
         <button className="rounded border p-2" type="button" onClick={signOut}>
           Salir

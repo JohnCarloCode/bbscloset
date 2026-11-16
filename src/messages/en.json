@@ -28,10 +28,71 @@
     "addGarment": "Add garment"
   },
   "login": {
-    "title": "Sign in"
+    "title": "Sign in",
+    "intro": "Use the email your invite was sent to.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "forgotPassword": "Forgot your password?",
+    "inviteOnly": "bb's closet is invite-only.",
+    "joinWaitlist": "Join the waitlist",
+    "errors": {
+      "invalidCredentials": "The email or password is incorrect.",
+      "offline": "You’re offline. Check your connection and try again.",
+      "generic": "Couldn’t sign in. Please try again."
+    },
+    "sessionExpired": "Your session has expired. Please sign in again.",
+    "forgot": {
+      "title": "Reset your password",
+      "intro": "Enter your email and we’ll send you a link to create a new password.",
+      "email": "Email",
+      "submit": "Send link",
+      "submitting": "Sending…",
+      "sent": "If that email exists, we’ve sent you a link.",
+      "offline": "You’re offline. Check your connection and try again.",
+      "backToLogin": "Back to sign in"
+    }
+  },
+  "resetPassword": {
+    "title": "New password",
+    "intro": "Choose the password you’ll use to sign in from now on.",
+    "checking": "Checking your link…",
+    "newPassword": "New password",
+    "confirmPassword": "Repeat the password",
+    "hint": "At least {min} characters.",
+    "submit": "Save password",
+    "submitting": "Saving…",
+    "invalidLink": "This link no longer works: it has expired, was already used or was opened in a different browser. Request a new one.",
+    "requestNewLink": "Request a new link",
+    "errors": {
+      "tooShort": "It must be at least {min} characters.",
+      "mismatch": "The passwords don’t match.",
+      "sameAsOld": "It must be different from your old one.",
+      "offline": "You’re offline. Check your connection and try again.",
+      "generic": "Couldn’t save your password. Please try again."
+    }
   },
   "waitlist": {
-    "title": "Waitlist"
+    "title": "Waitlist",
+    "headline": "Your whole closet, ready for dress-up.",
+    "intro": "bb's closet is invite-only for now. Leave your email and we’ll write when there’s a spot.",
+    "collageAlt": "Sample outfit: cap, sunglasses, T-shirt, trousers, bag and sneakers.",
+    "email": "Email",
+    "submit": "Join the waitlist",
+    "submitting": "Joining…",
+    "done": {
+      "title": "You’re on the list.",
+      "body": "We’ll email {email} when your invite is ready."
+    },
+    "errors": {
+      "invalidEmail": "That email doesn’t look right. Please check it.",
+      "offline": "You’re offline. Check your connection and try again.",
+      "rateLimited": "Too many attempts. Wait a minute and try again.",
+      "generic": "Couldn’t add you to the list. Please try again."
+    },
+    "alreadyInvited": "Already invited?",
+    "signIn": "Sign in"
   },
   "catalog": {},
   "garment": {},
@@ -43,7 +104,9 @@
   },
   "export": {},
   "settings": {
-    "language": "Language"
+    "language": "Language",
+    "signOut": "Sign out",
+    "signingOut": "Signing out…"
   },
   "cutout": {},
   "slots": {

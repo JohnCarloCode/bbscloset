@@ -28,10 +28,71 @@
     "addGarment": "Añadir prenda"
   },
   "login": {
-    "title": "Entrar"
+    "title": "Entrar",
+    "intro": "Usa el email al que te llegó la invitación.",
+    "email": "Email",
+    "password": "Contraseña",
+    "submit": "Entrar",
+    "submitting": "Entrando…",
+    "forgotPassword": "¿Has olvidado la contraseña?",
+    "inviteOnly": "bb's closet es solo con invitación.",
+    "joinWaitlist": "Apúntate a la lista de espera",
+    "errors": {
+      "invalidCredentials": "El email o la contraseña no son correctos.",
+      "offline": "No hay conexión. Comprueba tu conexión y vuelve a intentarlo.",
+      "generic": "No se ha podido entrar. Vuelve a intentarlo."
+    },
+    "sessionExpired": "Tu sesión ha caducado. Vuelve a entrar.",
+    "forgot": {
+      "title": "Recuperar contraseña",
+      "intro": "Escribe tu email y te enviaremos un enlace para crear una contraseña nueva.",
+      "email": "Email",
+      "submit": "Enviar enlace",
+      "submitting": "Enviando…",
+      "sent": "Si el email existe, te hemos enviado un enlace.",
+      "offline": "No hay conexión. Comprueba tu conexión y vuelve a intentarlo.",
+      "backToLogin": "Volver a entrar"
+    }
+  },
+  "resetPassword": {
+    "title": "Nueva contraseña",
+    "intro": "Elige la contraseña con la que entrarás a partir de ahora.",
+    "checking": "Comprobando el enlace…",
+    "newPassword": "Nueva contraseña",
+    "confirmPassword": "Repite la contraseña",
+    "hint": "Al menos {min} caracteres.",
+    "submit": "Guardar contraseña",
+    "submitting": "Guardando…",
+    "invalidLink": "Este enlace ya no sirve: ha caducado, ya se ha usado o se ha abierto en otro navegador. Pide uno nuevo.",
+    "requestNewLink": "Pedir otro enlace",
+    "errors": {
+      "tooShort": "Tiene que tener al menos {min} caracteres.",
+      "mismatch": "Las contraseñas no coinciden.",
+      "sameAsOld": "Tiene que ser distinta de la anterior.",
+      "offline": "No hay conexión. Comprueba tu conexión y vuelve a intentarlo.",
+      "generic": "No se ha podido guardar la contraseña. Vuelve a intentarlo."
+    }
   },
   "waitlist": {
-    "title": "Lista de espera"
+    "title": "Lista de espera",
+    "headline": "Todo tu armario, listo para vestirte.",
+    "intro": "bb's closet es solo con invitación por ahora. Déjanos tu email y te escribiremos cuando haya sitio.",
+    "collageAlt": "Ejemplo de outfit: gorra, gafas de sol, camiseta, pantalón, bolso y zapatillas.",
+    "email": "Email",
+    "submit": "Apuntarme",
+    "submitting": "Apuntando…",
+    "done": {
+      "title": "Estás en la lista.",
+      "body": "Te escribiremos a {email} cuando tengas sitio."
+    },
+    "errors": {
+      "invalidEmail": "Este email no parece válido. Revísalo.",
+      "offline": "No hay conexión. Comprueba tu conexión y vuelve a intentarlo.",
+      "rateLimited": "Demasiados intentos. Espera un minuto y vuelve a intentarlo.",
+      "generic": "No se ha podido apuntar. Vuelve a intentarlo."
+    },
+    "alreadyInvited": "¿Ya tienes invitación?",
+    "signIn": "Entrar"
   },
   "catalog": {},
   "garment": {},
@@ -43,7 +104,9 @@
   },
   "export": {},
   "settings": {
-    "language": "Idioma"
+    "language": "Idioma",
+    "signOut": "Cerrar sesión",
+    "signingOut": "Cerrando sesión…"
   },
   "cutout": {},
   "slots": {

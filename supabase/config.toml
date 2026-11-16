@@ -244,6 +244,13 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
+# Email de "recuperar contraseña" (paso 2.3): enlace con token_hash a
+# /reset-password, que se canjea con verifyOtp y funciona en cualquier
+# navegador. En el remoto se pega a mano (supabase/README.md).
+[auth.email.template.recovery]
+subject = "Recupera tu contraseña de bb's closet"
+content_path = "./supabase/templates/recovery.html"
+
 # Uncomment to customize email template
 # [auth.email.template.invite]
 # subject = "You have been invited"
