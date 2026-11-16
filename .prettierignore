@@ -5,6 +5,6 @@ public/
 doc-ai/
 pruebas/
 pruebas-fotos/
-supabase/
+/supabase/
 package-lock.json
 next-env.d.ts

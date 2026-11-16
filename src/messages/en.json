@@ -1,0 +1,116 @@
+{
+  "common": {
+    "appName": "bb's closet",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "undo": "Undo",
+    "redo": "Redo",
+    "edit": "Edit",
+    "done": "Done",
+    "back": "Back",
+    "view": "View",
+    "retry": "Retry",
+    "optional": "Optional",
+    "languages": {
+      "es": "Español",
+      "en": "English"
+    }
+  },
+  "nav": {
+    "label": "Main navigation",
+    "catalog": "Catalog",
+    "dresser": "Dresser",
+    "favorites": "Favorites",
+    "settings": "Settings",
+    "cutout": "Cut out photos",
+    "addGarment": "Add garment"
+  },
+  "login": {
+    "title": "Sign in"
+  },
+  "waitlist": {
+    "title": "Waitlist"
+  },
+  "catalog": {},
+  "garment": {},
+  "queue": {},
+  "dresser": {},
+  "favorites": {
+    "savedCount": "{count, plural, =0 {No saved outfits} one {# saved outfit} other {# saved outfits}}",
+    "outfitTitle": "Outfit"
+  },
+  "export": {},
+  "settings": {
+    "language": "Language"
+  },
+  "cutout": {},
+  "slots": {
+    "base_layer": "Base layer",
+    "mid_layer": "Mid layer",
+    "outer_layer": "Outerwear",
+    "bottom": "Bottoms",
+    "full_body": "Full body",
+    "footwear": "Shoes",
+    "bag": "Bag",
+    "jewelry": "Jewelry",
+    "accessories": "Accessories"
+  },
+  "types": {
+    "tshirt": "T-shirt",
+    "shirt": "Shirt",
+    "top": "Top",
+    "bodysuit": "Bodysuit",
+    "sweater": "Sweater",
+    "sweatshirt": "Sweatshirt",
+    "cardigan": "Cardigan",
+    "vest": "Vest",
+    "jacket": "Jacket",
+    "coat": "Coat",
+    "bomber": "Bomber",
+    "trench": "Trench coat",
+    "trousers": "Trousers",
+    "jeans": "Jeans",
+    "skirt": "Skirt",
+    "shorts": "Shorts",
+    "dress": "Dress",
+    "jumpsuit": "Jumpsuit",
+    "sneakers": "Sneakers",
+    "boots": "Boots",
+    "sandals": "Sandals",
+    "heels": "Heels",
+    "handbag": "Handbag",
+    "backpack": "Backpack",
+    "crossbody": "Crossbody",
+    "necklace": "Necklace",
+    "earrings": "Earrings",
+    "ring": "Ring",
+    "bracelet": "Bracelet",
+    "hat": "Hat",
+    "glasses": "Glasses",
+    "belt": "Belt",
+    "scarf": "Scarf"
+  },
+  "seasons": {
+    "spring": "Spring",
+    "summer": "Summer",
+    "autumn": "Autumn",
+    "winter": "Winter"
+  },
+  "colors": {
+    "black": "Black",
+    "white": "White",
+    "gray": "Grey",
+    "beige": "Beige",
+    "brown": "Brown",
+    "red": "Red",
+    "orange": "Orange",
+    "yellow": "Yellow",
+    "green": "Green",
+    "blue": "Blue",
+    "purple": "Purple",
+    "pink": "Pink",
+    "multicolor": "Multicolor"
+  }
+}

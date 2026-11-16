@@ -1,0 +1,116 @@
+{
+  "common": {
+    "appName": "bb's closet",
+    "close": "Cerrar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "undo": "Deshacer",
+    "redo": "Rehacer",
+    "edit": "Editar",
+    "done": "Hecho",
+    "back": "Atrás",
+    "view": "Ver",
+    "retry": "Reintentar",
+    "optional": "Opcional",
+    "languages": {
+      "es": "Español",
+      "en": "English"
+    }
+  },
+  "nav": {
+    "label": "Navegación principal",
+    "catalog": "Catálogo",
+    "dresser": "Vestidor",
+    "favorites": "Favoritos",
+    "settings": "Ajustes",
+    "cutout": "Recortar fotos",
+    "addGarment": "Añadir prenda"
+  },
+  "login": {
+    "title": "Entrar"
+  },
+  "waitlist": {
+    "title": "Lista de espera"
+  },
+  "catalog": {},
+  "garment": {},
+  "queue": {},
+  "dresser": {},
+  "favorites": {
+    "savedCount": "{count, plural, =0 {Ningún outfit guardado} one {# outfit guardado} other {# outfits guardados}}",
+    "outfitTitle": "Outfit"
+  },
+  "export": {},
+  "settings": {
+    "language": "Idioma"
+  },
+  "cutout": {},
+  "slots": {
+    "base_layer": "Capa base",
+    "mid_layer": "Capa media",
+    "outer_layer": "Capa exterior",
+    "bottom": "Parte inferior",
+    "full_body": "Cuerpo entero",
+    "footwear": "Calzado",
+    "bag": "Bolso",
+    "jewelry": "Joyería",
+    "accessories": "Accesorios"
+  },
+  "types": {
+    "tshirt": "Camiseta",
+    "shirt": "Camisa",
+    "top": "Top",
+    "bodysuit": "Body",
+    "sweater": "Jersey",
+    "sweatshirt": "Sudadera",
+    "cardigan": "Cárdigan",
+    "vest": "Chaleco",
+    "jacket": "Chaqueta",
+    "coat": "Abrigo",
+    "bomber": "Cazadora",
+    "trench": "Gabardina",
+    "trousers": "Pantalón",
+    "jeans": "Vaqueros",
+    "skirt": "Falda",
+    "shorts": "Short",
+    "dress": "Vestido",
+    "jumpsuit": "Mono",
+    "sneakers": "Zapatillas",
+    "boots": "Botas",
+    "sandals": "Sandalias",
+    "heels": "Tacones",
+    "handbag": "Bolso de mano",
+    "backpack": "Mochila",
+    "crossbody": "Bandolera",
+    "necklace": "Collar",
+    "earrings": "Pendientes",
+    "ring": "Anillo",
+    "bracelet": "Pulsera",
+    "hat": "Gorro",
+    "glasses": "Gafas",
+    "belt": "Cinturón",
+    "scarf": "Bufanda"
+  },
+  "seasons": {
+    "spring": "Primavera",
+    "summer": "Verano",
+    "autumn": "Otoño",
+    "winter": "Invierno"
+  },
+  "colors": {
+    "black": "Negro",
+    "white": "Blanco",
+    "gray": "Gris",
+    "beige": "Beige",
+    "brown": "Marrón",
+    "red": "Rojo",
+    "orange": "Naranja",
+    "yellow": "Amarillo",
+    "green": "Verde",
+    "blue": "Azul",
+    "purple": "Morado",
+    "pink": "Rosa",
+    "multicolor": "Multicolor"
+  }
+}

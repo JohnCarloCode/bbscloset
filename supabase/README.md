@@ -39,10 +39,16 @@ Tras crear un usuario en *Authentication → Users*: `select * from profiles;` m
 
 ## Regenerar los tipos de TypeScript
 
-Después de cada migración (con el proyecto enlazado):
+`src/lib/supabase/types.ts` (tipo `Database`, lo usan los clientes de `src/lib/supabase/`) se genera; no se edita a mano. Después de cada migración:
 
 ```bash
-supabase gen types typescript --linked > src/lib/supabase/types.ts
+npm run gen:types   # contra el Supabase LOCAL (supabase start), con las mismas migraciones
+```
+
+John, contra el remoto (de solo lectura, no cambia nada en el proyecto):
+
+```bash
+supabase gen types typescript --project-id <ref-del-proyecto> > src/lib/supabase/types.ts && npx prettier --write src/lib/supabase/types.ts
 ```
 
 ## Local (opcional, requiere Docker)
