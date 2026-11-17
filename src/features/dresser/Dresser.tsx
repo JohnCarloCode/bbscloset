@@ -17,7 +17,7 @@
 //   derecha del lienzo, solo con ajustes manuales.
 // - Estados vacíos (4.7) superpuestos al lienzo: "Un lienzo en blanco" o,
 //   sin prendas en uso, "Tu armario está vacío" + "Añadir una prenda".
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/Button";
 import { cx } from "@/components/cx";
@@ -25,7 +25,7 @@ import { useAddGarment } from "@/features/catalog/add/store";
 import { GARMENT_SAVED_EVENT } from "@/features/queue/store";
 import { apiFetch } from "@/lib/api/client";
 import type { Garment } from "@/lib/api/types";
-import { OutfitCanvasLazy, type CanvasGarment } from "./canvas/OutfitCanvasLazy";
+import { OutfitCanvasLazy } from "./canvas/OutfitCanvasLazy";
 import { serializeDraft, writeDraft } from "./draft";
 import { DresserHeader } from "./DresserHeader";
 import { hasManual } from "./model";
@@ -33,6 +33,7 @@ import { BottomDrawer } from "./panel/BottomDrawer";
 import { RandomBar } from "./RandomBar";
 import { DesktopPanel } from "./panel/DesktopPanel";
 import { selectClosetEmpty, toKnownGarment, useDresserStore, type KnownGarment } from "./store";
+import { useCanvasGarments } from "./useCanvasGarments";
 import { useDresserToasts } from "./useDresserToasts";
 
 /** Pide el recorte de las prendas del lienzo que aún no lo tienen. */
@@ -136,9 +137,7 @@ function useDraftWriter() {
 export function Dresser() {
   const tNav = useTranslations("nav");
   const tCanvas = useTranslations("dresser.canvas");
-  const tTypes = useTranslations("types");
   const items = useDresserStore((s) => s.canvas.items);
-  const garments = useDresserStore((s) => s.garments);
   const drawer = useDresserStore((s) => s.drawer);
   const activeSlot = useDresserStore((s) => s.activeSlot);
   const commit = useDresserStore((s) => s.commit);
@@ -192,20 +191,7 @@ export function Dresser() {
     return () => ro.disconnect();
   }, [setCanvasSize]);
 
-  const canvasGarments = useMemo(() => {
-    const out: Record<string, CanvasGarment> = {};
-    for (const { garmentId } of items) {
-      const g = garments[garmentId];
-      if (!g) continue;
-      out[garmentId] = {
-        id: garmentId,
-        cutoutUrl: g.cutoutUrl ?? null,
-        label: g.label || tTypes(g.typeId),
-        aspect: g.aspect,
-      };
-    }
-    return out;
-  }, [items, garments, tTypes]);
+  const canvasGarments = useCanvasGarments(items);
 
   const { showTapEvents } = useDresserToasts();
   const onTap = useCallback(

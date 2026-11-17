@@ -16,6 +16,8 @@
 //   de gama media con DPR 3) y manejadores estables para que GarmentNode
 //   (memo) solo se repinte en React cuando cambia su item.
 // - editable = false: sin selección ni gestos (vista previa, exportación).
+// - allowRemove / allowLock = false: sin "Quitar" ni candado (detalle del
+//   favorito, screens.md 11: no se quitan prendas y no hay aleatorios).
 import Konva from "konva";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -70,6 +72,10 @@ export type OutfitCanvasProps = {
   onSelect?: (garmentId: string | null) => void;
   /** Aspecto real de un recorte al cargarlo (para autoLayout). */
   onAspect?: (garmentId: string, aspect: number) => void;
+  /** "Quitar" en la barra de selección (false en el detalle del favorito). */
+  allowRemove?: boolean;
+  /** Candado de la prenda seleccionada (false en el detalle del favorito). */
+  allowLock?: boolean;
   /** Acceso al Stage (exportar a imagen, fase 6). */
   onStage?: (stage: Konva.Stage | null) => void;
   className?: string;
@@ -106,6 +112,8 @@ export default function OutfitCanvas({
   onSelect,
   onAspect,
   onStage,
+  allowRemove = true,
+  allowLock = true,
   className,
 }: OutfitCanvasProps) {
   const t = useTranslations("dresser.canvas");
@@ -287,7 +295,7 @@ export default function OutfitCanvas({
   // Candado: centrado en la esquina superior izquierda de la caja (girada)
   // de la prenda, un poco por fuera, y siempre dentro del lienzo.
   let lockPos: { left: number; top: number } | null = null;
-  if (selected && size.width > 0) {
+  if (allowLock && selected && size.width > 0) {
     const b = rotatedBounds(selected, aspectOf(selected.garmentId), size);
     const half = LOCK_SIZE / 2;
     const clamp = (v: number, max: number) => Math.min(Math.max(v, 0), Math.max(0, max));
@@ -380,7 +388,7 @@ export default function OutfitCanvas({
         )}
       </div>
 
-      {selected && lockPos && !gesturing && (
+      {allowLock && selected && lockPos && !gesturing && (
         <button
           type="button"
           aria-pressed={selected.locked}
@@ -426,13 +434,17 @@ export default function OutfitCanvas({
               garmentId: selected.garmentId,
             })
           }
-          onRemove={() => {
-            setSelectedId(null);
-            emit(remove(state, selected.garmentId), {
-              type: "remove",
-              garmentId: selected.garmentId,
-            });
-          }}
+          onRemove={
+            allowRemove
+              ? () => {
+                  setSelectedId(null);
+                  emit(remove(state, selected.garmentId), {
+                    type: "remove",
+                    garmentId: selected.garmentId,
+                  });
+                }
+              : undefined
+          }
         />
       )}
     </div>

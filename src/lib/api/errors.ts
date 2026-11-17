@@ -7,6 +7,7 @@ export type ApiErrorCode =
   | "unauthorized"
   | "invalid_body"
   | "invalid_query"
+  | "invalid_garments"
   | "not_found"
   | "conflict"
   | "limit_reached"

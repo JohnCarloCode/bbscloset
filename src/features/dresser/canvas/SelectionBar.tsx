@@ -1,7 +1,7 @@
 "use client";
 
 // Barra del lienzo con una prenda seleccionada (screens.md 7.1): "Traer
-// delante · Enviar atrás · Quitar". Va abajo del lienzo, encima de él, como
+// delante · Enviar atrás · Quitar" ("Quitar" solo si hay onRemove). Va abajo del lienzo, encima de él, como
 // en el prototipo; botones `button-pearl-capsule` (DESIGN.md) de 44 px.
 // No confundir con la SelectionBar del catálogo (modo selección).
 import { useTranslations } from "next-intl";
@@ -13,7 +13,8 @@ export type CanvasSelectionBarProps = {
   canBackward: boolean;
   onForward: () => void;
   onBackward: () => void;
-  onRemove: () => void;
+  /** Sin él no se pinta "Quitar" (detalle del favorito). */
+  onRemove?: () => void;
   className?: string;
 };
 
@@ -44,9 +45,11 @@ export function SelectionBar({
       <button type="button" className={capsule} disabled={!canBackward} onClick={onBackward}>
         {t("sendBackward")}
       </button>
-      <button type="button" className={capsule} onClick={onRemove}>
-        {t("remove")}
-      </button>
+      {onRemove && (
+        <button type="button" className={capsule} onClick={onRemove}>
+          {t("remove")}
+        </button>
+      )}
     </div>
   );
 }

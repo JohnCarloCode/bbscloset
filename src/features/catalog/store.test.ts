@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Garment, GarmentCountsResponse } from "@/lib/api/types";
 import { SLOT_IDS, type SlotId } from "@/lib/domain/slots";
+import { emitGarmentChanged } from "./garmentChanged";
 import {
   EMPTY_FILTERS,
   PAGE_SIZE,
@@ -22,6 +23,12 @@ import {
   withoutGarment,
   type CatalogQuery,
 } from "./store";
+
+// El aviso global (5.5) se espía; changeOf es el de verdad.
+vi.mock("./garmentChanged", async (orig) => ({
+  ...(await orig<typeof import("./garmentChanged")>()),
+  emitGarmentChanged: vi.fn(),
+}));
 
 const T1 = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
 const T2 = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
@@ -382,6 +389,29 @@ describe("useCatalogStore", () => {
     expect(urls.filter((u) => u.includes("/api/garments/counts"))).toHaveLength(3);
   });
 
+  it("avisa de cada cambio con GARMENT_CHANGED_EVENT (5.5)", async () => {
+    await useCatalogStore.getState().load();
+    const emit = vi.mocked(emitGarmentChanged);
+    emit.mockClear();
+    useCatalogStore.getState().updateGarment({ ...garment("a"), name: "Camiseta" });
+    useCatalogStore.getState().updateGarment({ ...garment("a"), archived: true });
+    useCatalogStore.getState().removeGarment("b");
+    fetchMock.mockImplementation(async (url: string, init?: RequestInit) =>
+      url.includes("/api/garments/archive")
+        ? Response.json({
+            updated: (JSON.parse(String(init?.body)) as { ids: string[] }).ids.length,
+          })
+        : Response.json(counts({})),
+    );
+    await useCatalogStore.getState().setArchived(["x", "y"], false);
+    expect(emit.mock.calls).toEqual([
+      [["a"], "updated"],
+      [["a"], "archived"],
+      [["b"], "deleted"],
+      [["x", "y"], "unarchived"],
+    ]);
+  });
+
   it("modo selección: marcar, desmarcar y salir vacía la selección", () => {
     const st = useCatalogStore.getState();
     st.setSelecting(true);
@@ -473,8 +503,11 @@ describe("useCatalogStore", () => {
     fetchMock.mockImplementation(async () =>
       Response.json({ error: { code: "internal", message: "x" } }, { status: 500 }),
     );
+    vi.mocked(emitGarmentChanged).mockClear();
     await expect(useCatalogStore.getState().setArchived(["a"], true)).rejects.toThrow();
     expect(useCatalogStore.getState().items.map((g) => g.id)).toEqual(["a", "b"]);
+    // Nada guardado: el aviso va vacío (y emitGarmentChanged no emite nada).
+    expect(vi.mocked(emitGarmentChanged).mock.calls).toEqual([[[], "archived"]]);
   });
 
   it("un error de red deja el estado de error con su código", async () => {

@@ -474,3 +474,69 @@ function zeroCounts() {
     accessories: 0,
   };
 }
+
+describe("prendas cambiadas en el catálogo (5.5)", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  const list = (ids: string[]) => ({
+    ids,
+    nextCursor: null,
+    status: "ready" as const,
+    loadingMore: false,
+    fetchedAt: Date.now(),
+  });
+
+  it("borrada: fuera del lienzo, del historial y del panel; listas y aleatorios caducados", () => {
+    const fetchMock = vi.fn(async () => Response.json({ bySlot: zeroCounts() }));
+    vi.stubGlobal("fetch", fetchMock);
+    store().tapGarment(g("tee", "tshirt"));
+    store().tapGarment(g("jeans", "jeans"));
+    store().tapGarment(g("bag", "handbag"));
+    store().setSelected("jeans");
+    useDresserStore.setState({
+      counts: zeroCounts(),
+      lists: { bottom: list(["jeans", "chinos"]), bag: list(["bag"]) },
+      pools: { bottom: { ids: ["jeans", "chinos"], fetchedAt: Date.now() } },
+    });
+
+    store().garmentsChanged(["jeans"], "deleted");
+
+    expect(items().map((i) => i.garmentId)).toEqual(["tee", "bag"]);
+    expect(store().selectedId).toBeNull();
+    expect(store().lists.bottom?.ids).toEqual(["chinos"]);
+    expect(store().lists.bottom?.fetchedAt).toBe(0);
+    expect(store().lists.bag?.fetchedAt).toBe(0);
+    expect(store().pools).toEqual({});
+    expect(fetchMock).toHaveBeenCalledWith("/api/garments/counts", expect.anything());
+    // Deshacer no la vuelve a traer.
+    store().undo();
+    expect(items().map((i) => i.garmentId)).toEqual(["tee"]);
+  });
+
+  it("archivada: también sale del lienzo; editada o desarchivada: solo caduca la caché", () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => Response.json({ bySlot: zeroCounts() })),
+    );
+    store().tapGarment(g("tee", "tshirt"));
+    store().tapGarment(g("jeans", "jeans"));
+    useDresserStore.setState({ counts: zeroCounts(), lists: { bottom: list(["jeans"]) } });
+
+    store().garmentsChanged(["tee"], "updated");
+    store().garmentsChanged(["jeans"], "unarchived");
+    expect(items().map((i) => i.garmentId)).toEqual(["tee", "jeans"]);
+    expect(store().lists.bottom?.ids).toEqual(["jeans"]);
+    expect(store().lists.bottom?.fetchedAt).toBe(0);
+
+    store().garmentsChanged(["jeans"], "archived");
+    expect(items().map((i) => i.garmentId)).toEqual(["tee"]);
+    expect(store().lists.bottom?.ids).toEqual([]);
+  });
+
+  it("sin nada cargado no pide nada", () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    store().garmentsChanged(["x"], "deleted");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+});

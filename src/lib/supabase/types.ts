@@ -293,6 +293,7 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      create_favorite: { Args: { p_items: Json; p_name: string }; Returns: string };
       garments_with_all_tags: {
         Args: { p_tag_ids: string[] };
         Returns: {
@@ -317,6 +318,10 @@ export type Database = {
         };
       };
       set_garment_tags: { Args: { p_garment_id: string; p_names: string[] }; Returns: undefined };
+      update_favorite: {
+        Args: { p_id: string; p_items: Json; p_name: string; p_set_name: boolean };
+        Returns: undefined;
+      };
     };
     Enums: {
       [_ in never]: never;

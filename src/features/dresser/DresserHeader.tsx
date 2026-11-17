@@ -2,14 +2,16 @@
 
 // Cabecera del vestidor (screens.md 7.1; paso 4.6): título "Vestidor" y, a la
 // derecha, Deshacer · Rehacer | Guardar en favoritos · Guardar como imagen,
-// atenuados cuando no aplican. Favoritos e imagen siguen desactivados hasta
-// los pasos 5.2 y 6.2.
+// atenuados cuando no aplican. "Guardar en favoritos" (5.2) abre
+// SaveFavoriteSheet; atenuado con el lienzo vacío. La imagen llega en 6.2.
 // Atajos en escritorio: Cmd/Ctrl+Z deshace y Shift+Cmd/Ctrl+Z rehace, salvo
 // con el foco en un campo de texto o con una hoja/diálogo abierto encima.
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { DownloadIcon, HeartIcon, RedoIcon, UndoIcon } from "@/components/icons";
+import { SaveFavoriteSheet } from "@/features/favorites/SaveFavoriteSheet";
 import { useDresserStore } from "./store";
+import { useCanvasGarments } from "./useCanvasGarments";
 
 function isTextField(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -69,6 +71,14 @@ export function DresserHeader({ title }: { title: string }) {
   const undo = useDresserStore((s) => s.undo);
   const redo = useDresserStore((s) => s.redo);
 
+  const canvas = useDresserStore((s) => s.canvas);
+  const canvasSize = useDresserStore((s) => s.canvasSize);
+  const canvasGarments = useCanvasGarments(canvas.items);
+  const empty = canvas.items.length === 0;
+  // Cada apertura monta la hoja de nuevo (key), así empieza limpia.
+  const [favSheet, setFavSheet] = useState({ open: false, key: 0 });
+  const openFavSheet = () => setFavSheet((s) => ({ open: true, key: s.key + 1 }));
+
   useUndoShortcuts();
 
   return (
@@ -82,14 +92,22 @@ export function DresserHeader({ title }: { title: string }) {
           <RedoIcon />
         </HeaderButton>
         <span aria-hidden="true" className="mx-1 h-5 w-px bg-hairline" />
-        {/* Se activan en 5.2 (favoritos) y 6.2 (imagen). */}
-        <HeaderButton label={t("saveFavorite")} disabled>
+        <HeaderButton label={t("saveFavorite")} disabled={empty} onClick={openFavSheet}>
           <HeartIcon />
         </HeaderButton>
+        {/* Se activa en 6.2. */}
         <HeaderButton label={t("saveImage")} disabled>
           <DownloadIcon />
         </HeaderButton>
       </div>
+      <SaveFavoriteSheet
+        key={favSheet.key}
+        open={favSheet.open && !empty}
+        onClose={() => setFavSheet((s) => ({ ...s, open: false }))}
+        canvas={canvas}
+        garments={canvasGarments}
+        canvasSize={canvasSize}
+      />
     </header>
   );
 }

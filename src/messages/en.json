@@ -241,7 +241,7 @@
       "deleteIrreversible": "This can't be undone.",
       "deleted": "Garment deleted.",
       "error": "Something went wrong. Try again.",
-      "offline": "Looks like you're offline. Try again when you're connected.",
+      "offline": "Looks like you’re offline. Try again when you’re connected.",
       "notFound": "This garment no longer exists."
     },
     "select": {
@@ -411,7 +411,71 @@
   },
   "favorites": {
     "savedCount": "{count, plural, =0 {No saved outfits} one {# saved outfit} other {# saved outfits}}",
-    "outfitTitle": "Outfit"
+    "save": {
+      "title": "Save to Favorites",
+      "nameLabel": "Name",
+      "namePlaceholder": "e.g. Friday dinner",
+      "nameHint": "Optional. If left blank, it’s saved as {date}.",
+      "submit": "Save favorite",
+      "saved": "Saved to Favorites.",
+      "error": "Couldn’t save the favorite. Please try again.",
+      "offline": "Looks like you’re offline. Try again when you’re connected.",
+      "invalidGarments": "A garment on the canvas no longer exists. Remove it and try again."
+    },
+    "list": {
+      "meta": "{date} · {count, plural, one {# piece} other {# pieces}}",
+      "deleteLabel": "Delete “{title}”",
+      "loading": "Loading favorites…",
+      "loadingMore": "Loading more favorites…",
+      "loadMoreError": "Couldn’t load more favorites.",
+      "deleted": "Favorite deleted.",
+      "deleteError": "Couldn’t delete the favorite. Please try again.",
+      "offline": "Looks like you’re offline. Try again when you’re connected.",
+      "confirm": {
+        "title": "Delete this favorite?",
+        "description": "The garments stay in your closet.",
+        "confirm": "Delete favorite"
+      },
+      "empty": {
+        "title": "No favorites yet",
+        "description": "Outfits you save from the Dresser show up here, exactly as you arranged them.",
+        "action": "Open the Dresser"
+      },
+      "error": {
+        "title": "Couldn’t load your favorites",
+        "generic": "Something went wrong. Please try again.",
+        "offline": "Looks like you’re offline. Try again when you’re connected."
+      }
+    },
+    "detail": {
+      "back": "Favorites",
+      "loading": "Loading favorite…",
+      "subtitle": "Saved {date} · {count, plural, one {# piece} other {# pieces}}",
+      "saveImage": "Save as image",
+      "actions": "Favorite actions",
+      "help": "Drag to move. Pinch, or use the handles, to resize and rotate. To change garments, build a new outfit in the Dresser.",
+      "unsaved": "Unsaved changes",
+      "saved": "Favorite updated.",
+      "saveError": "Couldn’t save your changes. Please try again.",
+      "offline": "You’re offline. Check your connection and try again.",
+      "invalidGarments": "A garment in this favorite no longer exists. Reload the page.",
+      "leave": {
+        "title": "Discard changes?",
+        "body": "You rearranged this favorite. Leave without saving?",
+        "confirm": "Discard changes",
+        "cancel": "Keep editing"
+      },
+      "notFound": {
+        "title": "We can’t find this favorite",
+        "description": "It may have been deleted.",
+        "action": "Go to Favorites"
+      },
+      "error": {
+        "title": "Couldn’t load this favorite",
+        "generic": "Something went wrong. Please try again.",
+        "offline": "You’re offline. Check your connection and try again."
+      }
+    }
   },
   "export": {},
   "settings": {

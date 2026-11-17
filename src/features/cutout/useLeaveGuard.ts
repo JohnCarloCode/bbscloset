@@ -7,6 +7,7 @@
 // componentes, así que se interceptan en captura los clics en enlaces
 // internos (antes que el router) y la página pide confirmación con su Dialog.
 // No cubre "Atrás" del navegador ni las navegaciones por código.
+// También lo usa el detalle del favorito (5.4) para los cambios sin guardar.
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isLeavingClick } from "./logic";

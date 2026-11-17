@@ -16,6 +16,8 @@
 //   vista, el hueco y los filtros vigentes (también los no cargados aún);
 //   `setArchived` archiva o desarchiva por tandas (POST /api/garments/archive)
 //   y quita de la lista las que ya no encajan. Cambiar de vista sale del modo.
+// - Las tres avisan con GARMENT_CHANGED_EVENT (garmentChanged.ts, 5.5) para
+//   que el vestidor y los favoritos no se queden con datos viejos.
 import { create } from "zustand";
 import { apiFetch, isApiClientError, type ApiClientErrorCode } from "@/lib/api/client";
 import type {
@@ -31,6 +33,7 @@ import type {
 import { COLOR_FAMILY_IDS, type ColorFamilyId } from "@/lib/domain/colors";
 import { SLOT_IDS, isSlotId, type SlotId } from "@/lib/domain/slots";
 import { isGarmentTypeId, slotOfType, type GarmentTypeId } from "@/lib/domain/types";
+import { changeOf, emitGarmentChanged } from "./garmentChanged";
 import { garmentMatches, insertGarment } from "./pending";
 
 export type CatalogView = "active" | "archived";
@@ -473,6 +476,8 @@ export const useCatalogStore = create<CatalogState>()((set, get) => {
 
     updateGarment: (garment) => {
       const { status, items, nextCursor, selectedIds } = get();
+      const prev = items.find((g) => g.id === garment.id);
+      emitGarmentChanged([garment.id], changeOf(garment, prev?.archived));
       if (status === "ready") {
         const next = applyGarmentChange(items, garment, get(), nextCursor === null);
         if (next !== items) {
@@ -486,6 +491,7 @@ export const useCatalogStore = create<CatalogState>()((set, get) => {
 
     removeGarment: (id) => {
       const { items, selectedIds } = get();
+      emitGarmentChanged([id], "deleted");
       const next = withoutGarment(items, id);
       if (next !== items) set({ items: next, selectedIds: selectedIds.filter((x) => x !== id) });
       void get().reloadCounts();
@@ -511,12 +517,19 @@ export const useCatalogStore = create<CatalogState>()((set, get) => {
 
     setArchived: async (ids, archived) => {
       let updated = 0;
-      for (const part of chunk(ids, ARCHIVE_BATCH)) {
-        const res = await apiFetch<GarmentArchiveResponse>("/api/garments/archive", {
-          method: "POST",
-          json: { ids: part, archived },
-        });
-        updated += res.updated;
+      const done: string[] = [];
+      try {
+        for (const part of chunk(ids, ARCHIVE_BATCH)) {
+          const res = await apiFetch<GarmentArchiveResponse>("/api/garments/archive", {
+            method: "POST",
+            json: { ids: part, archived },
+          });
+          updated += res.updated;
+          done.push(...part);
+        }
+      } finally {
+        // Un solo aviso con las tandas que sí se han guardado.
+        emitGarmentChanged(done, archived ? "archived" : "unarchived");
       }
       const { view, items, selectedIds, allIds, status } = get();
       const fits = archived === (view === "archived");

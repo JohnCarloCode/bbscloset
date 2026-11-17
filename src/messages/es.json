@@ -411,7 +411,71 @@
   },
   "favorites": {
     "savedCount": "{count, plural, =0 {Ningún outfit guardado} one {# outfit guardado} other {# outfits guardados}}",
-    "outfitTitle": "Outfit"
+    "save": {
+      "title": "Guardar en favoritos",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "p. ej. Cena del viernes",
+      "nameHint": "Opcional. Si lo dejas vacío, se guarda como {date}.",
+      "submit": "Guardar favorito",
+      "saved": "Guardado en Favoritos.",
+      "error": "No se ha podido guardar el favorito. Vuelve a intentarlo.",
+      "offline": "Parece que no hay conexión. Vuelve a intentarlo cuando la tengas.",
+      "invalidGarments": "Alguna prenda del lienzo ya no existe. Quítala y vuelve a intentarlo."
+    },
+    "list": {
+      "meta": "{date} · {count, plural, one {# prenda} other {# prendas}}",
+      "deleteLabel": "Eliminar «{title}»",
+      "loading": "Cargando favoritos…",
+      "loadingMore": "Cargando más favoritos…",
+      "loadMoreError": "No se han podido cargar más favoritos.",
+      "deleted": "Favorito eliminado.",
+      "deleteError": "No se ha podido eliminar el favorito. Vuelve a intentarlo.",
+      "offline": "Parece que no hay conexión. Vuelve a intentarlo cuando la tengas.",
+      "confirm": {
+        "title": "¿Eliminar este favorito?",
+        "description": "Las prendas siguen en tu armario.",
+        "confirm": "Eliminar favorito"
+      },
+      "empty": {
+        "title": "Todavía no hay favoritos",
+        "description": "Los outfits que guardes desde el vestidor salen aquí, tal como los dejaste.",
+        "action": "Abrir el vestidor"
+      },
+      "error": {
+        "title": "No se han podido cargar tus favoritos",
+        "generic": "Algo ha fallado. Vuelve a intentarlo.",
+        "offline": "Parece que no hay conexión. Vuelve a intentarlo cuando la tengas."
+      }
+    },
+    "detail": {
+      "back": "Favoritos",
+      "loading": "Cargando favorito…",
+      "subtitle": "Guardado el {date} · {count, plural, one {# prenda} other {# prendas}}",
+      "saveImage": "Guardar como imagen",
+      "actions": "Acciones del favorito",
+      "help": "Arrastra para mover. Pellizca, o usa los tiradores, para cambiar tamaño y girar. Para cambiar prendas, monta un outfit nuevo en el vestidor.",
+      "unsaved": "Cambios sin guardar",
+      "saved": "Favorito actualizado.",
+      "saveError": "No se han podido guardar los cambios. Vuelve a intentarlo.",
+      "offline": "Parece que no hay conexión. Vuelve a intentarlo cuando la tengas.",
+      "invalidGarments": "Alguna prenda de este favorito ya no existe. Recarga la página.",
+      "leave": {
+        "title": "¿Descartar cambios?",
+        "body": "Has recolocado este favorito. ¿Salir sin guardar?",
+        "confirm": "Descartar cambios",
+        "cancel": "Seguir editando"
+      },
+      "notFound": {
+        "title": "No encontramos este favorito",
+        "description": "Puede que se haya eliminado.",
+        "action": "Ir a Favoritos"
+      },
+      "error": {
+        "title": "No se ha podido cargar el favorito",
+        "generic": "Algo ha fallado. Vuelve a intentarlo.",
+        "offline": "Parece que no hay conexión. Vuelve a intentarlo cuando la tengas."
+      }
+    }
   },
   "export": {},
   "settings": {

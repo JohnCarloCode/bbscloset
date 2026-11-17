@@ -1,4 +1,5 @@
-// Tipos de las respuestas de la API de prendas, marcas y etiquetas (paso 3.2).
+// Tipos de las respuestas de la API de prendas, marcas y etiquetas (paso 3.2)
+// y de favoritos (paso 5.1).
 // Los usan las rutas de src/app/api/ y la UI (con apiFetch).
 import type { ColorFamilyId } from "@/lib/domain/colors";
 import type { SeasonId } from "@/lib/domain/seasons";
@@ -82,3 +83,71 @@ export type BrandsResponse = { brands: string[] };
 /** GET /api/tags */
 export type TagWithCount = TagRef & { count: number };
 export type TagsResponse = { tags: TagWithCount[] };
+
+// ---------------------------------------------------------------------------
+// Favoritos (paso 5.1)
+
+/** Tope técnico del nombre de un favorito. */
+export const FAVORITE_NAME_MAX = 80;
+/** Prendas por favorito (más que cualquier lienzo real del vestidor). */
+export const FAVORITE_ITEMS_MAX = 30;
+
+/**
+ * Posición de una prenda en el favorito, en las unidades del lienzo
+ * (src/features/dresser/model.ts). x, y, scale y rotation van juntos: o todos
+ * con valor (ajuste manual) o todos null ("colócalo tú, app"). z puede ser
+ * null (se usa la z por defecto del hueco).
+ */
+export type FavoritePosition = {
+  x: number | null;
+  y: number | null;
+  scale: number | null;
+  rotation: number | null;
+  z: number | null;
+};
+
+/** Item del listado: lo justo para el mini collage. */
+export type FavoriteSummaryItem = FavoritePosition & {
+  garment_id: string;
+  type_id: GarmentTypeId;
+  slot: SlotId;
+  /** URL firmada (1 h) de la miniatura; null si no se pudo firmar. */
+  thumbUrl: string | null;
+};
+
+export type FavoriteSummary = {
+  id: string;
+  /** Nombre opcional; si es null, la UI muestra la fecha. */
+  name: string | null;
+  created_at: string;
+  garmentCount: number;
+  items: FavoriteSummaryItem[];
+};
+
+/** GET /api/favorites */
+export type FavoriteListResponse = {
+  items: FavoriteSummary[];
+  nextCursor: string | null;
+  /** Total de favoritos del usuario (contador del listado). */
+  total: number;
+};
+
+/** Item del detalle: con el recorte para el lienzo. */
+export type FavoriteItem = FavoritePosition & {
+  garment_id: string;
+  type_id: GarmentTypeId;
+  slot: SlotId;
+  name: string | null;
+  /** Los favoritos siguen mostrando las prendas archivadas (spec 2.5). */
+  archived: boolean;
+  /** URL firmada (1 h) del recorte; null si no se pudo firmar. */
+  cutoutUrl: string | null;
+};
+
+/** GET/PATCH /api/favorites/[id] y POST /api/favorites */
+export type Favorite = {
+  id: string;
+  name: string | null;
+  created_at: string;
+  items: FavoriteItem[];
+};

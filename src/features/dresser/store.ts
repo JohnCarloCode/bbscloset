@@ -20,6 +20,7 @@
 //   firmadas) se pide por páginas y se guarda para toda la sesión. Los
 //   recortes no: se piden aparte solo para las prendas del lienzo (Dresser).
 import { create } from "zustand";
+import { onGarmentChanged, type GarmentChange } from "@/features/catalog/garmentChanged";
 import { apiFetch, isApiClientError } from "@/lib/api/client";
 import type { Garment, GarmentCountsResponse, GarmentListResponse } from "@/lib/api/types";
 import { isSlotId, type SlotId } from "@/lib/domain/slots";
@@ -208,6 +209,13 @@ export type DresserState = {
   loadMore: (slot: SlotId) => Promise<void>;
   /** Marca las listas como caducadas y recarga los recuentos (p. ej. al subir una prenda). */
   invalidate: () => void;
+  /** Quita prendas del lienzo y de todo su historial, sin crear un paso (decisión 10). */
+  dropGarments: (ids: ReadonlySet<string>) => void;
+  /**
+   * Prendas cambiadas en el catálogo (GARMENT_CHANGED_EVENT, 5.5): listas y
+   * aleatorios caducados y, si se han borrado o archivado, fuera del lienzo.
+   */
+  garmentsChanged: (ids: readonly string[], change: GarmentChange) => void;
 };
 
 const initial = {
@@ -407,19 +415,8 @@ export const useDresserStore = create<DresserState>()((set, get) => {
           };
         }
         set({ garments: known });
-        if (gone.size === 0) return;
-        // Borradas o archivadas: fuera en silencio, también del historial
-        // (deshacer no debe volver a traerlas). No es un paso nuevo.
-        const s = get();
-        const drop = (c: CanvasState) =>
-          c.items.some((i) => gone.has(i.garmentId))
-            ? { items: c.items.filter((i) => !gone.has(i.garmentId)) }
-            : c;
-        const h = mapHistory(historyOf(s), drop, sameCanvas);
-        set({
-          ...fromHistory(replacePresent(h, relayout(h.present, aspectOf, s.canvasSize))),
-          ...(s.selectedId && gone.has(s.selectedId) ? { selectedId: null } : {}),
-        });
+        // Borradas o archivadas: fuera en silencio.
+        if (gone.size > 0) get().dropGarments(gone);
       } catch {
         // Sin red: se queda el lienzo tal cual (los recortes se reintentan sueltos).
       } finally {
@@ -683,6 +680,49 @@ export const useDresserStore = create<DresserState>()((set, get) => {
       }
     },
 
+    dropGarments: (gone) => {
+      const s = get();
+      if (
+        ![s.canvas, ...s.past, ...s.future].some((c) => c.items.some((i) => gone.has(i.garmentId)))
+      )
+        return;
+      // También del historial: deshacer no debe volver a traerlas. No es un paso nuevo.
+      const drop = (c: CanvasState) =>
+        c.items.some((i) => gone.has(i.garmentId))
+          ? { items: c.items.filter((i) => !gone.has(i.garmentId)) }
+          : c;
+      const h = mapHistory(historyOf(s), drop, sameCanvas);
+      set({
+        ...fromHistory(replacePresent(h, relayout(h.present, aspectOf, s.canvasSize))),
+        ...(s.selectedId && gone.has(s.selectedId) ? { selectedId: null } : {}),
+      });
+    },
+
+    garmentsChanged: (ids, change) => {
+      if (change === "deleted" || change === "archived") {
+        const gone = new Set(ids);
+        get().dropGarments(gone);
+        // Fuera ya del panel, sin esperar a que se vuelva a pedir la lista.
+        set((s) => ({
+          lists: Object.fromEntries(
+            Object.entries(s.lists).map(([slot, l]) => [
+              slot,
+              l.ids.some((id) => gone.has(id))
+                ? { ...l, ids: l.ids.filter((id) => !gone.has(id)) }
+                : l,
+            ]),
+          ),
+        }));
+      }
+      const s = get();
+      // Sin nada cargado todavía no hay caché que invalidar.
+      if (s.counts === null && Object.keys(s.lists).length === 0) {
+        if (Object.keys(s.pools).length > 0) set({ pools: {} });
+        return;
+      }
+      s.invalidate();
+    },
+
     invalidate: () => {
       // Se marcan caducadas (se siguen viendo hasta que llegue la recarga).
       set((s) => ({
@@ -695,6 +735,10 @@ export const useDresserStore = create<DresserState>()((set, get) => {
     },
   };
 });
+
+// Cambios hechos en el catálogo mientras el vestidor está oculto (Activity)
+// o sin montar: el store vive toda la sesión, así que escucha aquí.
+onGarmentChanged(({ ids, change }) => useDresserStore.getState().garmentsChanged(ids, change));
 
 /** Solo para tests: vuelve al estado inicial. */
 export function resetDresserStoreForTests() {
