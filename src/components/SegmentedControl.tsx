@@ -81,7 +81,9 @@ export function SegmentedControl<V extends string>({
               "after:absolute after:inset-x-0 after:-inset-y-[3px] after:content-['']",
               "disabled:cursor-not-allowed disabled:opacity-40",
               checked && variant === "emphasis" && "bg-primary font-semibold",
-              checked && variant === "neutral" && "bg-canvas",
+              // Blanco con borde hairline (como el prototipo); sin borde visible si no está activo.
+              variant === "neutral" && "border",
+              checked && variant === "neutral" ? "border-hairline bg-canvas" : "border-transparent",
             )}
           >
             {o.label}

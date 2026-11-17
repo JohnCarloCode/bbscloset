@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
+    "check:messages": "node scripts/check-messages.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "gen:types": "supabase gen types typescript --local > src/lib/supabase/types.ts && prettier --write src/lib/supabase/types.ts"

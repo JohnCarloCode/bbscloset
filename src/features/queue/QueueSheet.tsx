@@ -112,6 +112,7 @@ function QueueRow({
       >
         <BlobImage
           blob={item.thumb ?? item.source}
+          alt={t("queue.item.thumbAlt", { name })}
           className={cx("max-h-full max-w-full object-contain", !item.thumb && "opacity-55")}
         />
       </TransparencyChecker>

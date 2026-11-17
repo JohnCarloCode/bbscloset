@@ -5,6 +5,7 @@
 // Si IndexedDB no está disponible (modo privado antiguo, permisos), la cola
 // sigue funcionando solo en memoria: los fallos se registran y se ignoran.
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
+import { reportStorageUnavailable } from "@/lib/storageNotice";
 import type { QueueItem } from "./types";
 
 const DB_NAME = "bbscloset";
@@ -35,6 +36,8 @@ function db(): Promise<IDBPDatabase<QueueDB>> {
 
 function warn(action: string, err: unknown) {
   console.warn(`[queue] IndexedDB: no se pudo ${action}`, err);
+  // Aviso (una vez): lo pendiente no sobrevivirá a cerrar la página.
+  reportStorageUnavailable();
 }
 
 /** Items guardados de un usuario (vacío si IndexedDB falla). */

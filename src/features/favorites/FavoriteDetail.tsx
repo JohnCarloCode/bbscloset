@@ -264,7 +264,7 @@ function Editor({
           title={t("saveImage")}
           disabled={laid.items.length === 0}
           onClick={() => setImgSheet((s) => ({ open: true, key: s.key + 1 }))}
-          className="flex size-10 cursor-pointer items-center justify-center rounded-full text-ink disabled:cursor-default disabled:opacity-30"
+          className="flex size-11 cursor-pointer items-center justify-center rounded-full text-ink disabled:cursor-default disabled:opacity-30"
         >
           <DownloadIcon />
         </button>

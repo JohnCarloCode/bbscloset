@@ -181,6 +181,47 @@ export function toggle(
   return { ...place(state, garment, jewelryMax, now), removed: null };
 }
 
+/**
+ * Prendas del lienzo a las que se les ha cambiado el tipo (y con él quizá el
+ * hueco) en el catálogo (7.6). Cada item cuyo hueco ya no corresponde a su
+ * tipo se quita y se vuelve a poner con `place`, que aplica la regla de huecos
+ * (la que sobra en el hueco nuevo, o por cuerpo entero, se va). Lo propio del
+ * item se conserva: si era manual, su posición, tamaño y giro; y el candado.
+ * `typeOf` da el tipo actual (undefined = no se sabe: se deja como está).
+ * Devuelve el mismo estado si no cambia nada.
+ */
+export function reslot(
+  state: CanvasState,
+  typeOf: (garmentId: string) => GarmentTypeId | undefined,
+  jewelryMax: number = JEWELRY_MAX_DEFAULT,
+): CanvasState {
+  const moved = state.items.filter((i) => {
+    const type = typeOf(i.garmentId);
+    return type !== undefined && slotOfType(type) !== i.slotId;
+  });
+  if (moved.length === 0) return state;
+
+  let next = state;
+  for (const old of [...moved].sort(byPlacedAt)) {
+    // Puede haberla quitado ya una anterior (p. ej. otra pasada a cuerpo entero).
+    if (!hasItem(next, old.garmentId)) continue;
+    const placed = place(
+      remove(next, old.garmentId),
+      { id: old.garmentId, typeId: typeOf(old.garmentId)! },
+      jewelryMax,
+      old.placedAt,
+    ).state;
+    next = mapItem(placed, old.garmentId, (i) => ({
+      ...i,
+      ...(old.manual
+        ? { x: old.x, y: old.y, scale: old.scale, rotation: old.rotation, manual: true }
+        : {}),
+      locked: old.locked,
+    }));
+  }
+  return next;
+}
+
 export function remove(state: CanvasState, garmentId: string): CanvasState {
   if (!hasItem(state, garmentId)) return state;
   return { items: state.items.filter((i) => i.garmentId !== garmentId) };

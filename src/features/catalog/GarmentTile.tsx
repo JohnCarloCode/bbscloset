@@ -8,11 +8,12 @@
 // (`role="checkbox"`, `aria-checked`) con un círculo marcable arriba a la
 // derecha; tocarla la marca o desmarca en vez de abrir la ficha. Marcada,
 // borde negro de 2 px y círculo rosa con la marca (como el prototipo).
-import { memo, useState } from "react";
+import { memo } from "react";
 import { useTranslations } from "next-intl";
 import { cx } from "@/components/cx";
 import { CheckIcon } from "@/components/icons";
 import type { Garment } from "@/lib/api/types";
+import { useSignedSrc } from "@/lib/storage/useSignedSrc";
 
 /** Lado de la miniatura en Storage (thumb.webp, paso 3.5). */
 const THUMB_SIZE = 320;
@@ -35,10 +36,9 @@ export const GarmentTile = memo(function GarmentTile({
 }: GarmentTileProps) {
   const tTypes = useTranslations("types");
   const tSlots = useTranslations("slots");
-  // Una URL que no carga (p. ej. firmada y caducada) deja el fondo liso.
-  // La URL forma parte de la clave: si llega una nueva (7.6), se vuelve a intentar.
-  const [failedUrl, setFailedUrl] = useState<string | null>(null);
-  const thumbUrl = garment.thumbUrl && garment.thumbUrl !== failedUrl ? garment.thumbUrl : null;
+  // Si la URL firmada ha caducado se renueva y se reintenta una vez (7.6);
+  // si aun así no carga, el fondo queda liso.
+  const { src: thumbUrl, onError } = useSignedSrc(garment.thumbUrl);
 
   const title = garment.name || tTypes(garment.type_id);
   const meta = [tSlots(garment.slot), garment.brand].filter(Boolean).join(" · ");
@@ -70,7 +70,8 @@ export const GarmentTile = memo(function GarmentTile({
         )}
         {thumbUrl && (
           // Miniatura WebP ya reducida (≤ 320 px) con URL firmada de Supabase:
-          // no pasa por el optimizador de next/image.
+          // no pasa por el optimizador de next/image. La prenda ocupa ~62 % del
+          // cuadro, como en el prototipo.
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={thumbUrl}
@@ -80,8 +81,8 @@ export const GarmentTile = memo(function GarmentTile({
             loading="lazy"
             decoding="async"
             draggable={false}
-            onError={() => setFailedUrl(garment.thumbUrl)}
-            className="absolute inset-0 size-full object-contain p-sm"
+            onError={onError}
+            className="absolute inset-0 size-full object-contain p-[19%]"
           />
         )}
       </span>

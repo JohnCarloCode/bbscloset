@@ -4,8 +4,12 @@
 //   - 401 → la sesión ha caducado: navega a /login?expired=1 (el login enseña
 //     un toast) y lanza el error con code "unauthorized" (la UI no debe
 //     enseñar nada más: la página se va);
-//   - sin red → status 0 y code "network".
+//   - sin red → status 0 y code "network";
+//   - 503 service_unavailable (Supabase no responde, 7.6) → además enciende el
+//     aviso global "No se puede conectar" (connection.ts); la siguiente
+//     respuesta buena lo apaga.
 // Un fetch abortado (AbortController) se relanza tal cual.
+import { setServiceUnavailable } from "./connection";
 import type { ApiErrorCode } from "./errors";
 
 /** Marca en la URL del login para avisar de que la sesión ha caducado. */
@@ -103,12 +107,17 @@ export async function apiFetch<T = unknown>(path: string, init: ApiFetchInit = {
   }
 
   const data = await readJson(res);
-  if (res.ok) return data as T;
+  if (res.ok) {
+    setServiceUnavailable(false);
+    return data as T;
+  }
 
   if (res.status === 401) {
     redirectToLogin();
     const { message, details } = toError(res, data);
     throw new ApiClientError(401, "unauthorized", message, details);
   }
-  throw toError(res, data);
+  const error = toError(res, data);
+  if (error.code === "service_unavailable") setServiceUnavailable(true);
+  throw error;
 }

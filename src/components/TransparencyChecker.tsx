@@ -1,6 +1,6 @@
 // transparency-checker (DESIGN.md): fondo que delata la transparencia.
-// - `checker`: damero de 16 px (#ececec / blanco) para recortes con transparencia.
-// - `photo`: fondo liso photo-backdrop (#d9d4cc) para fotos que conservan su fondo.
+// - `checker`: damero de 16 px (checker / canvas) para recortes con transparencia.
+// - `photo`: fondo liso photo-backdrop para fotos que conservan su fondo.
 import type { HTMLAttributes } from "react";
 import { cx } from "./cx";
 

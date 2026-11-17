@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiClientError, apiFetch, resetApiClientForTests } from "./client";
+import { isServiceUnavailable, setServiceUnavailable } from "./connection";
 
 const jsonResponse = (status: number, body: unknown) =>
   new Response(JSON.stringify(body), {
@@ -57,6 +58,23 @@ describe("apiFetch", () => {
       details: [{ path: "n" }],
     });
     expect(assign).not.toHaveBeenCalled();
+  });
+
+  it("503 service_unavailable → enciende el aviso global; la siguiente respuesta buena lo apaga", async () => {
+    setServiceUnavailable(false);
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse(503, { error: { code: "service_unavailable", message: "down" } }),
+    );
+    await expect(apiFetch("/api/garments")).rejects.toMatchObject({
+      status: 503,
+      code: "service_unavailable",
+    });
+    expect(isServiceUnavailable()).toBe(true);
+    expect(assign).not.toHaveBeenCalled();
+
+    fetchMock.mockResolvedValueOnce(jsonResponse(200, { ok: 1 }));
+    await apiFetch("/api/garments");
+    expect(isServiceUnavailable()).toBe(false);
   });
 
   it("error sin cuerpo JSON → code unknown", async () => {

@@ -1,5 +1,6 @@
 // Consultas de prendas, marcas y etiquetas (paso 3.2). Las rutas de
-// src/app/api/garments/**, /api/brands y /api/tags solo validan y llaman aquí.
+// src/app/api/garments/** y /api/brands solo validan y llaman aquí (las
+// etiquetas, en tags.ts).
 // Todo va con el cliente del usuario: la RLS (0004) y las políticas de
 // Storage (0007) son la segunda barrera. Las funciones RPC de 0008 son
 // `security invoker`, así que también respetan la RLS.
@@ -23,7 +24,6 @@ import {
   type GarmentUploadSlot,
   type GarmentUsageResponse,
   type SignedUpload,
-  type TagWithCount,
 } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -106,7 +106,7 @@ const garmentFields = {
   type_id: z.enum(GARMENT_TYPE_IDS),
   name: optionalText(NAME_MAX),
   seasons: seasonsSchema,
-  /** Hex del selector (`#abc`, `#AABBCC`…); se guarda normalizado. */
+  /** Hex del selector (3 o 6 cifras, en cualquier caja); se guarda normalizado. */
   color_hex: z.string().max(16).nullable(),
   /** Solo "multicolor" explícito (decisión 2); el resto se calcula del hex. */
   color_family: z.literal("multicolor").nullable(),
@@ -714,20 +714,4 @@ export async function listBrands(
     if (brand && (!needle || brand.toLocaleLowerCase().startsWith(needle))) brands.add(brand);
   }
   return [...brands].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
-}
-
-/** Etiquetas del usuario con su número de prendas (en uso y archivadas), por nombre. */
-export async function listTags(supabase: ServerSupabase, userId: string): Promise<TagWithCount[]> {
-  const { data, error } = await supabase
-    .from("tags")
-    .select("id, name, garment_tags(count)")
-    .eq("user_id", userId);
-  if (error) throw error;
-  return data
-    .map((t) => ({
-      id: t.id,
-      name: t.name,
-      count: (t.garment_tags as unknown as { count: number }[])[0]?.count ?? 0,
-    }))
-    .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
 }

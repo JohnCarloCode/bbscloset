@@ -1,5 +1,5 @@
 // Tests de la geometría de exportación (plan 6.1). El pintado con Konva se
-// prueba en el navegador (/dev/canvas).
+// prueba en el navegador (vestidor y exportar).
 import { describe, expect, it } from "vitest";
 import type { CanvasItem } from "@/features/dresser/model";
 import {

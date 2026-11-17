@@ -28,7 +28,10 @@ export default function WaitlistPage() {
         <WaitlistForm />
         <p className="flex flex-wrap items-center justify-center gap-x-xxs text-caption text-ink-muted-80">
           <span>{t("alreadyInvited")}</span>
-          <Link href="/login" className="text-ink underline underline-offset-2">
+          <Link
+            href="/login"
+            className="inline-flex min-h-11 items-center text-ink underline underline-offset-2"
+          >
             {t("signIn")}
           </Link>
         </p>

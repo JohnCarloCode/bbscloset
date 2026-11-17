@@ -24,7 +24,10 @@ export default function LoginPage({ searchParams }: PageProps<"/login">) {
         <SessionExpiredToast />
         <p className="flex flex-wrap items-center gap-x-xxs border-t border-hairline pt-[20px] text-caption text-ink-muted-80">
           <span>{t("inviteOnly")}</span>
-          <Link href="/waitlist" className="text-ink underline underline-offset-2">
+          <Link
+            href="/waitlist"
+            className="inline-flex min-h-11 items-center text-ink underline underline-offset-2"
+          >
             {t("joinWaitlist")}
           </Link>
         </p>

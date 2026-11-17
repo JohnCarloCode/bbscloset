@@ -43,8 +43,10 @@ export function SlotChips({ counts, view, value, onChange, leading }: SlotChipsP
             aria-label={t("slotChip", { label, count })}
             className="shrink-0 gap-[6px] whitespace-nowrap"
           >
-            <span>{label}</span>
-            <span className="text-ink-muted-48">{count}</span>
+            <span>{label}</span> {/* Sobre el rosa del chip activo el gris no llega a 4,5:1. */}
+            <span className={slot === value ? "text-ink-muted-80" : "text-ink-muted-48"}>
+              {count}
+            </span>
           </Chip>
         );
       })}

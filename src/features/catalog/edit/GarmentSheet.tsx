@@ -21,6 +21,7 @@ import { Sheet } from "@/components/Sheet";
 import { TransparencyChecker } from "@/components/TransparencyChecker";
 import { useToast } from "@/components/toast";
 import { apiFetch, isApiClientError } from "@/lib/api/client";
+import { useSignedSrc } from "@/lib/storage/useSignedSrc";
 import type { Garment, GarmentUsageResponse } from "@/lib/api/types";
 import {
   GARMENT_SAVED_EVENT,
@@ -227,7 +228,8 @@ export function GarmentSheet({ garment: initial, onClose }: GarmentSheetProps) {
   );
 
   // Recorte actual (o el estado del cambio de foto pendiente).
-  const src = garment.cutoutUrl ?? garment.thumbUrl;
+  // URL firmada caducada → se renueva y se reintenta una vez (7.6).
+  const { src, onError: onImageError } = useSignedSrc(garment.cutoutUrl ?? garment.thumbUrl);
   const preview = pending ? (
     <div className="flex flex-col">
       <CutoutPreview localId={pending.localId} hasAlpha={replaceHasAlpha(pending.localId)} />
@@ -248,6 +250,7 @@ export function GarmentSheet({ garment: initial, onClose }: GarmentSheetProps) {
             alt={t("catalog.edit.cutoutAlt", { garment: name })}
             decoding="async"
             draggable={false}
+            onError={onImageError}
             className="size-full object-contain p-sm"
           />
         )}

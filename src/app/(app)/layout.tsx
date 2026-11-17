@@ -11,13 +11,18 @@ import { QueuePillSlot } from "@/components/nav/QueuePillSlot";
 import { QueueProvider } from "@/features/queue/QueueProvider";
 import { AddGarmentSheet } from "@/features/catalog/add/AddGarmentSheet";
 import { ReviewSheet } from "@/features/catalog/review/ReviewSheet";
+import { AppNotices } from "@/features/connection/AppNotices";
 
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="flex min-h-dvh">
       <Sidebar />
       {/* Hueco inferior del alto de la barra para que no tape el contenido. */}
-      <div className="min-w-0 flex-1 pb-(--tab-bar-h)">{children}</div>
+      <div className="min-w-0 flex-1 pb-(--tab-bar-h)">
+        {/* Sin red, sin Supabase o sin almacenamiento en el dispositivo (paso 7.6). */}
+        <AppNotices />
+        {children}
+      </div>
       <TabBar />
       {/* Cola de recorte global (paso 3.6): bucles, píldora y hoja. */}
       <QueuePillSlot>

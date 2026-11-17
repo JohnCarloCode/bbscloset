@@ -60,7 +60,7 @@ function HeaderButton({
       title={label}
       disabled={disabled}
       onClick={onClick}
-      className="flex size-10 cursor-pointer items-center justify-center rounded-full text-ink transition-opacity active:scale-95 disabled:cursor-default disabled:opacity-30 disabled:active:scale-100"
+      className="flex size-11 cursor-pointer items-center justify-center rounded-full text-ink motion-safe:transition-opacity active:scale-95 disabled:cursor-default disabled:opacity-30 disabled:active:scale-100"
     >
       {children}
     </button>

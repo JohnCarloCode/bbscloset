@@ -24,7 +24,7 @@ export type Garment = {
   slot: SlotId;
   name: string | null;
   seasons: SeasonId[];
-  /** `#aabbcc` en minúsculas, o null (sin color o multicolor). */
+  /** Hex de 6 cifras en minúsculas, o null (sin color o multicolor). */
   color_hex: string | null;
   color_family: ColorFamilyId | null;
   brand: string | null;
@@ -81,8 +81,20 @@ export type GarmentArchiveResponse = { updated: number };
 export type BrandsResponse = { brands: string[] };
 
 /** GET /api/tags */
+/** GET/PATCH /api/me: perfil del usuario y su email (de la sesión). */
+export type Me = {
+  user_id: string;
+  language: string;
+  jewelry_max: number;
+  random_slots: string[];
+  created_at: string;
+  email: string | null;
+};
+
 export type TagWithCount = TagRef & { count: number };
 export type TagsResponse = { tags: TagWithCount[] };
+/** PATCH /api/tags/[id] → TagWithCount; DELETE /api/tags/[id] → */
+export type TagDeleteResponse = { affected: number };
 
 // ---------------------------------------------------------------------------
 // Favoritos (paso 5.1)

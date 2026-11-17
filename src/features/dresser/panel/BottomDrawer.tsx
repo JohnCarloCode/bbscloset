@@ -116,7 +116,12 @@ export function BottomDrawer({ onTap, className }: BottomDrawerProps) {
             stepDrawer(e.key === "ArrowUp" ? 1 : -1);
           }
         }}
-        className="block h-6 w-full shrink-0 cursor-grab touch-none"
+        className={cx(
+          "relative block h-6 w-full shrink-0 cursor-grab touch-none",
+          // 24 px visibles; el ::after baja la zona táctil hasta 44 px por
+          // debajo del selector y el enlace (que van encima, con `relative`).
+          "after:absolute after:inset-x-0 after:top-0 after:-bottom-5 after:content-['']",
+        )}
       >
         <span
           aria-hidden="true"
@@ -134,7 +139,7 @@ export function BottomDrawer({ onTap, className }: BottomDrawerProps) {
         <button
           type="button"
           onClick={() => setDrawer(drawer === "half" ? "expanded" : "half")}
-          className="shrink-0 cursor-pointer py-xs text-caption whitespace-nowrap text-ink underline underline-offset-2"
+          className="relative shrink-0 cursor-pointer py-xs text-caption whitespace-nowrap text-ink underline underline-offset-2 after:absolute after:inset-x-0 after:-inset-y-1 after:content-['']"
         >
           {actionLabel}
         </button>

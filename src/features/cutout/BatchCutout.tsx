@@ -270,7 +270,11 @@ export function BatchCutout() {
               </p>
             </div>
             {batch.length > 0 &&
-              pickButton("secondary", t("cutout.add"), "min-h-9 px-md text-caption")}
+              pickButton(
+                "secondary",
+                t("cutout.add"), // 36 px visibles; el ::after amplía la zona táctil a 44 px.
+                "relative min-h-9 px-md text-caption after:absolute after:inset-x-0 after:-inset-y-1 after:content-['']",
+              )}
           </header>
 
           <input

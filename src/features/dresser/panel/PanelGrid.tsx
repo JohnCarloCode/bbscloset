@@ -10,12 +10,13 @@
 // Con `limit` solo se pintan esas tarjetas (una fila en el estado medio).
 // Con `onLoadMore`, un centinela al final pide la página siguiente al
 // acercarse dentro del contenedor con scroll (`scrollRoot`).
-import { memo, useEffect, useRef, useState, type RefObject } from "react";
+import { memo, useEffect, useRef, type RefObject } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/Button";
 import { cx } from "@/components/cx";
 import { useAddGarment } from "@/features/catalog/add/store";
 import type { SlotId } from "@/lib/domain/slots";
+import { useSignedSrc } from "@/lib/storage/useSignedSrc";
 import { selectClosetEmpty, useDresserStore, type KnownGarment } from "../store";
 
 const THUMB_SIZE = 320;
@@ -141,8 +142,8 @@ type PanelTileProps = {
 
 const PanelTile = memo(function PanelTile({ garment, onCanvas, onTap }: PanelTileProps) {
   const tTypes = useTranslations("types");
-  const [failedUrl, setFailedUrl] = useState<string | null>(null);
-  const thumbUrl = garment.thumbUrl && garment.thumbUrl !== failedUrl ? garment.thumbUrl : null;
+  // URL firmada caducada → se renueva y se reintenta una vez (7.6).
+  const { src: thumbUrl, onError } = useSignedSrc(garment.thumbUrl);
   const label = garment.label || tTypes(garment.typeId);
 
   return (
@@ -161,7 +162,8 @@ const PanelTile = memo(function PanelTile({ garment, onCanvas, onTap }: PanelTil
         )}
       >
         {thumbUrl && (
-          // Miniatura WebP ya reducida con URL firmada: sin next/image.
+          // Miniatura WebP ya reducida con URL firmada: sin next/image. Ocupa
+          // ~72 % del cuadro, como en el prototipo.
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={thumbUrl}
@@ -171,8 +173,8 @@ const PanelTile = memo(function PanelTile({ garment, onCanvas, onTap }: PanelTil
             loading="lazy"
             decoding="async"
             draggable={false}
-            onError={() => setFailedUrl(garment.thumbUrl)}
-            className="absolute inset-0 size-full object-contain p-[6px]"
+            onError={onError}
+            className="absolute inset-0 size-full object-contain p-[14%]"
           />
         )}
       </span>

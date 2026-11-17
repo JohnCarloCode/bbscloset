@@ -22,14 +22,17 @@
 import { create } from "zustand";
 import { onGarmentChanged, type GarmentChange } from "@/features/catalog/garmentChanged";
 import { apiFetch, isApiClientError } from "@/lib/api/client";
+import { getMe, invalidateMe } from "@/lib/api/me";
 import type { Garment, GarmentCountsResponse, GarmentListResponse } from "@/lib/api/types";
 import { isSlotId, type SlotId } from "@/lib/domain/slots";
 import { slotOfType, type GarmentTypeId } from "@/lib/domain/types";
 import { autoLayout, type CanvasSize } from "@/lib/layout/autoLayout";
 import {
   EMPTY_CANVAS,
+  hasItem,
   hasManual,
   JEWELRY_MAX_DEFAULT,
+  reslot,
   resetManual,
   toggle,
   type CanvasItem,
@@ -177,6 +180,11 @@ export type DresserState = {
   openDraft: (userId: string) => void;
   /** Comprueba las prendas del lienzo (y trae sus recortes); quita las que ya no valen. */
   syncCanvasGarments: () => Promise<void>;
+  /**
+   * Pone cada item del lienzo (y del historial) en el hueco del tipo que
+   * tiene ahora su prenda, con la regla de huecos (`reslot`). Sin paso nuevo.
+   */
+  reslotCanvas: () => void;
   /** "Sustituir": devuelve cuántas prendas han cambiado. */
   runSubstitute: (rng?: () => number) => Promise<{ changed: number }>;
   /** "Outfit aleatorio": devuelve las categorías sin prendas (para el aviso). */
@@ -417,6 +425,8 @@ export const useDresserStore = create<DresserState>()((set, get) => {
         set({ garments: known });
         // Borradas o archivadas: fuera en silencio.
         if (gone.size > 0) get().dropGarments(gone);
+        // Tipo cambiado en el catálogo: cada item al hueco de su tipo nuevo (7.6).
+        get().reslotCanvas();
       } catch {
         // Sin red: se queda el lienzo tal cual (los recortes se reintentan sueltos).
       } finally {
@@ -455,6 +465,7 @@ export const useDresserStore = create<DresserState>()((set, get) => {
               method: "PATCH",
               json: { random_slots: want },
             });
+            invalidateMe();
             randomSaved.value = me.random_slots.filter(isSlotId);
           }
         } catch (err) {
@@ -569,11 +580,7 @@ export const useDresserStore = create<DresserState>()((set, get) => {
 
     loadProfile: async () => {
       try {
-        const me = await apiFetch<{
-          user_id: string;
-          jewelry_max: number;
-          random_slots: string[];
-        }>("/api/me");
+        const me = await getMe();
         const randomSlots = me.random_slots.filter(isSlotId);
         // Si hay un guardado en curso, no se pisa lo que el usuario acaba de elegir.
         if (!randomSaved.saving) {
@@ -680,6 +687,20 @@ export const useDresserStore = create<DresserState>()((set, get) => {
       }
     },
 
+    reslotCanvas: () => {
+      const s = get();
+      const typeOf = (id: string) => s.garments[id]?.typeId;
+      const fix = (c: CanvasState) => reslot(c, typeOf, s.jewelryMax);
+      if (fix(s.canvas) === s.canvas && ![...s.past, ...s.future].some((c) => fix(c) !== c)) return;
+      const h = mapHistory(historyOf(s), fix, sameCanvas);
+      set({
+        ...fromHistory(replacePresent(h, relayout(h.present, aspectOf, s.canvasSize))),
+        ...(s.selectedId && !h.present.items.some((i) => i.garmentId === s.selectedId)
+          ? { selectedId: null }
+          : {}),
+      });
+    },
+
     dropGarments: (gone) => {
       const s = get();
       if (
@@ -714,6 +735,10 @@ export const useDresserStore = create<DresserState>()((set, get) => {
           ),
         }));
       }
+      // Editada y en el lienzo: puede haber cambiado de tipo (y de hueco), de
+      // nombre o de foto. Se vuelve a pedir (syncCanvasGarments la recoloca).
+      if (change === "updated" && ids.some((id) => hasItem(get().canvas, id)))
+        void get().syncCanvasGarments();
       const s = get();
       // Sin nada cargado todavía no hay caché que invalidar.
       if (s.counts === null && Object.keys(s.lists).length === 0) {

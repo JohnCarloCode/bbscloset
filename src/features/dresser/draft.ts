@@ -10,6 +10,7 @@
 // - El historial no se guarda.
 // - Un item roto se descarta y el resto se conserva; un borrador ilegible o
 //   de otra versión se ignora entero.
+import { reportStorageUnavailable } from "@/lib/storageNotice";
 import { z } from "zod";
 import { SLOT_IDS } from "@/lib/domain/slots";
 import { GARMENT_TYPE_IDS, slotOfType, type GarmentTypeId } from "@/lib/domain/types";
@@ -117,6 +118,7 @@ export function readDraft(userId: string): Draft | null {
   try {
     return parseDraft(window.localStorage.getItem(draftKey(userId)));
   } catch {
+    reportStorageUnavailable();
     return null;
   }
 }
@@ -125,6 +127,7 @@ export function writeDraft(userId: string, value: string): void {
   try {
     window.localStorage.setItem(draftKey(userId), value);
   } catch {
-    // Sin almacenamiento el vestidor sigue funcionando; solo no persiste.
+    // Sin almacenamiento el vestidor sigue funcionando; solo no persiste (con aviso).
+    reportStorageUnavailable();
   }
 }

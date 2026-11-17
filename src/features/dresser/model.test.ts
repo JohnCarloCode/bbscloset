@@ -11,6 +11,7 @@ import {
   place,
   remove,
   resetManual,
+  reslot,
   sendBackward,
   toggle,
   toggleLock,
@@ -242,5 +243,58 @@ describe("transformación manual", () => {
       manual: false,
       x: DEFAULT_TRANSFORM.x,
     });
+  });
+});
+
+describe("reslot: tipo cambiado en el catálogo (7.6)", () => {
+  it("sin cambios de hueco devuelve el mismo estado", () => {
+    const s = build([g("tshirt", "a"), g("jeans", "b")]);
+    // De camiseta a camisa: mismo hueco.
+    expect(reslot(s, (id) => (id === "a" ? "shirt" : undefined))).toBe(s);
+  });
+
+  it("actualiza el slotId y la z por defecto del hueco nuevo", () => {
+    const s = build([g("tshirt", "a"), g("jeans", "b")]);
+    const next = reslot(s, (id) => (id === "a" ? "sweater" : undefined));
+    const a = next.items.find((i) => i.garmentId === "a")!;
+    expect(a.slotId).toBe("mid_layer");
+    expect(a.z).toBe(SLOTS.mid_layer.defaultZ);
+    expect(ids(next)).toEqual(["a", "b"]);
+  });
+
+  it("si choca con otra del hueco nuevo, se queda la cambiada (regla de place)", () => {
+    const s = build([g("tshirt", "a"), g("sweater", "b")]);
+    const next = reslot(s, (id) => (id === "a" ? "cardigan" : undefined));
+    expect(ids(next)).toEqual(["a"]);
+    expect(next.items[0].slotId).toBe("mid_layer");
+  });
+
+  it("pasada a cuerpo entero quita capa base y parte inferior", () => {
+    const s = build([g("tshirt", "a"), g("jeans", "b"), g("sneakers", "c")]);
+    const next = reslot(s, (id) => (id === "b" ? "dress" : undefined));
+    expect(ids(next)).toEqual(["b", "c"]);
+    expect(next.items.find((i) => i.garmentId === "b")!.slotId).toBe("full_body");
+  });
+
+  it("conserva la posición manual y el candado", () => {
+    let s = build([g("tshirt", "a")]);
+    s = updateTransform(s, "a", { x: 0.2, y: 0.3, scale: 0.7, rotation: 15 });
+    s = toggleLock(s, "a");
+    const [a] = reslot(s, () => "jacket").items;
+    expect(a).toMatchObject({
+      slotId: "outer_layer",
+      x: 0.2,
+      y: 0.3,
+      scale: 0.7,
+      rotation: 15,
+      manual: true,
+      locked: true,
+    });
+  });
+
+  it("joyería: respeta el máximo al entrar en el hueco", () => {
+    const s = build([g("ring", "r1"), g("ring", "r2"), g("hat", "h")]);
+    const next = reslot(s, (id) => (id === "h" ? "necklace" : undefined), 2);
+    expect(ids(next)).toEqual(["h", "r2"]);
   });
 });

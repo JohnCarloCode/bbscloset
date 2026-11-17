@@ -1,0 +1,32 @@
+# CI gratuita (GitHub Actions): lint, tipos, tests y build en cada push a develop y main.
+# Los tests de integración (INTEGRATION=1) necesitan Supabase local y no se lanzan aquí.
+name: CI
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run check:messages
+      - run: npm run format:check
+      # El build no necesita las claves de Supabase: src/lib/env.ts solo falla al usarlas.
+      - run: npm run build

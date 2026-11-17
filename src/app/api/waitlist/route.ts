@@ -1,13 +1,15 @@
 // POST /api/waitlist: apunta un email a la lista de espera (pública, sin
 // sesión; el proxy la deja pasar). No envía ningún correo (spec 3.8).
 //   200 { ok: true } → apuntado, o ya lo estaba (no se revela quién está).
-//   400 invalid_body · 413 payload_too_large · 429 rate_limited · 500 internal.
+//   400 invalid_body · 413 payload_too_large · 429 rate_limited · 500 internal ·
+//   503 service_unavailable (Supabase no responde).
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { ApiError, apiError, parseBody } from "@/lib/api";
 import { clientIp, createRateLimiter } from "@/lib/api/rateLimit";
 import { supabaseAnonKey, supabaseUrl } from "@/lib/env";
 import type { Database } from "@/lib/supabase/types";
+import { fetchWithTimeout, isSupabaseUnreachable } from "@/lib/supabase/unreachable";
 import { waitlistBodySchema } from "@/features/waitlist/email";
 
 /** El cuerpo es solo { email }: 1 KB sobra. */
@@ -31,9 +33,13 @@ export async function POST(request: NextRequest) {
     // insertar. Sin .select(): devolver la fila exigiría permiso de lectura.
     const supabase = createClient<Database>(supabaseUrl(), supabaseAnonKey(), {
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+      global: { fetch: fetchWithTimeout },
     });
     const { error } = await supabase.from("waitlist").insert({ email });
 
+    if (error && isSupabaseUnreachable(error)) {
+      return apiError(503, "service_unavailable", "Supabase is unreachable");
+    }
     if (error && error.code !== UNIQUE_VIOLATION) {
       console.error("[api] waitlist insert failed", error.code, error.message);
       return apiError(500, "internal", "Internal server error");

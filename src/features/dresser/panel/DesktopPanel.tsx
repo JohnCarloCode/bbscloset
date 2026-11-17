@@ -47,8 +47,13 @@ export function DesktopPanel({ onTap, className }: DesktopPanelProps) {
               aria-label={t("categoryOption", { label: tSlots(s), count: counts?.[s] ?? 0 })}
               className="whitespace-nowrap"
             >
-              <span>{tSlots(s)}</span>
-              {counts && <span className="text-ink-muted-48">{counts[s]}</span>}
+              <span>{tSlots(s)}</span>{" "}
+              {/* Sobre el rosa del chip activo el gris no llega a 4,5:1. */}
+              {counts && (
+                <span className={s === slot ? "text-ink-muted-80" : "text-ink-muted-48"}>
+                  {counts[s]}
+                </span>
+              )}
             </Chip>
           ))}
         </div>

@@ -219,7 +219,7 @@ export function Dresser() {
                 type="button"
                 onClick={autoArrange}
                 title={tCanvas("autoArrangeHint")}
-                className="absolute top-[10px] right-[10px] z-20 h-8 cursor-pointer rounded-md border-[3px] border-divider-soft bg-surface-pearl px-3 text-[13px] whitespace-nowrap text-ink-muted-80 select-none active:scale-95"
+                className="absolute top-[10px] right-[10px] z-20 h-8 cursor-pointer rounded-md border-[3px] border-divider-soft bg-surface-pearl px-3 text-[13px] whitespace-nowrap text-ink-muted-80 select-none active:scale-95 after:absolute after:-inset-1.5 after:content-['']"
               >
                 {tCanvas("autoArrange")}
               </button>

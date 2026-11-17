@@ -131,7 +131,7 @@ function Toast({ id, message, actionLabel, onAction, durationMs, onDismiss }: To
           }}
           className={cx(
             // 44 px de alto sin engordar la píldora: invade el relleno vertical.
-            "-my-sm min-h-11 shrink-0 cursor-pointer text-caption whitespace-nowrap text-primary-on-dark",
+            "-my-sm min-h-11 min-w-11 shrink-0 cursor-pointer text-caption whitespace-nowrap text-primary-on-dark",
             // Sobre negro el contorno negro no se ve: foco en blanco.
             "focus-visible:outline-on-dark",
           )}

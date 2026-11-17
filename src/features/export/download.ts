@@ -131,8 +131,12 @@ function openInNewTab(blob: Blob, fileName: string, hint: string) {
   meta.name = "viewport";
   meta.content = "width=device-width, initial-scale=1";
   doc.head.appendChild(meta);
-  doc.body.style.cssText =
-    "margin:0;padding:16px;background:#f5f5f7;font:15px/1.4 -apple-system,system-ui,sans-serif;color:#1d1d1f;text-align:center";
+  // Colores de tokens.css, leídos de la página de la app (la pestaña nueva no
+  // carga sus estilos).
+  const root = getComputedStyle(document.documentElement);
+  const parchment = root.getPropertyValue("--color-canvas-parchment").trim();
+  const ink = root.getPropertyValue("--color-ink").trim();
+  doc.body.style.cssText = `margin:0;padding:16px;background:${parchment};font:15px/1.4 -apple-system,system-ui,sans-serif;color:${ink};text-align:center`;
   const img = doc.createElement("img");
   img.src = url;
   img.alt = fileName;

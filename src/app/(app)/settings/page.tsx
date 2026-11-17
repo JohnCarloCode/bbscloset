@@ -1,14 +1,7 @@
-// Placeholder: solo el título y el botón temporal de cerrar sesión (paso 2.2).
-// La pantalla se construye en el paso 7.2, que coloca el botón en Cuenta.
-import { useTranslations } from "next-intl";
-import { SignOutButton } from "@/features/auth/SignOutButton";
+// Ajustes (screens.md 12; paso 7.2). La pantalla es de cliente: los datos
+// llegan por la API (apiFetch) en features/settings.
+import { Settings } from "@/features/settings/Settings";
 
 export default function SettingsPage() {
-  const t = useTranslations("nav");
-  return (
-    <main className="flex flex-col items-start gap-lg px-5 pt-lg pb-xl">
-      <h1 className="text-lead font-semibold">{t("settings")}</h1>
-      <SignOutButton />
-    </main>
-  );
+  return <Settings />;
 }

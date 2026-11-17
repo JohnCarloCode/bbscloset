@@ -1,10 +1,16 @@
 // Envoltorio común de las rutas de /api: crea el cliente de Supabase con la
 // sesión de la petición, exige usuario (o 401) y captura excepciones (500
-// `internal` sin detalles; ApiError → su respuesta).
+// `internal` sin detalles; ApiError → su respuesta). Si Supabase no responde
+// (red, tiempo agotado, proyecto pausado), 503 `service_unavailable` (7.6).
 import { unstable_rethrow } from "next/navigation";
 import type { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { isSupabaseUnreachable } from "@/lib/supabase/unreachable";
 import { ApiError, apiError } from "./errors";
+
+function serviceUnavailable() {
+  return apiError(503, "service_unavailable", "Supabase is unreachable");
+}
 
 export type ServerSupabase = Awaited<ReturnType<typeof createClient>>;
 
@@ -29,7 +35,9 @@ export function withUser<P extends Record<string, string | string[]> = Record<st
       const supabase = await createClient();
 
       // getClaims valida el JWT de la sesión (el proxy ya lo ha refrescado).
-      const { data } = await supabase.auth.getClaims();
+      const { data, error } = await supabase.auth.getClaims();
+      // Sin Supabase no se sabe si la sesión vale: no es un 401.
+      if (error && isSupabaseUnreachable(error)) return serviceUnavailable();
       const claims = data?.claims;
       if (!claims?.sub) return apiError(401, "unauthorized", "Authentication required");
 
@@ -41,6 +49,10 @@ export function withUser<P extends Record<string, string | string[]> = Record<st
       // al leer cookies en el build) para no convertirlos en un 500.
       unstable_rethrow(err);
       if (err instanceof ApiError) return err.toResponse();
+      if (isSupabaseUnreachable(err)) {
+        console.warn("[api] supabase unreachable", request.method, request.nextUrl.pathname);
+        return serviceUnavailable();
+      }
       console.error("[api] unhandled error", request.method, request.nextUrl.pathname, err);
       return apiError(500, "internal", "Internal server error");
     }

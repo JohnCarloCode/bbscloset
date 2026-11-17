@@ -12,7 +12,6 @@
     "back": "Atrás",
     "view": "Ver",
     "retry": "Reintentar",
-    "optional": "Opcional",
     "languages": {
       "es": "Español",
       "en": "English"
@@ -74,7 +73,6 @@
     }
   },
   "waitlist": {
-    "title": "Lista de espera",
     "headline": "Todo tu armario, listo para vestirte.",
     "intro": "bb's closet es solo con invitación por ahora. Déjanos tu email y te escribiremos cuando haya sitio.",
     "collageAlt": "Ejemplo de outfit: gorra, gafas de sol, camiseta, pantalón, bolso y zapatillas.",
@@ -292,6 +290,9 @@
       "colorNone": "Sin color",
       "colorHint": "Toca el cuadro para elegir el color.",
       "colorPicker": "Selector de color",
+      "colorShade": "Saturación y brillo",
+      "colorHue": "Matiz",
+      "colorShadeValue": "Saturación {saturation} %, brillo {brightness} %",
       "clearColor": "Quitar color",
       "brand": "Marca",
       "brandPlaceholder": "p. ej. Zara, vintage",
@@ -452,7 +453,6 @@
       "loading": "Cargando favorito…",
       "subtitle": "Guardado el {date} · {count, plural, one {# prenda} other {# prendas}}",
       "saveImage": "Guardar como imagen",
-      "actions": "Acciones del favorito",
       "help": "Arrastra para mover. Pellizca, o usa los tiradores, para cambiar tamaño y girar. Para cambiar prendas, monta un outfit nuevo en el vestidor.",
       "unsaved": "Cambios sin guardar",
       "saved": "Favorito actualizado.",
@@ -494,12 +494,53 @@
     "errorCutout": "No se ha podido cargar alguna prenda. Comprueba la conexión y vuelve a intentarlo.",
     "errorEmpty": "No hay prendas que guardar en la imagen.",
     "errorGeneric": "No se ha podido preparar la imagen.",
-    "saveError": "No se ha podido guardar la imagen. Inténtalo de nuevo."
+    "saveError": "No se ha podido guardar la imagen. Vuelve a intentarlo."
   },
   "settings": {
     "language": "Idioma",
     "signOut": "Cerrar sesión",
-    "signingOut": "Cerrando sesión…"
+    "signingOut": "Cerrando sesión…",
+    "loadError": "No se han podido cargar los ajustes. Vuelve a intentarlo.",
+    "offline": "Parece que no hay conexión. Vuelve a intentarlo cuando la tengas.",
+    "tags": {
+      "title": "Etiquetas",
+      "count": "{count, plural, one {# prenda} other {# prendas}}",
+      "rename": "Renombrar",
+      "renameLabel": "Nuevo nombre de «{name}»",
+      "renameAria": "Renombrar «{name}»",
+      "deleteAria": "Eliminar «{name}»",
+      "empty": "Todavía no tienes etiquetas. Se crean al añadirlas a una prenda.",
+      "note": "Renombrar una etiqueta la cambia en todas las prendas. Las etiquetas nuevas se crean al añadirlas a una prenda.",
+      "errors": {
+        "duplicate": "Ya tienes una etiqueta con ese nombre.",
+        "empty": "Escribe un nombre.",
+        "tooLong": "Como mucho {max} caracteres.",
+        "generic": "No se ha podido renombrar. Vuelve a intentarlo."
+      },
+      "deleteTitle": "¿Eliminar «{name}»?",
+      "deleteBody": "{count, plural, =0 {Ninguna prenda la usa.} one {Se quitará de # prenda.} other {Se quitará de # prendas.}}",
+      "deleteConfirm": "Eliminar etiqueta",
+      "deleted": "Etiqueta eliminada.",
+      "deleteError": "No se ha podido eliminar la etiqueta. Vuelve a intentarlo."
+    },
+    "dresser": {
+      "title": "Vestidor",
+      "jewelry": "Joyas a la vez",
+      "decrease": "Una joya menos",
+      "increase": "Una joya más",
+      "note": "3 por defecto, hasta 10. Al llegar al máximo, la nueva sustituye a la más antigua.",
+      "saveError": "No se ha podido guardar el máximo de joyas. Vuelve a intentarlo."
+    },
+    "languageError": "No se ha podido cambiar el idioma. Vuelve a intentarlo.",
+    "tools": {
+      "title": "Herramientas",
+      "cutout": "Recortar fotos",
+      "note": "Quita el fondo de muchas fotos a la vez y descárgalas en PNG. No se añaden a tu armario."
+    },
+    "account": {
+      "title": "Cuenta",
+      "email": "Email"
+    }
   },
   "cutout": {
     "title": "Recortar fotos",
@@ -516,7 +557,6 @@
       "choose": "Elegir fotos",
       "note": "Hasta 30 fotos por tanda. No se añaden a tu armario."
     },
-    "dropHere": "Suelta las fotos para añadirlas",
     "notices": {
       "tooMany": "Hasta 30 fotos por tanda: {count, plural, one {# foto no se ha añadido} other {# fotos no se han añadido}}. Descarga estas y empieza de nuevo.",
       "invalid": "{count, plural, one {# foto no se ha añadido:} other {# fotos no se han añadido:}}",
@@ -628,5 +668,13 @@
     "purple": "Morado",
     "pink": "Rosa",
     "multicolor": "Multicolor"
+  },
+  "connection": {
+    "offline": "Sin conexión. Lo que hagas ahora no se guardará hasta que vuelva la red.",
+    "offlineToast": "Te has quedado sin conexión. Vuelve a intentarlo cuando la tengas.",
+    "unavailableTitle": "No se puede conectar",
+    "unavailableBody": "El servidor no responde ahora mismo. Tus prendas y favoritos están a salvo: vuelve a intentarlo en un rato.",
+    "stillDown": "Sigue sin responder. Vuelve a intentarlo en un rato.",
+    "storageToast": "Este navegador no deja guardar datos en el dispositivo (¿modo privado?). Puedes seguir, pero el outfit en curso y las fotos pendientes no se guardarán si cierras la app."
   }
 }

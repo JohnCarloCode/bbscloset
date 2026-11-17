@@ -5,16 +5,11 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { supabaseAnonKey, supabaseUrl } from "@/lib/env";
 import type { Database } from "@/lib/supabase/types";
+import { fetchWithTimeout, isSupabaseUnreachable } from "@/lib/supabase/unreachable";
 
 // Rutas abiertas sin sesión (con sus subrutas). Todo lo demás exige sesión,
 // así que una pantalla nueva de la app nace protegida.
-const PUBLIC_PATHS = [
-  "/login",
-  "/waitlist",
-  "/reset-password",
-  "/api/waitlist",
-  "/dev", // Páginas temporales de desarrollo; se borran en el paso 7.5.
-];
+const PUBLIC_PATHS = ["/login", "/waitlist", "/reset-password", "/api/waitlist"];
 
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
@@ -24,6 +19,7 @@ export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient<Database>(supabaseUrl(), supabaseAnonKey(), {
+    global: { fetch: fetchWithTimeout },
     cookies: {
       getAll() {
         return request.cookies.getAll();
@@ -44,10 +40,23 @@ export async function proxy(request: NextRequest) {
 
   // No meter código entre createServerClient y getClaims: getClaims valida el
   // JWT (y lo renueva si ha caducado), que es lo que refresca la sesión.
-  const { data } = await supabase.auth.getClaims();
+  const { data, error } = await supabase.auth.getClaims();
   const signedIn = Boolean(data?.claims?.sub);
 
   const { pathname } = request.nextUrl;
+
+  // Supabase no responde (p. ej. proyecto pausado, 7.6) y hay cookie de
+  // sesión: no se puede saber si vale, así que no se manda al login. La API
+  // contesta 503 y las pantallas enseñan "No se puede conectar" con reintento.
+  if (!signedIn && error && isSupabaseUnreachable(error) && hasSessionCookie(request)) {
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.json(
+        { error: { code: "service_unavailable", message: "Supabase is unreachable" } },
+        { status: 503 },
+      );
+    }
+    return response;
+  }
 
   // Con sesión, el login no tiene sentido: directo al Vestidor. Solo al pedir
   // la página (GET/HEAD): el formulario, ya con sesión, llama a la server
@@ -66,6 +75,11 @@ export async function proxy(request: NextRequest) {
     : NextResponse.redirect(new URL("/login", request.url));
 
   return withSupabaseCookies(denied, response);
+}
+
+/** Cookie de sesión de Supabase (`sb-<ref>-auth-token`, quizá en trozos `.0`, `.1`…). */
+function hasSessionCookie(request: NextRequest): boolean {
+  return request.cookies.getAll().some((c) => /^sb-.+-auth-token(\.\d+)?$/.test(c.name));
 }
 
 /**

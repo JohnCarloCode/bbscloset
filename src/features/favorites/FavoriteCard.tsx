@@ -46,7 +46,7 @@ export const FavoriteCard = memo(function FavoriteCard({
           type="button"
           onClick={() => onDelete(favorite)}
           aria-label={t("deleteLabel", { title })}
-          className="absolute top-xs right-xs z-[1] h-8 cursor-pointer rounded-md border-[3px] border-divider-soft bg-surface-pearl px-3 text-[13px] text-ink-muted-80 select-none active:scale-95"
+          className="absolute top-xs right-xs z-[1] h-8 cursor-pointer rounded-md border-[3px] border-divider-soft bg-surface-pearl px-3 text-[13px] text-ink-muted-80 select-none active:scale-95 after:absolute after:-inset-1.5 after:content-['']"
         >
           {tCommon("delete")}
         </button>

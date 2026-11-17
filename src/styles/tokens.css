@@ -29,7 +29,10 @@
   --color-body-on-dark: #ffffff;
   --color-body-muted: #cccccc;
   --color-ink-muted-80: #333333;
-  --color-ink-muted-48: #7a7a7a;
+  /* DESIGN.md dice #7a7a7a, pero sobre blanco da 4,29:1 y sobre parchment 3,94:1
+     (no llega al 4,5:1 de WCAG AA para texto pequeño). #6e6e73 (el gris
+     secundario de Apple) da 5,07:1 sobre blanco y 4,66:1 sobre parchment. */
+  --color-ink-muted-48: #6e6e73;
   --color-divider-soft: #f0f0f0;
   --color-hairline: #e0e0e0;
   --color-canvas: #ffffff;

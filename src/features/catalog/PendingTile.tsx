@@ -62,7 +62,7 @@ export const PendingTile = memo(function PendingTile({ item, disabled = false }:
           blob={item.thumb ?? item.source}
           decoding="async"
           draggable={false}
-          className="absolute inset-0 size-full object-contain p-sm opacity-40"
+          className="absolute inset-0 size-full object-contain p-[19%] opacity-40"
         />
         <StatusBadge
           tone={failed ? "error" : "neutral"}

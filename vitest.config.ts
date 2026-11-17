@@ -7,5 +7,8 @@ export default defineConfig({
   },
   test: {
     include: ["src/**/*.test.{ts,tsx}"],
+    // Los tests de integración comparten la BD local (p. ej. el de etiquetas
+    // renombra y borra "curro"/"fiesta" del seed): con INTEGRATION=1, de uno en uno.
+    fileParallelism: process.env.INTEGRATION !== "1",
   },
 });

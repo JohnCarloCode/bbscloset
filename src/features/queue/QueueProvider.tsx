@@ -8,14 +8,12 @@
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useToast } from "@/components/toast";
-import { apiFetch } from "@/lib/api/client";
+import { getMe } from "@/lib/api/me";
 import { QueuePill } from "./QueuePill";
 import { QueueSheet } from "./QueueSheet";
 import { startRunner } from "./runner";
 import { useQueueStore } from "./store";
 import { startUploader } from "./upload";
-
-type Me = { user_id: string };
 
 export function QueueProvider() {
   const t = useTranslations("queue");
@@ -25,7 +23,7 @@ export function QueueProvider() {
   // Usuario de la sesión. Un 401 ya lo gestiona apiFetch (va al login).
   useEffect(() => {
     let cancelled = false;
-    apiFetch<Me>("/api/me")
+    getMe()
       .then((me) => {
         if (!cancelled) void useQueueStore.getState().init(me.user_id);
       })

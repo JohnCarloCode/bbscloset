@@ -7,9 +7,10 @@
 // un lienzo de proporción fija 4:5 (MINI_COLLAGE_RATIO, ver allí por qué).
 // El aspecto de cada miniatura se lee al cargarla (naturalWidth/Height);
 // hasta entonces vale 1, y al llegar se recompone el collage.
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState, type CSSProperties } from "react";
 import { composeMiniCollage, MINI_COLLAGE_RATIO, pieceBox } from "./miniCollageLayout";
 import type { FavoriteSummaryItem } from "@/lib/api/types";
+import { useSignedSrc } from "@/lib/storage/useSignedSrc";
 
 export type MiniCollageProps = {
   items: readonly FavoriteSummaryItem[];
@@ -17,8 +18,6 @@ export type MiniCollageProps = {
 
 export const MiniCollage = memo(function MiniCollage({ items }: MiniCollageProps) {
   const [aspects, setAspects] = useState<Record<string, number>>({});
-  // URLs que no cargan (p. ej. firmadas y caducadas): se dejan sin pintar.
-  const [failed, setFailed] = useState<Record<string, string>>({});
 
   const pieces = useMemo(() => composeMiniCollage(items, aspects), [items, aspects]);
   const urlOf = useMemo(() => new Map(items.map((i) => [i.garment_id, i.thumbUrl])), [items]);
@@ -37,22 +36,14 @@ export const MiniCollage = memo(function MiniCollage({ items }: MiniCollageProps
     >
       {pieces.map((p, index) => {
         const url = urlOf.get(p.garmentId);
-        if (!url || failed[p.garmentId] === url) return null;
+        if (!url) return null;
         const box = pieceBox(p);
         const known = p.garmentId in aspects;
         return (
-          // Miniatura WebP ya reducida (≤ 320 px) con URL firmada: sin next/image.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <CollagePiece
             key={p.garmentId}
-            src={url}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            draggable={false}
-            onLoad={(e) => onLoad(p.garmentId, e.currentTarget)}
-            onError={() => setFailed((f) => ({ ...f, [p.garmentId]: url }))}
-            className="pointer-events-none absolute h-auto max-w-none select-none"
+            url={url}
+            onLoad={(img) => onLoad(p.garmentId, img)}
             style={{
               left: `${box.left}%`,
               top: `${box.top}%`,
@@ -68,3 +59,30 @@ export const MiniCollage = memo(function MiniCollage({ items }: MiniCollageProps
     </span>
   );
 });
+
+type CollagePieceProps = {
+  url: string;
+  onLoad: (img: HTMLImageElement) => void;
+  style: CSSProperties;
+};
+
+/** Una miniatura del collage; si la URL firmada ha caducado se renueva una vez (7.6). */
+function CollagePiece({ url, onLoad, style }: CollagePieceProps) {
+  const { src, onError } = useSignedSrc(url);
+  if (!src) return null;
+  return (
+    // Miniatura WebP ya reducida (≤ 320 px) con URL firmada: sin next/image.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt=""
+      loading="lazy"
+      decoding="async"
+      draggable={false}
+      onLoad={(e) => onLoad(e.currentTarget)}
+      onError={onError}
+      className="pointer-events-none absolute h-auto max-w-none select-none"
+      style={style}
+    />
+  );
+}

@@ -5,6 +5,8 @@
 //   navegador) y, si el sistema mata la app, se repite al volver (init).
 // - El progreso va al store en memoria; IndexedDB solo se toca al cambiar de
 //   estado (cutting, ready, error).
+// - Sin red y sin el modelo descargado (7.6): la foto vuelve a la cola, sin
+//   error, y el bucle espera al evento `online`.
 import { toCutoutAndThumb } from "@/lib/imaging/encode";
 import { isImagingError } from "@/lib/imaging/errors";
 import { removeBackground, type CutoutProgress } from "@/lib/imaging/removeBackground";
@@ -17,9 +19,10 @@ const PROGRESS_THROTTLE_MS = 200;
 
 // Recorte en marcha (de cualquier bucle): si el runner se para y vuelve a
 // arrancar, el nuevo espera a que acabe el anterior para no recortar dos a la vez.
-let inFlight: Promise<void> = Promise.resolve();
+let inFlight: Promise<unknown> = Promise.resolve();
 
-async function cut(item: QueueItem, isCurrent: () => boolean): Promise<void> {
+/** Devuelve true si no se ha podido recortar por falta de red (hay que esperarla). */
+async function cut(item: QueueItem, isCurrent: () => boolean): Promise<boolean> {
   const { patch } = useQueueStore.getState();
   patch(item.localId, { status: "cutting", progress: 0, stage: undefined, error: undefined });
 
@@ -39,7 +42,7 @@ async function cut(item: QueueItem, isCurrent: () => boolean): Promise<void> {
     const png = item.mode === "cut" ? await removeBackground(item.source, onProgress) : item.source;
     const { cutout, thumb, width, height } = await toCutoutAndThumb(png);
     // Quitado o con otra foto mientras recortaba: se descarta el resultado.
-    if (!isCurrent()) return;
+    if (!isCurrent()) return false;
     patch(item.localId, {
       status: "ready",
       progress: 1,
@@ -48,15 +51,22 @@ async function cut(item: QueueItem, isCurrent: () => boolean): Promise<void> {
       thumb: thumb.blob,
       cutoutSize: { width, height },
     });
+    return false;
   } catch (err) {
     console.warn("[queue] recorte fallido", err);
-    if (!isCurrent()) return;
+    if (!isCurrent()) return false;
+    // El modelo no se ha podido descargar porque no hay red: a esperar, sin error.
+    if (isImagingError(err) && err.code === "model_load_failed" && !navigator.onLine) {
+      patch(item.localId, { status: "queued", progress: 0, stage: undefined });
+      return true;
+    }
     patch(item.localId, {
       status: "error",
       progress: 0,
       stage: undefined,
       error: isImagingError(err) ? err.code : "cut_failed",
     });
+    return false;
   }
 }
 
@@ -69,6 +79,13 @@ export function startRunner(): () => void {
   });
   const onVisibility = () => waker.wake();
   document.addEventListener("visibilitychange", onVisibility);
+  // Sin red y sin modelo: se para hasta que vuelva la red.
+  let waitingForNetwork = false;
+  const onOnline = () => {
+    waitingForNetwork = false;
+    waker.wake();
+  };
+  window.addEventListener("online", onOnline);
 
   void (async () => {
     // Un tick de margen: con StrictMode el efecto se monta, desmonta y
@@ -81,6 +98,11 @@ export function startRunner(): () => void {
         await waker.wait();
         continue;
       }
+      if (waitingForNetwork && !navigator.onLine) {
+        await waker.wait();
+        continue;
+      }
+      waitingForNetwork = false;
       const item = nextToCut(useQueueStore.getState().items);
       if (!item) {
         await waker.wait();
@@ -91,8 +113,9 @@ export function startRunner(): () => void {
         const now = useQueueStore.getState().items.find((i) => i.localId === item.localId);
         return !!now && now.source === item.source && now.status === "cutting";
       };
-      inFlight = cut(item, isCurrent);
-      await inFlight;
+      const running = cut(item, isCurrent);
+      inFlight = running;
+      if (await running) waitingForNetwork = true;
     }
   })();
 
@@ -100,6 +123,7 @@ export function startRunner(): () => void {
     stopped = true;
     unsubscribe();
     document.removeEventListener("visibilitychange", onVisibility);
+    window.removeEventListener("online", onOnline);
     waker.wake();
   };
 }

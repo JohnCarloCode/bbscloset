@@ -20,7 +20,7 @@
   }
 
   /* Alto de la barra de pestañas inferior (TabBar: 1 px de borde + 6 + 50 px + zona segura,
-     mín. 10 px). Vale 0 si no hay barra (login, waitlist, /dev) o en
+     mín. 10 px). Vale 0 si no hay barra (login, waitlist) o en
      escritorio, donde la barra se oculta. Lo usan el contenido de (app), la
      queue-pill y el toast para quedar por encima. */
   :root {
@@ -109,4 +109,25 @@
       transform: translateY(8px);
     }
   }
+}
+
+/* Selector de color (react-colorful, ColorField): la librería quita el
+   contorno de foco y su barra de matiz mide 24 px. Foco negro como en el
+   resto de la app y zona táctil de 44 px en el matiz (10 px por arriba y por
+   abajo, con el hueco reservado para no pisar el cuadro de saturación). */
+.react-colorful .react-colorful__interactive:focus-visible {
+  outline: 2px solid var(--color-primary-focus);
+  outline-offset: 2px;
+}
+.react-colorful .react-colorful__saturation {
+  margin-bottom: 10px;
+  border-radius: var(--radius-sm);
+}
+.react-colorful .react-colorful__hue {
+  margin-bottom: 10px;
+  border-radius: var(--radius-sm);
+}
+.react-colorful .react-colorful__hue .react-colorful__interactive {
+  top: -10px;
+  bottom: -10px;
 }

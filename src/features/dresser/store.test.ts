@@ -58,6 +58,16 @@ describe("tapGarment", () => {
     expect(items().map((i) => i.garmentId)).toEqual(["j2", "j3"]);
   });
 
+  it("con jewelryMax 5 (Ajustes, 7.2) caben 5 joyas y la sexta sustituye a la primera", () => {
+    store().setJewelryMax(5);
+    const types: GarmentTypeId[] = ["ring", "necklace", "earrings", "bracelet", "ring"];
+    types.forEach((t, i) => store().tapGarment(g(`j${i + 1}`, t)));
+    expect(items()).toHaveLength(5);
+    const r = store().tapGarment(g("j6", "necklace"));
+    expect(r.events.jewelryDropped?.garmentId).toBe("j1");
+    expect(items().map((i) => i.garmentId)).toEqual(["j2", "j3", "j4", "j5", "j6"]);
+  });
+
   it("aplica la colocación automática con el tamaño del lienzo y los aspectos", () => {
     store().tapGarment(g("tee", "tshirt", 0.8));
     store().tapGarment(g("jeans", "jeans", 0.5));
@@ -531,6 +541,40 @@ describe("prendas cambiadas en el catálogo (5.5)", () => {
     store().garmentsChanged(["jeans"], "archived");
     expect(items().map((i) => i.garmentId)).toEqual(["tee"]);
     expect(store().lists.bottom?.ids).toEqual([]);
+  });
+
+  it("editada con otro tipo estando en el lienzo: se vuelve a pedir y cambia de hueco (7.6)", async () => {
+    // La camiseta pasa a ser un vestido: quita los vaqueros (regla de place).
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) =>
+        url.startsWith("/api/garments?")
+          ? Response.json({
+              items: ["tee", "jeans"]
+                .filter((id) => url.includes(id))
+                .map((id) => ({
+                  id,
+                  type_id: id === "tee" ? "dress" : "jeans",
+                  slot: id === "tee" ? "full_body" : "bottom",
+                  name: null,
+                  thumbUrl: "http://t",
+                  cutoutUrl: "http://c",
+                })),
+              nextCursor: null,
+            })
+          : Response.json({ bySlot: zeroCounts() }),
+      ),
+    );
+    store().tapGarment(g("tee", "tshirt"));
+    store().tapGarment(g("jeans", "jeans"));
+
+    store().garmentsChanged(["tee"], "updated");
+    await vi.waitFor(() => expect(item("tee").slotId).toBe("full_body"));
+    expect(items().map((i) => i.garmentId)).toEqual(["tee"]);
+    expect(store().garments.tee.typeId).toBe("dress");
+    // Deshacer no vuelve a una combinación imposible.
+    store().undo();
+    expect(items().every((i) => i.slotId !== "base_layer")).toBe(true);
   });
 
   it("sin nada cargado no pide nada", () => {

@@ -5,11 +5,14 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { supabaseAnonKey, supabaseUrl } from "@/lib/env";
 import type { Database } from "./types";
+import { fetchWithTimeout } from "./unreachable";
 
 export async function createClient() {
   const cookieStore = await cookies();
 
   return createServerClient<Database>(supabaseUrl(), supabaseAnonKey(), {
+    // Con tiempo máximo: un Supabase que no contesta da 503, no una espera eterna.
+    global: { fetch: fetchWithTimeout },
     cookies: {
       getAll() {
         return cookieStore.getAll();

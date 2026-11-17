@@ -28,30 +28,42 @@ export function QueuePill() {
     };
   }, [pill.visible]);
 
-  if (!pill.visible) return null;
+  // Región viva fija (aunque la píldora no se vea): anuncia solo el "N de M",
+  // no cada tick del anillo de progreso.
+  const status = (
+    <span role="status" className="sr-only">
+      {pill.visible ? t("pill", { current: pill.current, total: pill.total }) : ""}
+    </span>
+  );
+  if (!pill.visible) return status;
 
   const pct = Math.round(pill.progress * 100);
   return (
-    <button
-      type="button"
-      data-queue-pill=""
-      onClick={openSheet}
-      aria-haspopup="dialog"
-      className={
-        "flex h-10 cursor-pointer items-center gap-xs rounded-pill border border-ink bg-primary " +
-        "pr-md pl-[10px] text-caption text-on-primary"
-      }
-    >
-      <span
-        aria-hidden="true"
-        className="flex size-5 items-center justify-center rounded-full"
-        style={{
-          background: `conic-gradient(var(--color-ink) ${pct}%, rgba(0,0,0,0.15) 0)`,
-        }}
+    <>
+      {status}
+      <button
+        type="button"
+        data-queue-pill=""
+        onClick={openSheet}
+        aria-haspopup="dialog"
+        className={
+          "flex h-10 cursor-pointer items-center gap-xs rounded-pill border border-ink bg-primary " +
+          "pr-md pl-[10px] text-caption text-on-primary " +
+          // 40 px visibles; el ::after amplía la zona táctil a 44 px.
+          "relative after:absolute after:inset-x-0 after:-inset-y-0.5 after:content-['']"
+        }
       >
-        <span className="size-3.5 rounded-full bg-primary" />
-      </span>
-      <span>{t("pill", { current: pill.current, total: pill.total })}</span>
-    </button>
+        <span
+          aria-hidden="true"
+          className="flex size-5 items-center justify-center rounded-full"
+          style={{
+            background: `conic-gradient(var(--color-ink) ${pct}%, rgba(0,0,0,0.15) 0)`,
+          }}
+        >
+          <span className="size-3.5 rounded-full bg-primary" />
+        </span>
+        <span>{t("pill", { current: pill.current, total: pill.total })}</span>
+      </button>
+    </>
   );
 }

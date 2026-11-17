@@ -4,7 +4,7 @@
 // teclear) que guarda el hex; debajo, la familia calculada en vivo con su
 // muestra. "Multicolor" es una opción explícita sin hex (decisión 2) y
 // "Quitar color" deja la prenda sin color.
-import { useId } from "react";
+import { useEffect, useId, useRef } from "react";
 import { HexColorPicker } from "react-colorful";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/Button";
@@ -25,6 +25,42 @@ export function ColorField({ value, onChange }: ColorFieldProps) {
   const labelId = useId();
   const family = colorFamilyOf(value);
   const hex = value.kind === "hex" ? normalizeHex(value.hex) : null;
+  const pickerRef = useRef<HTMLDivElement>(null);
+
+  // react-colorful trae sus aria-label en inglés ("Color", "Hue",
+  // "Saturation …%, Brightness …%") y no deja cambiarlos: se reescriben
+  // en el DOM, también cada vez que la librería actualiza el valor.
+  useEffect(() => {
+    const root = pickerRef.current;
+    if (!root) return;
+    const localize = () => {
+      const shade = root.querySelector(".react-colorful__saturation [role=slider]");
+      const hue = root.querySelector(".react-colorful__hue [role=slider]");
+      const label = t("garment.form.colorShade");
+      if (shade && shade.getAttribute("aria-label") !== label) {
+        shade.setAttribute("aria-label", label);
+      }
+      const text = shade?.getAttribute("aria-valuetext");
+      const m = text?.match(/^Saturation (\d+(?:\.\d+)?)%, Brightness (\d+(?:\.\d+)?)%$/);
+      if (shade && m) {
+        shade.setAttribute(
+          "aria-valuetext",
+          t("garment.form.colorShadeValue", { saturation: m[1], brightness: m[2] }),
+        );
+      }
+      const hueLabel = t("garment.form.colorHue");
+      if (hue && hue.getAttribute("aria-label") !== hueLabel)
+        hue.setAttribute("aria-label", hueLabel);
+    };
+    localize();
+    const observer = new MutationObserver(localize);
+    observer.observe(root, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["aria-label", "aria-valuetext"],
+    });
+    return () => observer.disconnect();
+  }, [t]);
 
   return (
     <div role="group" aria-labelledby={labelId} className="flex flex-col gap-xs">
@@ -47,6 +83,7 @@ export function ColorField({ value, onChange }: ColorFieldProps) {
       </div>
 
       <div
+        ref={pickerRef}
         aria-label={t("garment.form.colorPicker")}
         role="group"
         className={cx(value.kind !== "hex" && "opacity-60 motion-safe:transition-opacity")}

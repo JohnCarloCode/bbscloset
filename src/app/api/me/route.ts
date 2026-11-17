@@ -1,5 +1,6 @@
 // /api/me: perfil del usuario de la sesión.
-//   GET   → el perfil.
+//   GET   → el perfil, con el email de la sesión (de los claims; profiles no
+//           lo guarda) para mostrarlo en Ajustes › Cuenta.
 //   PATCH → cambia idioma, máximo de joyería y huecos del outfit aleatorio;
 //           devuelve el perfil actualizado. Si cambia el idioma, fija también
 //           la cookie `locale`.
@@ -27,6 +28,10 @@ const patchSchema = z
     message: "At least one field is required",
   });
 
+function withEmail<T extends object>(profile: T, email: string | undefined) {
+  return { ...profile, email: email ?? null };
+}
+
 export const GET = withUser(async ({ supabase, user }) => {
   // La RLS ya limita profiles a la fila propia; el filtro deja clara la intención.
   const { data: profile, error } = await supabase
@@ -37,7 +42,7 @@ export const GET = withUser(async ({ supabase, user }) => {
 
   if (error) throw error;
   if (!profile) return apiError(404, "not_found", "Profile not found");
-  return NextResponse.json(profile);
+  return NextResponse.json(withEmail(profile, user.email));
 });
 
 export const PATCH = withUser(async ({ supabase, user, request }) => {
@@ -53,7 +58,7 @@ export const PATCH = withUser(async ({ supabase, user, request }) => {
   if (error) throw error;
   if (!profile) return apiError(404, "not_found", "Profile not found");
 
-  const response = NextResponse.json(profile);
+  const response = NextResponse.json(withEmail(profile, user.email));
   if (changes.language) {
     response.cookies.set(LOCALE_COOKIE, profile.language, LOCALE_COOKIE_OPTIONS);
   }

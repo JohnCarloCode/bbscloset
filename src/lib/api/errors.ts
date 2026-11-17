@@ -14,7 +14,9 @@ export type ApiErrorCode =
   | "upload_missing"
   | "payload_too_large"
   | "rate_limited"
-  | "internal";
+  | "internal"
+  /** Supabase no responde (red, tiempo agotado o proyecto pausado): 503. */
+  | "service_unavailable";
 
 export type ApiErrorBody = {
   error: { code: ApiErrorCode; message: string; details?: unknown };

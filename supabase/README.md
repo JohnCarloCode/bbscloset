@@ -106,3 +106,23 @@ El registro público está desactivado: las altas se hacen a mano desde el panel
 4. **Comprobar:** en *Table Editor → profiles* aparece su `user_id`. Al entrar en la app ve su armario vacío y nada del resto (RLS).
 
 Prueba recomendada (pendiente): invitar un segundo email propio, entrar con él y comprobar que no ve las prendas ni los favoritos del usuario de prueba. En local, la separación entre usuarios ya está comprobada por API con `test@` y `test2@` del `seed.sql`.
+
+## Si Supabase se pausa (plan Free) — [John]
+
+En el plan Free, Supabase **pausa el proyecto tras ~1 semana sin uso**. Los datos (prendas, fotos, favoritos) **no se pierden**: solo se apaga hasta que se reactiva.
+
+**Qué ve la clienta mientras tanto**
+
+- Si ya tenía la sesión abierta: la app abre, pero arriba sale el aviso *"No se puede conectar — El servidor no responde ahora mismo. Tus prendas y favoritos están a salvo: vuelve a intentarlo en un rato."* con "Reintentar". Las listas enseñan su error con "Reintentar". No se la manda al login (la API responde `503 service_unavailable`, no `401`).
+- Lo que tenga pendiente en el móvil (fotos en la cola de recorte, borrador del vestidor) se queda en el dispositivo; la subida se reintenta sola y sigue cuando Supabase vuelve.
+- Si no tenía sesión: el login dice que no hay conexión.
+
+**Cómo reactivarlo**
+
+1. Entrar en [supabase.com/dashboard](https://supabase.com/dashboard) y abrir el proyecto (sale como *Paused*).
+2. Pulsar **Restore project** (o *Resume*). Tarda unos minutos.
+3. Cuando el proyecto esté *Healthy*, decirle a la clienta que toque "Reintentar" (o que recargue la app).
+
+Para que no vuelva a pasar: el cron diario a `/api/health` (paso 8.5) mantiene el proyecto activo; si se lanza a más usuarias, pasar a un plan de pago.
+
+**Probarlo en local:** `supabase stop` (en este repo; conserva los datos) simula el proyecto pausado y `supabase start` lo vuelve a levantar.

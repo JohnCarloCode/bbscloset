@@ -112,7 +112,7 @@ export function CategoryPicker({ value, counts, onChange, placement }: CategoryP
       >
         <span className="truncate text-[15px] leading-none font-semibold tracking-[-0.224px]">
           {tSlots(value)}
-        </span>
+        </span>{" "}
         <span className="text-caption text-ink-muted-48">{count(value)}</span>
         <ChevronDownIcon className={cx("shrink-0", open && "rotate-180")} />
       </button>
@@ -126,7 +126,7 @@ export function CategoryPicker({ value, counts, onChange, placement }: CategoryP
           aria-activedescendant={`${listId}-${active}`}
           onKeyDown={onListKey}
           className={cx(
-            "absolute left-0 z-30 max-h-[min(410px,55dvh)] w-[248px] max-w-[calc(100vw-32px)] overflow-y-auto rounded-lg border border-hairline bg-canvas p-[6px] outline-none",
+            "group absolute left-0 z-30 max-h-[min(410px,55dvh)] w-[248px] max-w-[calc(100vw-32px)] overflow-y-auto rounded-lg border border-hairline bg-canvas p-[6px] outline-none",
             placement === "up" ? "bottom-[calc(100%+8px)]" : "top-[calc(100%+8px)]",
           )}
         >
@@ -143,10 +143,20 @@ export function CategoryPicker({ value, counts, onChange, placement }: CategoryP
                 "flex h-11 cursor-pointer items-center justify-between rounded-md px-sm text-[15px]",
                 slot === value ? "bg-primary text-ink" : "text-ink",
                 slot === active && slot !== value && "bg-canvas-parchment",
+                // Foco de teclado en la opción activa (la lista tiene el foco real).
+                slot === active &&
+                  "group-focus-visible:outline-2 group-focus-visible:-outline-offset-2 group-focus-visible:outline-primary-focus",
               )}
             >
               <span>{tSlots(slot)}</span>
-              <span className="text-caption text-ink-muted-48">{count(slot)}</span>
+              <span
+                className={cx(
+                  "text-caption",
+                  slot === value ? "text-ink-muted-80" : "text-ink-muted-48",
+                )}
+              >
+                {count(slot)}
+              </span>
             </li>
           ))}
         </ul>

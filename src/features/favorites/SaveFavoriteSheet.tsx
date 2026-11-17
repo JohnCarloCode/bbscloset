@@ -129,7 +129,10 @@ export function SaveFavoriteSheet({
           void save();
         }}
       >
-        <div className="self-center" style={{ width: box.width, height: box.height }}>
+        <div
+          className="self-center overflow-hidden rounded-lg border border-hairline"
+          style={{ width: box.width, height: box.height }}
+        >
           <OutfitCanvasLazy items={canvas.items} garments={garments} editable={false} />
         </div>
         <TextField
