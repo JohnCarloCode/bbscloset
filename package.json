@@ -14,12 +14,15 @@
     "gen:types": "supabase gen types typescript --local > src/lib/supabase/types.ts && prettier --write src/lib/supabase/types.ts"
   },
   "dependencies": {
+    "@imgly/background-removal": "^1.7.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.119.0",
+    "client-zip": "^2.5.1",
     "idb": "^8.0.4",
     "next": "16.4.6",
     "next-intl": "^4.15.1",
     "react": "19.3.0",
+    "react-colorful": "^5.8.1",
     "react-dom": "19.3.0",
     "zod": "^4.6.7",
     "zustand": "^5.1.0"

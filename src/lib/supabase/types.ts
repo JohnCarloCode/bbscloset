@@ -293,7 +293,30 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      garments_with_all_tags: {
+        Args: { p_tag_ids: string[] };
+        Returns: {
+          archived: boolean;
+          brand: string | null;
+          color_family: string | null;
+          color_hex: string | null;
+          created_at: string;
+          id: string;
+          image_path: string;
+          name: string | null;
+          seasons: string[];
+          thumb_path: string;
+          type_id: string;
+          user_id: string;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "garments";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
+      set_garment_tags: { Args: { p_garment_id: string; p_names: string[] }; Returns: undefined };
     };
     Enums: {
       [_ in never]: never;

@@ -1,11 +1,21 @@
-// Placeholder: solo el título. La pantalla se construye en su paso del plan.
-import { useTranslations } from "next-intl";
+// Catálogo (screens.md 4). La pantalla es de cliente: los datos llegan por la
+// API (apiFetch) y el estado vive en features/catalog/store.ts. Lee la URL con
+// useSearchParams (filtros, 3.4), así que va dentro de <Suspense>
+// (cacheComponents): el esqueleto sale en el HTML inicial.
+import { Suspense } from "react";
+import { Catalog } from "@/features/catalog/Catalog";
+import { GridSkeleton } from "@/features/catalog/GarmentGrid";
 
 export default function CatalogPage() {
-  const t = useTranslations("nav");
   return (
-    <main className="px-5 pt-lg pb-xl">
-      <h1 className="text-lead font-semibold">{t("catalog")}</h1>
-    </main>
+    <Suspense
+      fallback={
+        <main className="mx-auto w-full max-w-[1200px] px-5 pt-xs pb-xl">
+          <GridSkeleton />
+        </main>
+      }
+    >
+      <Catalog />
+    </Suspense>
   );
 }

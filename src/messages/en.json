@@ -94,9 +94,258 @@
     "alreadyInvited": "Already invited?",
     "signIn": "Sign in"
   },
-  "catalog": {},
-  "garment": {},
-  "queue": {},
+  "catalog": {
+    "title": "Catalog",
+    "count": "{inUse, plural, other {# in rotation}} · {archived, plural, other {# archived}}",
+    "countEmpty": "No garments yet",
+    "add": "Add",
+    "viewLabel": "Catalog view",
+    "inUse": "In rotation",
+    "archived": "Archived ({count})",
+    "slotsLabel": "Categories",
+    "all": "All",
+    "slotChip": "{label}, {count, plural, one {# garment} other {# garments}}",
+    "loading": "Loading garments…",
+    "loadingMore": "Loading more garments…",
+    "error": {
+      "title": "Couldn't load your garments",
+      "offline": "You seem to be offline. Try again when you're back online.",
+      "generic": "Something went wrong. Please try again."
+    },
+    "loadMoreError": "Couldn't load more garments.",
+    "empty": {
+      "title": "Your closet is empty",
+      "body": "Take a photo of a garment and pick its type. We'll cut it out for the Dresser.",
+      "action": "Add your first garment"
+    },
+    "noResults": {
+      "title": "No garments match",
+      "body": "Try removing a filter or picking another category."
+    },
+    "noArchived": {
+      "title": "Nothing archived",
+      "body": "Archive clothes that are out of season. They leave the Dresser but stay in your favorites."
+    },
+    "filters": {
+      "button": "Filters",
+      "buttonCount": "Filters · {count}",
+      "buttonLabel": "{count, plural, =0 {Filters} one {Filters, # active} other {Filters, # active}}",
+      "title": "Filters",
+      "clear": "Clear",
+      "type": "Type",
+      "brand": "Brand",
+      "color": "Colour",
+      "tags": "Tags",
+      "tagsNote": "With several tags, only garments that have all of them are shown.",
+      "show": "{count, plural, =0 {No garments match} one {Show # garment} other {Show # garments}}",
+      "showUnknown": "Show garments",
+      "noTypes": "No garments in this view.",
+      "noBrands": "You haven't added a brand to any garment yet.",
+      "noColors": "None of your items has a colour yet.",
+      "noTags": "You don't have any tags yet.",
+      "optionsError": "Brands and tags couldn't be loaded.",
+      "loadingOptions": "Loading…"
+    },
+    "activeFilters": {
+      "label": "Active filters",
+      "remove": "Remove filter: {label}",
+      "tag": "#{name}",
+      "clearAll": "Clear all"
+    },
+    "addGarment": {
+      "title": "New garment",
+      "pick": {
+        "button": "Choose photos",
+        "tip": "Plain background that contrasts with the garment, and good light.",
+        "checking": "Checking the photo…",
+        "full": "Your closet is full: you already have 500 garments, counting the ones being cut out. Delete one to add another."
+      },
+      "choose": {
+        "thumbAlt": "Preview of {name}",
+        "detectedAlpha": "Transparent background detected. It looks already cut out.",
+        "detectedBackground": "This photo has a background.",
+        "label": "Background",
+        "cut": "Remove background",
+        "asIs": "Already cut out",
+        "hintCut": "Takes about 30 seconds. It runs in the background while you fill in the details.",
+        "hintAsIs": "The photo is used as it is.",
+        "warnBackground": "This photo has a background. In the collage it will show as a box. You can still use it.",
+        "continue": "Continue"
+      },
+      "data": {
+        "previewAlt": "Garment preview",
+        "changePhoto": "Change photo",
+        "submit": "Add to {slot}",
+        "pickType": "Pick a type to continue",
+        "saveAnother": "Save and add another",
+        "added": "Added to {slot}.",
+        "addAnother": "Add another",
+        "savedPending": "Saved. {garment} will be ready when the cut-out finishes."
+      },
+      "bulk": {
+        "title": "{count, plural, one {# photo} other {# photos}}",
+        "label": "Background",
+        "allCut": "Remove from all",
+        "allAsIs": "All already cut out",
+        "hint": "We checked each photo. Tap one to change just that one.",
+        "badgeCut": "Remove bg",
+        "badgeAsIs": "As is",
+        "badgeChecking": "Checking…",
+        "badgeInvalid": "Can't use",
+        "badgeNoRoom": "No room",
+        "detectedAlpha": "Already cut out",
+        "detectedBackground": "Has a background",
+        "cellLabel": "Photo {n}, {name}: {detected}. {mode}",
+        "cellChecking": "Photo {n}, {name}: checking…",
+        "cellInvalid": "Photo {n}, {name}: {reason}",
+        "cellNoRoom": "Photo {n}, {name}: no room left in your closet.",
+        "modeCut": "The background will be removed.",
+        "modeAsIs": "It will be used as is.",
+        "tooMany": "Up to 30 photos at a time: the first 30 will be used ({count, plural, one {# left out} other {# left out}}).",
+        "invalid": "{count, plural, one {# photo can't be used and won't be added.} other {# photos can't be used and won't be added.}}",
+        "noRoom": "{room, plural, one {There's room for only # more garment in your closet (500 limit): the first one will be added.} other {There's room for only # more garments in your closet (500 limit): the first # will be added.}}",
+        "warnBackground": "{count, plural, one {# photo has a background. In the collage it will show as a box. You can still use it.} other {# photos have a background. In the collage they will show as a box. You can still use them.}}",
+        "note": "They go to the cut-out queue and wait in Catalog → To review. About 30 seconds each, with the app open.",
+        "submit": "{count, plural, one {Add # photo} other {Add # photos}}",
+        "checking": "Checking the photos…",
+        "adding": "Adding {done} of {total}…",
+        "nothing": "None of these photos can be added.",
+        "added": "{count, plural, one {# photo added. Review it in the Catalog.} other {# photos added. Review them in the Catalog.}}",
+        "review": "Review"
+      }
+    },
+    "pending": {
+      "badge": "Cutting out",
+      "cutting": "Cutting out…",
+      "uploading": "Uploading…",
+      "notSaved": "Not saved",
+      "label": "{name}, {status}"
+    },
+    "edit": {
+      "title": "Edit garment",
+      "photoTitle": "Change photo",
+      "changePhoto": "Change photo",
+      "cutoutAlt": "Cut-out of {garment}",
+      "onlyCutout": "Only the cut-out is kept.",
+      "save": "Save changes",
+      "saved": "Changes saved.",
+      "archive": "Archive",
+      "unarchive": "Put back in rotation",
+      "archived": "Archived. It stays in your favorites but leaves the Dresser.",
+      "unarchived": "Back in rotation.",
+      "delete": "Delete garment",
+      "deleteTitle": "Delete {garment}?",
+      "deleteUsage": "It's in {count, plural, one {# favorite} other {# favorites}}.",
+      "deleteKept": "{count, plural, one {It will be removed from it and the collage will rearrange.} other {It will be removed from them and the collages will rearrange.}}",
+      "deleteEmpty": "This will also delete {count, plural, one {# favorite that would be left empty} other {# favorites that would be left empty}}.",
+      "deleteIrreversible": "This can't be undone.",
+      "deleted": "Garment deleted.",
+      "error": "Something went wrong. Try again.",
+      "offline": "Looks like you're offline. Try again when you're connected.",
+      "notFound": "This garment no longer exists."
+    },
+    "select": {
+      "select": "Select",
+      "selectAll": "Select all",
+      "selectNone": "Select none",
+      "selectAllError": "Couldn't select them all. Try again.",
+      "barLabel": "Selection",
+      "count": "{count, plural, =0 {Tap garments to select} one {# selected} other {# selected}}",
+      "archive": "Archive",
+      "unarchive": "Unarchive",
+      "archived": "{count, plural, one {# garment archived.} other {# garments archived.}}",
+      "unarchived": "{count, plural, one {# garment back in rotation.} other {# garments back in rotation.}}",
+      "error": "Couldn't change them. Try again."
+    },
+    "review": {
+      "banner": "{count, plural, one {# garment to review} other {# garments to review}}",
+      "bannerHint": "{count, plural, one {Pick a type to add it to your closet.} other {Pick a type to add them to your closet.}}",
+      "open": "Review",
+      "title": "To review",
+      "position": "{current} of {total}",
+      "saveNext": "Save and next",
+      "save": "Save",
+      "skip": "Skip",
+      "discard": "Discard photo",
+      "added": "{count, plural, one {# garment added to your closet.} other {# garments added to your closet.}}",
+      "stillToReview": "Still to review: {count}."
+    }
+  },
+  "garment": {
+    "photoErrors": {
+      "not_image": "This file isn't an image. Choose a photo.",
+      "too_large": "This photo is larger than 10 MB. Choose a lighter one.",
+      "heic_unsupported": "This browser can't open HEIC photos. Choose another photo (for example, a JPG).",
+      "decode_failed": "This photo couldn't be opened. Try another one."
+    },
+    "form": {
+      "type": "Type",
+      "required": "Required",
+      "optionalNote": "Everything below is optional.",
+      "moreData": "More details",
+      "name": "Name",
+      "namePlaceholder": "e.g. the flower shirt",
+      "namePlaceholderType": "Shown as “{type}” if left blank",
+      "tooLong": "{max} characters at most.",
+      "season": "Season",
+      "color": "Colour",
+      "colorNone": "No colour",
+      "colorHint": "Tap the square to pick the colour.",
+      "colorPicker": "Colour picker",
+      "clearColor": "Remove colour",
+      "brand": "Brand",
+      "brandPlaceholder": "e.g. Zara, vintage",
+      "brandSuggestions": "Brands you already use",
+      "tags": "Tags",
+      "tagsPlaceholder": "Add a tag and press Enter",
+      "tagsInput": "New tag",
+      "suggestedTags": {
+        "elegant": "elegant",
+        "comfy": "comfy",
+        "work": "work",
+        "party": "party",
+        "weekend": "weekend"
+      }
+    }
+  },
+  "queue": {
+    "status": {
+      "position": "#{position} in the queue. You can fill in the details meanwhile.",
+      "preparing": "Getting the cutout ready (first time only)…",
+      "cutting": "Removing the background… {percent}%",
+      "done": "Background removed. Only the cutout is saved.",
+      "asIsCutout": "Already cut out. Used as is.",
+      "asIsPhoto": "Used with its background, as you chose.",
+      "error": "Couldn't cut out"
+    },
+    "errors": {
+      "model_load_failed": "The cutout couldn't be prepared. Check your connection and try again.",
+      "cut_failed": "Couldn't cut out",
+      "empty_cutout": "No garment was found in the photo. Try another one.",
+      "encode_failed": "The cutout couldn't be saved. Try again."
+    },
+    "pill": "Cutting out {current} of {total}",
+    "sheet": {
+      "title": "Cutout queue",
+      "subtitle": "{ready} of {total} ready · one photo at a time",
+      "allDone": "All done.",
+      "keepOpen": "Keep the app open while it cuts out."
+    },
+    "item": {
+      "newGarment": "New garment (not saved yet)",
+      "toReview": "Photo to review",
+      "position": "#{position} in the queue",
+      "ready": "Ready",
+      "changePhoto": "Change photo",
+      "remove": "Remove",
+      "thumbAlt": "Thumbnail of {name}"
+    },
+    "uploadErrors": {
+      "limit_reached": "Couldn't save it: you already have 500 garments.",
+      "other": "Couldn't save the garment."
+    },
+    "allReady": "{count, plural, one {# garment ready for the Dresser} other {# garments ready for the Dresser}}"
+  },
   "dresser": {},
   "favorites": {
     "savedCount": "{count, plural, =0 {No saved outfits} one {# saved outfit} other {# saved outfits}}",
@@ -108,7 +357,67 @@
     "signOut": "Sign out",
     "signingOut": "Signing out…"
   },
-  "cutout": {},
+  "cutout": {
+    "title": "Cut out photos",
+    "back": "Settings",
+    "subtitle": "Remove the background from many photos at once.",
+    "progress": "{ready} of {total} ready",
+    "progressFailed": "{count, plural, one {# couldn’t be cut out} other {# couldn’t be cut out}}",
+    "add": "Add photos",
+    "adding": "Adding photos… {done} of {total}",
+    "empty": {
+      "title": "Upload several photos",
+      "body": "We remove the background and you download them as PNG.",
+      "dropHint": "You can also drop them here.",
+      "choose": "Choose photos",
+      "note": "Up to 30 photos per batch. They are not added to your closet."
+    },
+    "dropHere": "Drop the photos to add them",
+    "notices": {
+      "tooMany": "Up to 30 photos per batch: {count, plural, one {# photo wasn’t added} other {# photos weren’t added}}. Download these and start over.",
+      "invalid": "{count, plural, one {# photo wasn’t added:} other {# photos weren’t added:}}",
+      "invalidItem": "{name}: {reason}"
+    },
+    "tile": {
+      "queued": "Queued",
+      "error": "Couldn’t cut out",
+      "ready": "Ready",
+      "label": "{name}: {status}"
+    },
+    "errorDialog": {
+      "title": "Couldn’t cut out this photo",
+      "tip": "Try a photo with a plain background that contrasts with the garment.",
+      "remove": "Remove photo",
+      "keep": "Keep"
+    },
+    "detail": {
+      "transparent": "PNG with transparency",
+      "remove": "Remove",
+      "download": "Download PNG",
+      "alt": "Cut-out of {name}"
+    },
+    "downloadAll": "Download all ({count, plural, one {# PNG} other {# PNGs}})",
+    "share": "Share or save to Photos",
+    "zipping": "Preparing the download…",
+    "zipName": "cut-outs",
+    "fallbackName": "cut-out-{n}",
+    "downloaded": "Downloaded {file}",
+    "downloadedAll": "Downloaded {file} · {count, plural, one {# PNG} other {# PNGs}}",
+    "downloadFailed": "Couldn’t prepare the download. Try again.",
+    "startOver": {
+      "action": "Start over",
+      "title": "Start over?",
+      "bodyDownloaded": "The page will be emptied.",
+      "bodyNotDownloaded": "You haven’t downloaded these cut-outs. They will be lost.",
+      "confirm": "Start over"
+    },
+    "leave": {
+      "title": "Leave without downloading?",
+      "body": "They will be lost.",
+      "confirm": "Leave",
+      "cancel": "Stay"
+    }
+  },
   "slots": {
     "base_layer": "Base layer",
     "mid_layer": "Mid layer",

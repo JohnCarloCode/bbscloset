@@ -94,9 +94,258 @@
     "alreadyInvited": "¿Ya tienes invitación?",
     "signIn": "Entrar"
   },
-  "catalog": {},
-  "garment": {},
-  "queue": {},
+  "catalog": {
+    "title": "Catálogo",
+    "count": "{inUse, plural, other {# en uso}} · {archived, plural, one {# archivada} other {# archivadas}}",
+    "countEmpty": "Ninguna prenda todavía",
+    "add": "Añadir",
+    "viewLabel": "Vista del catálogo",
+    "inUse": "En uso",
+    "archived": "Archivadas ({count})",
+    "slotsLabel": "Huecos",
+    "all": "Todo",
+    "slotChip": "{label}, {count, plural, one {# prenda} other {# prendas}}",
+    "loading": "Cargando prendas…",
+    "loadingMore": "Cargando más prendas…",
+    "error": {
+      "title": "No se han podido cargar las prendas",
+      "offline": "Parece que no hay conexión. Vuelve a intentarlo cuando la tengas.",
+      "generic": "Algo ha fallado. Vuelve a intentarlo."
+    },
+    "loadMoreError": "No se han podido cargar más prendas.",
+    "empty": {
+      "title": "Tu armario está vacío",
+      "body": "Haz una foto de una prenda y elige su tipo. La recortaremos para el vestidor.",
+      "action": "Añadir tu primera prenda"
+    },
+    "noResults": {
+      "title": "Ninguna prenda coincide",
+      "body": "Prueba a quitar un filtro o a elegir otro hueco."
+    },
+    "noArchived": {
+      "title": "Nada archivado",
+      "body": "Archiva la ropa que no es de temporada. Sale del vestidor, pero sigue en tus favoritos."
+    },
+    "filters": {
+      "button": "Filtros",
+      "buttonCount": "Filtros · {count}",
+      "buttonLabel": "{count, plural, =0 {Filtros} one {Filtros, # activo} other {Filtros, # activos}}",
+      "title": "Filtros",
+      "clear": "Borrar",
+      "type": "Tipo",
+      "brand": "Marca",
+      "color": "Color",
+      "tags": "Etiquetas",
+      "tagsNote": "Con varias etiquetas, solo salen las prendas que las tienen todas.",
+      "show": "{count, plural, =0 {Ninguna prenda coincide} one {Ver # prenda} other {Ver # prendas}}",
+      "showUnknown": "Ver prendas",
+      "noTypes": "No hay prendas en esta vista.",
+      "noBrands": "Aún no has puesto marca a ninguna prenda.",
+      "noColors": "Ninguna prenda tiene color todavía.",
+      "noTags": "Aún no tienes etiquetas.",
+      "optionsError": "No se han podido cargar las marcas y etiquetas.",
+      "loadingOptions": "Cargando…"
+    },
+    "activeFilters": {
+      "label": "Filtros activos",
+      "remove": "Quitar filtro: {label}",
+      "tag": "#{name}",
+      "clearAll": "Borrar todo"
+    },
+    "addGarment": {
+      "title": "Nueva prenda",
+      "pick": {
+        "button": "Elegir fotos",
+        "tip": "Fondo liso que contraste con la prenda y buena luz.",
+        "checking": "Comprobando la foto…",
+        "full": "Tu armario está lleno: ya tienes 500 prendas, contando las que se están recortando. Elimina alguna para añadir otra."
+      },
+      "choose": {
+        "thumbAlt": "Vista previa de {name}",
+        "detectedAlpha": "Fondo transparente detectado. Parece ya recortada.",
+        "detectedBackground": "Esta foto tiene fondo.",
+        "label": "Fondo",
+        "cut": "Quitar fondo",
+        "asIs": "Ya está recortada",
+        "hintCut": "Tarda unos 30 segundos y se hace en segundo plano mientras rellenas los datos.",
+        "hintAsIs": "La foto se usa tal cual.",
+        "warnBackground": "Esta foto tiene fondo. En el collage se verá como un recuadro. Puedes usarla igualmente.",
+        "continue": "Continuar"
+      },
+      "data": {
+        "previewAlt": "Vista previa de la prenda",
+        "changePhoto": "Cambiar foto",
+        "submit": "Añadir a {slot}",
+        "pickType": "Elige un tipo para seguir",
+        "saveAnother": "Guardar y añadir otra",
+        "added": "Añadida a {slot}.",
+        "addAnother": "Añadir otra",
+        "savedPending": "Guardada. {garment} estará lista cuando acabe el recorte."
+      },
+      "bulk": {
+        "title": "{count, plural, one {# foto} other {# fotos}}",
+        "label": "Fondo",
+        "allCut": "Quitar fondo a todas",
+        "allAsIs": "Ya están recortadas",
+        "hint": "Hemos mirado cada foto. Toca una para cambiar solo esa.",
+        "badgeCut": "Quitar fondo",
+        "badgeAsIs": "Tal cual",
+        "badgeChecking": "Comprobando…",
+        "badgeInvalid": "No vale",
+        "badgeNoRoom": "No cabe",
+        "detectedAlpha": "Ya recortada",
+        "detectedBackground": "Con fondo",
+        "cellLabel": "Foto {n}, {name}: {detected}. {mode}",
+        "cellChecking": "Foto {n}, {name}: comprobando…",
+        "cellInvalid": "Foto {n}, {name}: {reason}",
+        "cellNoRoom": "Foto {n}, {name}: no cabe en tu armario.",
+        "modeCut": "Se quitará el fondo.",
+        "modeAsIs": "Se usará tal cual.",
+        "tooMany": "Como mucho 30 fotos por tanda: se usarán las 30 primeras ({count, plural, one {sobra #} other {sobran #}}).",
+        "invalid": "{count, plural, one {# foto no se puede usar y no se añadirá.} other {# fotos no se pueden usar y no se añadirán.}}",
+        "noRoom": "{room, plural, one {Solo cabe # prenda más en tu armario (límite de 500): se añadirá la primera.} other {Solo caben # prendas más en tu armario (límite de 500): se añadirán las # primeras.}}",
+        "warnBackground": "{count, plural, one {# foto tiene fondo. En el collage se verá como un recuadro. Puedes usarla igualmente.} other {# fotos tienen fondo. En el collage se verán como un recuadro. Puedes usarlas igualmente.}}",
+        "note": "Van a la cola de recorte y esperan en Catálogo → Por revisar. Unos 30 segundos cada una, con la app abierta.",
+        "submit": "{count, plural, one {Añadir # foto} other {Añadir # fotos}}",
+        "checking": "Comprobando las fotos…",
+        "adding": "Añadiendo {done} de {total}…",
+        "nothing": "Ninguna foto se puede añadir.",
+        "added": "{count, plural, one {# foto añadida. Revísala en el catálogo.} other {# fotos añadidas. Revísalas en el catálogo.}}",
+        "review": "Revisar"
+      }
+    },
+    "pending": {
+      "badge": "Recortando",
+      "cutting": "Recortando…",
+      "uploading": "Subiendo…",
+      "notSaved": "Sin guardar",
+      "label": "{name}, {status}"
+    },
+    "edit": {
+      "title": "Editar prenda",
+      "photoTitle": "Cambiar foto",
+      "changePhoto": "Cambiar foto",
+      "cutoutAlt": "Recorte de {garment}",
+      "onlyCutout": "Solo se guarda el recorte.",
+      "save": "Guardar cambios",
+      "saved": "Cambios guardados.",
+      "archive": "Archivar",
+      "unarchive": "Volver a usar",
+      "archived": "Archivada. Sigue en tus favoritos pero sale del vestidor.",
+      "unarchived": "De nuevo en uso.",
+      "delete": "Eliminar prenda",
+      "deleteTitle": "¿Eliminar {garment}?",
+      "deleteUsage": "Aparece en {count, plural, one {# favorito} other {# favoritos}}.",
+      "deleteKept": "{count, plural, one {Se quitará de él y el collage se recolocará.} other {Se quitará de ellos y los collages se recolocarán.}}",
+      "deleteEmpty": "Esto eliminará también {count, plural, one {# favorito que quedaría vacío} other {# favoritos que quedarían vacíos}}.",
+      "deleteIrreversible": "No se puede deshacer.",
+      "deleted": "Prenda eliminada.",
+      "error": "Algo ha fallado. Vuelve a intentarlo.",
+      "offline": "Parece que no hay conexión. Vuelve a intentarlo cuando la tengas.",
+      "notFound": "Esta prenda ya no existe."
+    },
+    "select": {
+      "select": "Seleccionar",
+      "selectAll": "Seleccionar todo",
+      "selectNone": "Quitar selección",
+      "selectAllError": "No se han podido seleccionar todas. Vuelve a intentarlo.",
+      "barLabel": "Selección",
+      "count": "{count, plural, =0 {Toca las prendas para seleccionarlas} one {# seleccionada} other {# seleccionadas}}",
+      "archive": "Archivar",
+      "unarchive": "Desarchivar",
+      "archived": "{count, plural, one {# prenda archivada.} other {# prendas archivadas.}}",
+      "unarchived": "{count, plural, one {# prenda de nuevo en uso.} other {# prendas de nuevo en uso.}}",
+      "error": "No se han podido cambiar. Vuelve a intentarlo."
+    },
+    "review": {
+      "banner": "{count, plural, one {# prenda por revisar} other {# prendas por revisar}}",
+      "bannerHint": "{count, plural, one {Elige un tipo para añadirla a tu armario.} other {Elige un tipo para añadirlas a tu armario.}}",
+      "open": "Revisar",
+      "title": "Por revisar",
+      "position": "{current} de {total}",
+      "saveNext": "Guardar y siguiente",
+      "save": "Guardar",
+      "skip": "Saltar",
+      "discard": "Descartar foto",
+      "added": "{count, plural, one {# prenda añadida.} other {# prendas añadidas.}}",
+      "stillToReview": "{count, plural, one {Queda # por revisar.} other {Quedan # por revisar.}}"
+    }
+  },
+  "garment": {
+    "photoErrors": {
+      "not_image": "Este archivo no es una imagen. Elige una foto.",
+      "too_large": "La foto pesa más de 10 MB. Elige otra más ligera.",
+      "heic_unsupported": "Este navegador no puede abrir fotos HEIC. Elige otra foto (por ejemplo, en JPG).",
+      "decode_failed": "No se pudo abrir esta foto. Prueba con otra."
+    },
+    "form": {
+      "type": "Tipo",
+      "required": "Obligatorio",
+      "optionalNote": "Todo lo de abajo es opcional.",
+      "moreData": "Más datos",
+      "name": "Nombre",
+      "namePlaceholder": "p. ej. la camisa de las flores",
+      "namePlaceholderType": "Se mostrará como «{type}» si lo dejas vacío",
+      "tooLong": "Como mucho {max} caracteres.",
+      "season": "Temporada",
+      "color": "Color",
+      "colorNone": "Sin color",
+      "colorHint": "Toca el cuadro para elegir el color.",
+      "colorPicker": "Selector de color",
+      "clearColor": "Quitar color",
+      "brand": "Marca",
+      "brandPlaceholder": "p. ej. Zara, vintage",
+      "brandSuggestions": "Marcas que ya usas",
+      "tags": "Etiquetas",
+      "tagsPlaceholder": "Añade una etiqueta y pulsa Intro",
+      "tagsInput": "Nueva etiqueta",
+      "suggestedTags": {
+        "elegant": "elegante",
+        "comfy": "cómodo",
+        "work": "curro",
+        "party": "fiesta",
+        "weekend": "findes"
+      }
+    }
+  },
+  "queue": {
+    "status": {
+      "position": "{position}.º en la cola. Puedes rellenar los datos mientras.",
+      "preparing": "Preparando el recorte (solo la primera vez)…",
+      "cutting": "Quitando el fondo… {percent} %",
+      "done": "Fondo quitado. Solo se guarda el recorte.",
+      "asIsCutout": "Ya recortada. Se usa tal cual.",
+      "asIsPhoto": "Se usa con su fondo, como elegiste.",
+      "error": "No se pudo recortar"
+    },
+    "errors": {
+      "model_load_failed": "No se pudo preparar el recorte. Revisa la conexión y vuelve a intentarlo.",
+      "cut_failed": "No se pudo recortar",
+      "empty_cutout": "No se encontró ninguna prenda en la foto. Prueba con otra.",
+      "encode_failed": "No se pudo guardar el recorte. Vuelve a intentarlo."
+    },
+    "pill": "Recortando {current} de {total}",
+    "sheet": {
+      "title": "Cola de recorte",
+      "subtitle": "{ready} de {total} listas · una foto cada vez",
+      "allDone": "Todo listo.",
+      "keepOpen": "Mantén la app abierta mientras recorta."
+    },
+    "item": {
+      "newGarment": "Prenda nueva (sin guardar)",
+      "toReview": "Foto por revisar",
+      "position": "{position}.º en la cola",
+      "ready": "Lista",
+      "changePhoto": "Cambiar foto",
+      "remove": "Quitar",
+      "thumbAlt": "Miniatura de {name}"
+    },
+    "uploadErrors": {
+      "limit_reached": "No se pudo guardar: ya tienes 500 prendas.",
+      "other": "No se pudo guardar la prenda."
+    },
+    "allReady": "{count, plural, one {# prenda lista para el vestidor} other {# prendas listas para el vestidor}}"
+  },
   "dresser": {},
   "favorites": {
     "savedCount": "{count, plural, =0 {Ningún outfit guardado} one {# outfit guardado} other {# outfits guardados}}",
@@ -108,7 +357,67 @@
     "signOut": "Cerrar sesión",
     "signingOut": "Cerrando sesión…"
   },
-  "cutout": {},
+  "cutout": {
+    "title": "Recortar fotos",
+    "back": "Ajustes",
+    "subtitle": "Quita el fondo de muchas fotos a la vez.",
+    "progress": "{ready} de {total} listas",
+    "progressFailed": "{count, plural, one {# no se pudo recortar} other {# no se pudieron recortar}}",
+    "add": "Añadir fotos",
+    "adding": "Añadiendo fotos… {done} de {total}",
+    "empty": {
+      "title": "Sube varias fotos",
+      "body": "Quitamos el fondo y te las descargas en PNG.",
+      "dropHint": "También puedes soltarlas aquí.",
+      "choose": "Elegir fotos",
+      "note": "Hasta 30 fotos por tanda. No se añaden a tu armario."
+    },
+    "dropHere": "Suelta las fotos para añadirlas",
+    "notices": {
+      "tooMany": "Hasta 30 fotos por tanda: {count, plural, one {# foto no se ha añadido} other {# fotos no se han añadido}}. Descarga estas y empieza de nuevo.",
+      "invalid": "{count, plural, one {# foto no se ha añadido:} other {# fotos no se han añadido:}}",
+      "invalidItem": "{name}: {reason}"
+    },
+    "tile": {
+      "queued": "En cola",
+      "error": "No se pudo recortar",
+      "ready": "Lista",
+      "label": "{name}: {status}"
+    },
+    "errorDialog": {
+      "title": "No se pudo recortar esta foto",
+      "tip": "Prueba con una foto de fondo liso que contraste con la prenda.",
+      "remove": "Quitar foto",
+      "keep": "Conservar"
+    },
+    "detail": {
+      "transparent": "PNG con transparencia",
+      "remove": "Quitar",
+      "download": "Descargar PNG",
+      "alt": "Recorte de {name}"
+    },
+    "downloadAll": "Descargar todas ({count} PNG)",
+    "share": "Compartir o guardar en Fotos",
+    "zipping": "Preparando la descarga…",
+    "zipName": "recortes",
+    "fallbackName": "recorte-{n}",
+    "downloaded": "Descargado {file}",
+    "downloadedAll": "Descargado {file} · {count} PNG",
+    "downloadFailed": "No se pudo preparar la descarga. Vuelve a intentarlo.",
+    "startOver": {
+      "action": "Empezar de nuevo",
+      "title": "¿Empezar de nuevo?",
+      "bodyDownloaded": "Se vaciará la página.",
+      "bodyNotDownloaded": "No has descargado estos recortes. Se perderán.",
+      "confirm": "Empezar de nuevo"
+    },
+    "leave": {
+      "title": "¿Salir sin descargar?",
+      "body": "Se perderán.",
+      "confirm": "Salir",
+      "cancel": "Quedarme"
+    }
+  },
   "slots": {
     "base_layer": "Capa base",
     "mid_layer": "Capa media",

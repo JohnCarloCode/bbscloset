@@ -73,9 +73,10 @@ export function ToastProvider({ children, raise }: ToastProviderProps) {
               "pointer-events-none fixed inset-x-md z-[70] flex justify-center",
               // 20 px sobre la barra de pestañas (--tab-bar-h, globals.css) o sobre
               // la zona segura si no hay barra; más --toast-raise con queue-pill.
-              "bottom-[calc(max(var(--tab-bar-h,0px),env(safe-area-inset-bottom))+20px+var(--toast-raise,0px))]",
-              // En escritorio queue-pill vive en la barra lateral: sin desplazamiento.
-              "desktop:bottom-lg",
+              // --selection-bar-h: barra de selección del catálogo (3.11).
+              "bottom-[calc(max(var(--tab-bar-h,0px),env(safe-area-inset-bottom))+20px+var(--toast-raise,0px)+var(--selection-bar-h,0px))]",
+              // En escritorio queue-pill vive en la barra lateral: sin --toast-raise.
+              "desktop:bottom-[calc(var(--spacing-lg)+var(--selection-bar-h,0px))]",
             )}
           >
             {current && <Toast key={current.id} {...current} onDismiss={dismiss} />}

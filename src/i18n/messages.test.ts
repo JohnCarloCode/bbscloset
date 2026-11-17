@@ -1,18 +1,11 @@
 // Los dos idiomas tienen las mismas claves y las listas cerradas coinciden
 // con las semillas de las migraciones (huecos y tipos en 0001; temporadas y
 // familias de color en las restricciones de 0002).
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import { createTranslator } from "next-intl";
 import { describe, expect, it } from "vitest";
 import en from "../messages/en.json";
 import es from "../messages/es.json";
-
-const migration = (name: string) =>
-  readFileSync(
-    fileURLToPath(new URL(`../../supabase/migrations/${name}`, import.meta.url)),
-    "utf8",
-  );
+import { checkValues, insertedIds, migration } from "../test/migrations";
 
 /** Rutas "a.b.c" de todas las hojas de un objeto de mensajes. */
 function leafKeys(obj: object, prefix = ""): string[] {
@@ -20,22 +13,6 @@ function leafKeys(obj: object, prefix = ""): string[] {
     const path = prefix ? `${prefix}.${k}` : k;
     return v !== null && typeof v === "object" ? [path + "/", ...leafKeys(v, path)] : [path];
   });
-}
-
-/** Primer valor entre comillas de cada fila del INSERT INTO <table> ... values (...). */
-function insertedIds(sql: string, table: string): string[] {
-  const start = sql.indexOf(`insert into public.${table}`);
-  const end = sql.indexOf("on conflict", start);
-  expect(start).toBeGreaterThanOrEqual(0);
-  return [...sql.slice(start, end).matchAll(/^\s*\('([a-z_]+)'/gm)].map((m) => m[1]);
-}
-
-/** Valores de un array['a','b'] o de un in ('a','b') tras la columna indicada. */
-function checkValues(sql: string, column: string): string[] {
-  const at = sql.search(new RegExp(`^\\s*${column}\\s`, "m"));
-  expect(at).toBeGreaterThanOrEqual(0);
-  const body = sql.slice(at).match(/(?:array\[|in \()([^\])]*)/)?.[1] ?? "";
-  return [...body.matchAll(/'([a-z_]+)'/g)].map((m) => m[1]);
 }
 
 const sorted = (xs: string[]) => [...xs].sort();

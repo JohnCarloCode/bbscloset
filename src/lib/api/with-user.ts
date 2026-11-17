@@ -1,6 +1,7 @@
 // Envoltorio común de las rutas de /api: crea el cliente de Supabase con la
 // sesión de la petición, exige usuario (o 401) y captura excepciones (500
 // `internal` sin detalles; ApiError → su respuesta).
+import { unstable_rethrow } from "next/navigation";
 import type { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { ApiError, apiError } from "./errors";
@@ -36,6 +37,9 @@ export function withUser<P extends Record<string, string | string[]> = Record<st
       const user: ApiUser = { id: claims.sub, email: claims.email };
       return await handler({ supabase, user, request, params });
     } catch (err) {
+      // Deja pasar los errores internos de Next (p. ej. el corte del prerender
+      // al leer cookies en el build) para no convertirlos en un 500.
+      unstable_rethrow(err);
       if (err instanceof ApiError) return err.toResponse();
       console.error("[api] unhandled error", request.method, request.nextUrl.pathname, err);
       return apiError(500, "internal", "Internal server error");

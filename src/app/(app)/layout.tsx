@@ -8,6 +8,9 @@
 import { Sidebar } from "@/components/nav/Sidebar";
 import { TabBar } from "@/components/nav/TabBar";
 import { QueuePillSlot } from "@/components/nav/QueuePillSlot";
+import { QueueProvider } from "@/features/queue/QueueProvider";
+import { AddGarmentSheet } from "@/features/catalog/add/AddGarmentSheet";
+import { ReviewSheet } from "@/features/catalog/review/ReviewSheet";
 
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
@@ -16,7 +19,14 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
       {/* Hueco inferior del alto de la barra para que no tape el contenido. */}
       <div className="min-w-0 flex-1 pb-(--tab-bar-h)">{children}</div>
       <TabBar />
-      <QueuePillSlot />
+      {/* Cola de recorte global (paso 3.6): bucles, píldora y hoja. */}
+      <QueuePillSlot>
+        <QueueProvider />
+      </QueuePillSlot>
+      {/* Hoja "Añadir prenda" (paso 3.7): se abre desde cualquier pantalla con useAddGarment. */}
+      <AddGarmentSheet />
+      {/* Hoja "Por revisar" (paso 3.12): la abren la franja del catálogo y el aviso de la subida masiva. */}
+      <ReviewSheet />
     </div>
   );
 }

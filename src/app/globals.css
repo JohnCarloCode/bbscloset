@@ -35,6 +35,16 @@
     }
   }
 
+  /* Alto de la barra de selección del catálogo (3.11, SelectionBar: 1 px de
+     borde + 2 × 8 + botón de 44 px). Mientras se ve, la queue-pill y el toast
+     suben por encima de ella. */
+  :root {
+    --selection-bar-h: 0px;
+  }
+  :root:has([data-selection-bar]) {
+    --selection-bar-h: 61px;
+  }
+
   /* Titulares con la variante Display de SF Pro. */
   h1,
   h2,

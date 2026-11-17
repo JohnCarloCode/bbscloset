@@ -3,10 +3,12 @@
 // Barra lateral de escritorio (≥ 1024 px; screens.md 1). Medidas del
 // prototipo: 232 px, fondo parchment con borde derecho, nombre de la app,
 // entradas de 44 px con icono de 20 px y texto de 15 px; la activa con fondo
-// rosa y negrita. Abajo, el botón principal "Añadir prenda".
+// rosa y negrita. Abajo, el botón principal "Añadir prenda", que abre la hoja
+// de añadir encima de la pantalla actual (paso 3.7).
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useAddGarment } from "@/features/catalog/add/store";
 import { cx } from "../cx";
 import { activeNavKey, SIDEBAR_ITEMS } from "./navItems";
 
@@ -14,6 +16,7 @@ export function Sidebar() {
   const t = useTranslations("nav");
   const tc = useTranslations("common");
   const active = activeNavKey(usePathname(), SIDEBAR_ITEMS);
+  const openAdd = useAddGarment((s) => s.open);
 
   return (
     <aside
@@ -43,16 +46,17 @@ export function Sidebar() {
         })}
       </nav>
       <div className="flex-1" />
-      {/* El paso 3.7 cambia el enlace por el botón que abre la hoja "Añadir prenda". */}
-      <Link
-        href="/catalog"
+      <button
+        type="button"
+        onClick={openAdd}
+        aria-haspopup="dialog"
         className={cx(
-          "mx-1 flex min-h-11 items-center justify-center rounded-pill bg-primary px-[22px]",
-          "text-[15px] text-on-primary",
+          "mx-1 flex min-h-11 cursor-pointer items-center justify-center rounded-pill bg-primary",
+          "px-[22px] text-[15px] text-on-primary",
         )}
       >
         {t("addGarment")}
-      </Link>
+      </button>
     </aside>
   );
 }

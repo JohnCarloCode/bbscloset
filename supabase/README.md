@@ -11,6 +11,7 @@ Esquema de la base de datos de bb's closet como migraciones versionadas. La refe
 | `0005_triggers.sql` | Crear `profiles` al crear usuario; borrar el favorito que se queda vacío |
 | `0006_waitlist.sql` | Lista de espera: insert anónimo, sin lectura |
 | `0007_storage.sql` | Bucket privado `garments` y políticas por carpeta `{user_id}/…` |
+| `0008_garment_functions.sql` | RPC `security invoker` (respetan la RLS): `garments_with_all_tags` (filtro de etiquetas con Y) y `set_garment_tags` (crear/unir etiquetas y reemplazar las de una prenda en una transacción) |
 
 ## Aplicar en el proyecto remoto
 
@@ -21,7 +22,7 @@ supabase link --project-ref <ref-del-proyecto>
 supabase db push
 ```
 
-Sin CLI: abrir *SQL Editor* en el panel de Supabase y pegar y ejecutar los archivos **en orden** (0001 → 0007). En ese caso la CLI no sabrá que están aplicados; no mezcles los dos métodos en el mismo proyecto.
+Sin CLI: abrir *SQL Editor* en el panel de Supabase y pegar y ejecutar los archivos **en orden** (0001 → 0008). En ese caso la CLI no sabrá que están aplicados; no mezcles los dos métodos en el mismo proyecto.
 
 Cambios futuros: siempre como migración nueva (`supabase migration new <nombre>`), nunca editando una ya aplicada.
 
@@ -64,6 +65,8 @@ supabase gen types typescript --project-id <ref-del-proyecto> > src/lib/supabase
 
 - `color_hex` solo acepta minúsculas (`#aabbcc`): normalizar antes de guardar.
 - Waitlist: insertar sin pedir la fila de vuelta (sin `.select()`), porque no hay permiso de lectura.
+- `tags` se crean y enlazan solo con `set_garment_tags` (0008): reutiliza la etiqueta existente por `lower(name)` y conserva su escritura original.
+- Con RPC que devuelven `setof garments`, PostgREST solo ordena por columnas que estén en el `select` (p. ej. `select("id, created_at")` para ordenar por `created_at`).
 - El favorito vacío se borra al final de la transacción: si se reemplazan todos sus items, hacerlo en una sola transacción (función RPC) o insertar los nuevos antes de borrar los viejos.
 
 ## Email de recuperar contraseña (paso 2.3) — [John]

@@ -20,6 +20,8 @@ export type SheetProps = {
   fullScreen?: boolean;
   /** Pie fijo (botón principal, etc.). */
   footer?: ReactNode;
+  /** Acción en la cabecera, antes del botón de cerrar (p. ej. "Borrar" en Filtros). */
+  headerAction?: ReactNode;
   children: ReactNode;
   className?: string;
 };
@@ -31,6 +33,7 @@ export function Sheet({
   closeLabel,
   fullScreen = false,
   footer,
+  headerAction,
   children,
   className,
 }: SheetProps) {
@@ -76,14 +79,17 @@ export function Sheet({
           <h2 id={titleId} className="min-w-0 truncate text-tagline">
             {title}
           </h2>
-          <Button
-            variant="icon-circular"
-            iconSurface="plain"
-            aria-label={closeLabel}
-            onClick={onClose}
-          >
-            <CloseIcon />
-          </Button>
+          <div className="flex shrink-0 items-center gap-xs">
+            {headerAction}
+            <Button
+              variant="icon-circular"
+              iconSurface="plain"
+              aria-label={closeLabel}
+              onClick={onClose}
+            >
+              <CloseIcon />
+            </Button>
+          </div>
         </div>
         <div
           className={cx(
