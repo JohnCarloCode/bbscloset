@@ -38,3 +38,17 @@ export function useCutoutImage(url: string | null | undefined): CutoutImage {
   // Mientras llega la nueva URL se considera cargando (no se pinta la anterior).
   return state.url === url ? state.result : { status: "loading", image: null };
 }
+
+/**
+ * Lo mismo sin React (exportación): promesa con el recorte cargado con
+ * crossOrigin="anonymous" y ya decodificado.
+ */
+export function loadCutoutImage(url: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error("cutout_load_failed"));
+    img.src = url;
+  });
+}

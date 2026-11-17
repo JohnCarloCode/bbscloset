@@ -477,7 +477,25 @@
       }
     }
   },
-  "export": {},
+  "export": {
+    "title": "Save as image",
+    "ratioLabel": "Aspect ratio",
+    "ratio": {
+      "square": "Square",
+      "portrait": "Portrait",
+      "story": "Story"
+    },
+    "previewAlt": "Image preview",
+    "preparing": "Preparing the image…",
+    "meta": "PNG · {width} × {height} px · no watermark",
+    "download": "Download PNG",
+    "downloaded": "Downloaded: {file}",
+    "openHint": "Press and hold the image to save it.",
+    "errorCutout": "Some garments couldn't be loaded. Check your connection and try again.",
+    "errorEmpty": "There are no garments to put in the image.",
+    "errorGeneric": "The image couldn't be prepared.",
+    "saveError": "The image couldn't be saved. Please try again."
+  },
   "settings": {
     "language": "Language",
     "signOut": "Sign out",

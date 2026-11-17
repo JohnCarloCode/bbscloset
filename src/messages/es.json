@@ -477,7 +477,25 @@
       }
     }
   },
-  "export": {},
+  "export": {
+    "title": "Guardar como imagen",
+    "ratioLabel": "Proporción",
+    "ratio": {
+      "square": "Cuadrado",
+      "portrait": "Vertical",
+      "story": "Story"
+    },
+    "previewAlt": "Vista previa de la imagen",
+    "preparing": "Preparando la imagen…",
+    "meta": "PNG · {width} × {height} px · sin marca de agua",
+    "download": "Descargar PNG",
+    "downloaded": "Descargada: {file}",
+    "openHint": "Mantén pulsada la imagen para guardarla.",
+    "errorCutout": "No se ha podido cargar alguna prenda. Comprueba la conexión y vuelve a intentarlo.",
+    "errorEmpty": "No hay prendas que guardar en la imagen.",
+    "errorGeneric": "No se ha podido preparar la imagen.",
+    "saveError": "No se ha podido guardar la imagen. Inténtalo de nuevo."
+  },
   "settings": {
     "language": "Idioma",
     "signOut": "Cerrar sesión",

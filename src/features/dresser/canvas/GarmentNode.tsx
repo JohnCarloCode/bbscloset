@@ -10,6 +10,7 @@ import { memo, useCallback, useEffect, useRef } from "react";
 import { Image as KonvaImage } from "react-konva";
 import type { CanvasItem } from "../model";
 import { buildAlphaMask } from "./alphaMask";
+import { garmentShapeAttrs } from "./garmentAttrs";
 import { nodeBox, type Size } from "./geometry";
 import type { ProductShadow } from "./theme";
 import { useCutoutImage } from "./useCutoutImage";
@@ -94,17 +95,8 @@ export const GarmentNode = memo(function GarmentNode({
       name="garment"
       id={id}
       image={image}
-      {...box}
-      scaleX={1}
-      scaleY={1}
-      shadowEnabled={shadow !== null}
-      shadowColor={shadow?.color}
-      shadowBlur={shadow?.blur}
-      shadowOffsetX={shadow?.offsetX}
-      shadowOffsetY={shadow?.offsetY}
-      // La sombra no cuenta para el clic ni para el marco del Transformer.
-      shadowForStrokeEnabled={false}
-      perfectDrawEnabled={false}
+      // Caja y sombra compartidas con la exportación (garmentAttrs.ts).
+      {...garmentShapeAttrs(box, shadow)}
       listening={editable}
       draggable={editable}
       hitFunc={hitFunc}

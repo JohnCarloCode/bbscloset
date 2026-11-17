@@ -3,12 +3,15 @@
 // Cabecera del vestidor (screens.md 7.1; paso 4.6): título "Vestidor" y, a la
 // derecha, Deshacer · Rehacer | Guardar en favoritos · Guardar como imagen,
 // atenuados cuando no aplican. "Guardar en favoritos" (5.2) abre
-// SaveFavoriteSheet; atenuado con el lienzo vacío. La imagen llega en 6.2.
+// SaveFavoriteSheet; atenuado con el lienzo vacío. "Guardar como imagen"
+// (6.2) abre ExportSheet con el lienzo tal cual (ya recolocado en el store);
+// también atenuado con el lienzo vacío.
 // Atajos en escritorio: Cmd/Ctrl+Z deshace y Shift+Cmd/Ctrl+Z rehace, salvo
 // con el foco en un campo de texto o con una hoja/diálogo abierto encima.
 import { useEffect, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { DownloadIcon, HeartIcon, RedoIcon, UndoIcon } from "@/components/icons";
+import { ExportSheet } from "@/features/export/ExportSheet";
 import { SaveFavoriteSheet } from "@/features/favorites/SaveFavoriteSheet";
 import { useDresserStore } from "./store";
 import { useCanvasGarments } from "./useCanvasGarments";
@@ -78,6 +81,8 @@ export function DresserHeader({ title }: { title: string }) {
   // Cada apertura monta la hoja de nuevo (key), así empieza limpia.
   const [favSheet, setFavSheet] = useState({ open: false, key: 0 });
   const openFavSheet = () => setFavSheet((s) => ({ open: true, key: s.key + 1 }));
+  const [imgSheet, setImgSheet] = useState({ open: false, key: 0, date: new Date(0) });
+  const openImgSheet = () => setImgSheet((s) => ({ open: true, key: s.key + 1, date: new Date() }));
 
   useUndoShortcuts();
 
@@ -95,8 +100,7 @@ export function DresserHeader({ title }: { title: string }) {
         <HeaderButton label={t("saveFavorite")} disabled={empty} onClick={openFavSheet}>
           <HeartIcon />
         </HeaderButton>
-        {/* Se activa en 6.2. */}
-        <HeaderButton label={t("saveImage")} disabled>
+        <HeaderButton label={t("saveImage")} disabled={empty} onClick={openImgSheet}>
           <DownloadIcon />
         </HeaderButton>
       </div>
@@ -107,6 +111,16 @@ export function DresserHeader({ title }: { title: string }) {
         canvas={canvas}
         garments={canvasGarments}
         canvasSize={canvasSize}
+      />
+      <ExportSheet
+        key={`img-${imgSheet.key}`}
+        open={imgSheet.open && !empty}
+        onClose={() => setImgSheet((s) => ({ ...s, open: false }))}
+        items={canvas.items}
+        garments={canvasGarments}
+        canvasSize={canvasSize}
+        name={null}
+        date={imgSheet.date}
       />
     </header>
   );

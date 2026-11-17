@@ -4,6 +4,8 @@
 // real de cada hueco con recorte (include=cutout), las coloca con autoLayout
 // y deja moverlas, redimensionarlas, girarlas, cambiar el orden, bloquear y
 // quitar. Se borra en el paso 7.5; puede llevar literales.
+// Paso 6.1: "Girar 2ª 30°" y "Exportar PNG ×3" (renderPng en 1:1, 4:5 y
+// 9:16; muestra cada PNG con sus dimensiones reales).
 // Para pruebas automáticas: window.__canvas (stage, items, exportar).
 import type Konva from "konva";
 import { useTranslations } from "next-intl";
@@ -11,6 +13,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/Button";
 import { OutfitCanvasLazy, type CanvasGarment } from "@/features/dresser/canvas/OutfitCanvasLazy";
 import { paintOrder, type CanvasItem, type CanvasState } from "@/features/dresser/model";
+import { renderPng, type ExportRatio } from "@/features/export/renderPng";
 import { apiFetch } from "@/lib/api/client";
 import type { GarmentListResponse } from "@/lib/api/types";
 import { SLOT_IDS, SLOTS } from "@/lib/domain/slots";
@@ -22,11 +25,22 @@ declare global {
       stage: Konva.Stage | null;
       items: CanvasItem[];
       exportPng: () => string;
+      exportAll: () => Promise<Exported[]>;
     };
   }
 }
 
 type Size = { width: number; height: number };
+type Exported = { ratio: ExportRatio; url: string; width: number; height: number; kb: number };
+const RATIOS: ExportRatio[] = ["1:1", "4:5", "9:16"];
+
+/** Dimensiones reales del PNG (decodificándolo). */
+async function pngSize(blob: Blob) {
+  const bmp = await createImageBitmap(blob);
+  const out = { width: bmp.width, height: bmp.height };
+  bmp.close();
+  return out;
+}
 
 /** Recoloca los items no manuales (la z del item manda si se reordenó). */
 function relayout(items: CanvasItem[], aspects: Record<string, number>, size: Size): CanvasItem[] {
@@ -59,6 +73,7 @@ export default function DevCanvasPage() {
   const [log, setLog] = useState<string[]>([]);
   const [exported, setExported] = useState<string>("");
   const [size, setSize] = useState<Size>({ width: 0, height: 0 });
+  const [pngs, setPngs] = useState<Exported[]>([]);
   const boxRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<Konva.Stage | null>(null);
 
@@ -121,8 +136,31 @@ export default function DevCanvasPage() {
     return url;
   }, []);
 
+  const exportAll = useCallback(async () => {
+    const out: Exported[] = [];
+    try {
+      for (const ratio of RATIOS) {
+        const { blob } = await renderPng({ items: shown, garments, canvasSize: size, ratio });
+        const dims = await pngSize(blob);
+        out.push({
+          ratio,
+          url: URL.createObjectURL(blob),
+          ...dims,
+          kb: Math.round(blob.size / 1024),
+        });
+      }
+    } catch (e) {
+      setLog((l) => [...l, `export error: ${String(e)}`]);
+    }
+    setPngs((prev) => {
+      prev.forEach((p) => URL.revokeObjectURL(p.url));
+      return out;
+    });
+    return out;
+  }, [shown, garments, size]);
+
   useEffect(() => {
-    window.__canvas = { stage: stageRef.current, items: shown, exportPng };
+    window.__canvas = { stage: stageRef.current, items: shown, exportPng, exportAll };
   });
 
   return (
@@ -143,6 +181,27 @@ export default function DevCanvasPage() {
         </Button>
         <Button variant="secondary" onClick={() => exportPng()}>
           toDataURL
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() =>
+            setItems((its) =>
+              its.map((i, n) =>
+                n === 1
+                  ? {
+                      ...(shown.find((x) => x.garmentId === i.garmentId) ?? i),
+                      rotation: i.rotation + 30,
+                      manual: true,
+                    }
+                  : i,
+              ),
+            )
+          }
+        >
+          Girar 2ª 30°
+        </Button>
+        <Button variant="secondary" onClick={() => void exportAll()}>
+          Exportar PNG ×3
         </Button>
       </div>
       <div
@@ -176,6 +235,17 @@ export default function DevCanvasPage() {
           .join("\n")}
       </pre>
       <pre className="text-[11px] leading-tight">{log.join("\n")}</pre>
+      <div className="flex flex-wrap items-start gap-md">
+        {pngs.map((p) => (
+          <figure key={p.ratio} className="flex flex-col gap-xs">
+            {/* eslint-disable-next-line @next/next/no-img-element -- blob local de prueba */}
+            <img src={p.url} alt={p.ratio} width={240} className="border border-hairline" />
+            <figcaption className="text-caption" data-export={p.ratio}>
+              {p.ratio}: {p.width} × {p.height} px · {p.kb} KB
+            </figcaption>
+          </figure>
+        ))}
+      </div>
     </main>
   );
 }

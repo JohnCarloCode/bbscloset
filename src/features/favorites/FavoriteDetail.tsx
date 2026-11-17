@@ -2,8 +2,9 @@
 
 // Detalle del favorito (screens.md 11; spec 3.4; paso 5.4).
 // - Cabecera: "‹ Favoritos", título (nombre o fecha), "Guardado el … · N
-//   prendas" e icono "Guardar como imagen" (atenuado hasta 6.2). No hay
-//   renombrar (screens 11 no lo pide).
+//   prendas" e icono "Guardar como imagen" (6.2: abre ExportSheet con lo que
+//   se ve en pantalla, también con cambios sin guardar). No hay renombrar
+//   (screens 11 no lo pide).
 // - Lienzo editable SIN panel: mover, redimensionar, rotar y orden. Sin
 //   "Quitar" ni candado (no se quitan prendas y aquí no hay aleatorios), y sin
 //   "Colocación automática" (no está en screens 11 ni en el prototipo).
@@ -32,6 +33,7 @@ import { useLeaveGuard } from "@/features/cutout/useLeaveGuard";
 import { OutfitCanvasLazy, type CanvasGarment } from "@/features/dresser/canvas/OutfitCanvasLazy";
 import type { CanvasState } from "@/features/dresser/model";
 import { relayout } from "@/features/dresser/store";
+import { ExportSheet } from "@/features/export/ExportSheet";
 import { apiFetch, isApiClientError, type ApiClientErrorCode } from "@/lib/api/client";
 import type { Favorite } from "@/lib/api/types";
 import type { CanvasSize } from "@/lib/layout/autoLayout";
@@ -186,6 +188,8 @@ function Editor({
   const [size, setSize] = useState<CanvasSize>({ width: 0, height: 0 });
   const [aspects, setAspects] = useState<Record<string, number>>({});
   const [saving, setSaving] = useState(false);
+  // Cada apertura monta la hoja de nuevo (key), así empieza limpia.
+  const [imgSheet, setImgSheet] = useState({ open: false, key: 0 });
   const canvasBox = useRef<HTMLDivElement>(null);
 
   const date = format.dateTime(new Date(favorite.created_at), "short");
@@ -254,12 +258,12 @@ function Editor({
     <main className="relative flex h-[calc(100dvh-var(--tab-bar-h))] min-h-0 flex-col overflow-hidden">
       <div className="flex h-12 shrink-0 items-center justify-between pr-[10px] pl-[14px]">
         <BackLink />
-        {/* Se activa en 6.2. */}
         <button
           type="button"
           aria-label={t("saveImage")}
           title={t("saveImage")}
-          disabled
+          disabled={laid.items.length === 0}
+          onClick={() => setImgSheet((s) => ({ open: true, key: s.key + 1 }))}
           className="flex size-10 cursor-pointer items-center justify-center rounded-full text-ink disabled:cursor-default disabled:opacity-30"
         >
           <DownloadIcon />
@@ -295,6 +299,16 @@ function Editor({
           onSave={() => void save()}
         />
       )}
+      <ExportSheet
+        key={imgSheet.key}
+        open={imgSheet.open && laid.items.length > 0}
+        onClose={() => setImgSheet((s) => ({ ...s, open: false }))}
+        items={laid.items}
+        garments={garments}
+        canvasSize={size}
+        name={favorite.name}
+        date={new Date(favorite.created_at)}
+      />
       <Dialog
         open={leaving}
         title={t("leave.title")}
