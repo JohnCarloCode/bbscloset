@@ -107,6 +107,10 @@ describe.skipIf(!RUN)("API de prendas (integración)", { timeout: 60_000 }, () =
     expect(await ids(`brand=${P}-brand`)).toEqual([b.id]);
     expect(await ids(`brand=${P}-brand&brand=${P}-otra`)).toEqual([b.id]);
     expect(await ids(`slot=bag&type=tshirt`)).toEqual([]);
+    // Ids concretos en O (borrador del vestidor); los del usuario 2 no salen.
+    expect((await ids(`id=${a.id},${c.id}`)).sort()).toEqual([a.id, c.id].sort());
+    expect(await ids(`id=${a.id}&slot=footwear`)).toEqual([]);
+    expect((await api(c2, `/api/garments?id=${a.id}`)).body).toMatchObject({ items: [] });
 
     expect((await api(c1, `/api/garments?tags=${x},${y}&count=true`)).body).toEqual({ count: 1 });
     expect((await api(c1, `/api/garments?tags=${y}&limit=0`)).body).toEqual({ count: 2 });

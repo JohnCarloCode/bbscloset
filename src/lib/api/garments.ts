@@ -189,6 +189,8 @@ const listQuerySchema = z.object({
   // Varias familias de color se combinan con O, como las marcas.
   color: z.array(z.enum(COLOR_FAMILY_IDS)).max(COLOR_FAMILY_IDS.length).default([]),
   tags: z.array(z.uuid()).max(TAGS_PER_GARMENT_MAX).default([]),
+  // Prendas concretas (en O), p. ej. las del borrador del vestidor (4.6).
+  id: z.array(z.uuid()).max(MAX_PAGE_SIZE).default([]),
   cursor: z.string().max(512).optional(),
   limit: z.coerce.number().int().min(0).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
   count: boolParam.default(false),
@@ -200,7 +202,7 @@ export type GarmentListQuery = z.output<typeof listQuerySchema>;
 // Parámetros que admiten varios valores: repetidos (?type=a&type=b) o
 // separados por comas (?type=a,b). `brand` también admite varios, pero solo
 // repetido: una marca puede llevar comas.
-const MULTI_PARAMS = ["type", "color", "tags", "include"] as const;
+const MULTI_PARAMS = ["type", "color", "tags", "id", "include"] as const;
 const REPEATED_PARAMS = ["brand"] as const;
 
 /** Valida los parámetros de GET /api/garments. Lanza 400 `invalid_query`. */
@@ -304,6 +306,7 @@ function applyFilters<Q>(query: Q, f: GarmentListQuery, types: string[] | null):
   if (types) q = q.in("type_id", types);
   if (f.brand.length > 0) q = q.in("brand", f.brand);
   if (f.color.length > 0) q = q.in("color_family", f.color);
+  if (f.id.length > 0) q = q.in("id", f.id);
   return q as unknown as Q;
 }
 

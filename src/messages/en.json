@@ -346,7 +346,69 @@
     },
     "allReady": "{count, plural, one {# garment ready for the Dresser} other {# garments ready for the Dresser}}"
   },
-  "dresser": {},
+  "dresser": {
+    "header": {
+      "actions": "Outfit actions",
+      "undo": "Undo",
+      "redo": "Redo",
+      "saveFavorite": "Save to favorites",
+      "saveImage": "Save as image"
+    },
+    "canvas": {
+      "label": "Outfit: {list}",
+      "emptyLabel": "Empty canvas",
+      "selectionLabel": "Actions for {name}",
+      "bringForward": "Bring forward",
+      "sendBackward": "Send back",
+      "remove": "Remove",
+      "lock": "Lock {name}",
+      "unlock": "Unlock {name}",
+      "lockedHint": "Locked: Replace keeps it",
+      "unlockedHint": "Lock so Replace keeps it",
+      "autoArrange": "Auto layout",
+      "autoArrangeHint": "Discard manual adjustments and rearrange the garments",
+      "emptyTitle": "A blank canvas",
+      "emptyBody": "Tap a garment below to put it on, or try Random outfit.",
+      "closetEmptyTitle": "Your closet is empty",
+      "addGarment": "Add a garment"
+    },
+    "panel": {
+      "title": "Your closet",
+      "showGarments": "Show garments",
+      "seeAll": "See all",
+      "seeAllCount": "See all ({count})",
+      "showLess": "Show less",
+      "handleShow": "Show garments",
+      "handleExpand": "See all garments",
+      "handleCollapse": "Show less",
+      "categories": "Categories",
+      "category": "Category: {label}, {count, plural, one {# garment} other {# garments}}",
+      "categoryOption": "{label}, {count, plural, one {# garment} other {# garments}}",
+      "grid": "Garments: {label}",
+      "empty": "No {slot, select, base_layer {base layers} mid_layer {mid layers} outer_layer {outer layers} bottom {bottoms} full_body {full-body pieces} footwear {footwear} bag {bags} jewelry {jewelry} accessories {accessories} other {garments}} in rotation yet.",
+      "closetEmpty": "Your closet is empty.",
+      "addOne": "Add one",
+      "loadError": "Couldn't load your garments.",
+      "loadingMore": "Loading more garments…"
+    },
+    "random": {
+      "substitute": "Replace",
+      "randomOutfit": "Random outfit",
+      "settings": "Random outfit categories",
+      "settingsHint": "Random outfit picks one garment from each:",
+      "saveError": "Couldn't save the categories. Try again.",
+      "loadError": "Couldn't load your garments. Try again.",
+      "slotPlural": "{slot, select, base_layer {base layers} mid_layer {mid layers} outer_layer {outer layers} bottom {bottoms} full_body {full-body pieces} footwear {footwear} bag {bags} jewelry {jewelry} accessories {accessories} other {garments}}",
+      "missing": "You don't have any {list} yet",
+      "addOne": "{slot, select, other {Add one}}"
+    },
+    "toast": {
+      "ref": "{type, select, tshirt {the T-shirt} shirt {the shirt} top {the top} bodysuit {the bodysuit} sweater {the sweater} sweatshirt {the sweatshirt} cardigan {the cardigan} vest {the vest} jacket {the jacket} coat {the coat} bomber {the bomber} trench {the trench coat} trousers {the trousers} jeans {the jeans} skirt {the skirt} shorts {the shorts} dress {the dress} jumpsuit {the jumpsuit} sneakers {the sneakers} boots {the boots} sandals {the sandals} heels {the heels} handbag {the handbag} backpack {the backpack} crossbody {the crossbody} necklace {the necklace} earrings {the earrings} ring {the ring} bracelet {the bracelet} hat {the hat} glasses {the glasses} belt {the belt} scarf {the scarf} other {{name}}}",
+      "refTo": "{type, select, tshirt {the T-shirt} shirt {the shirt} top {the top} bodysuit {the bodysuit} sweater {the sweater} sweatshirt {the sweatshirt} cardigan {the cardigan} vest {the vest} jacket {the jacket} coat {the coat} bomber {the bomber} trench {the trench coat} trousers {the trousers} jeans {the jeans} skirt {the skirt} shorts {the shorts} dress {the dress} jumpsuit {the jumpsuit} sneakers {the sneakers} boots {the boots} sandals {the sandals} heels {the heels} handbag {the handbag} backpack {the backpack} crossbody {the crossbody} necklace {the necklace} earrings {the earrings} ring {the ring} bracelet {the bracelet} hat {the hat} glasses {the glasses} belt {the belt} scarf {the scarf} other {{name}}}",
+      "replacedBy": "{name} replaced {list}.",
+      "jewelryDropped": "Up to {max, plural, one {# jewelry piece} other {# jewelry pieces}}. {name} was taken off."
+    }
+  },
   "favorites": {
     "savedCount": "{count, plural, =0 {No saved outfits} one {# saved outfit} other {# saved outfits}}",
     "outfitTitle": "Outfit"

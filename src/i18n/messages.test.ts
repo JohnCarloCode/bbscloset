@@ -68,3 +68,42 @@ describe("mensajes", () => {
     expect(tEn("favorites.savedCount", { count: 0 })).toBe("No saved outfits");
   });
 });
+
+describe("avisos del vestidor (screens 7.2)", () => {
+  const es_t = createTranslator({ locale: "es", messages: es, namespace: "dresser" });
+  const en_t = createTranslator({ locale: "en", messages: en, namespace: "dresser" });
+
+  it("textos de screens 7.2 en castellano", () => {
+    const list = `${es_t("toast.refTo", { type: "tshirt", name: "" })} y ${es_t("toast.ref", { type: "trousers", name: "" })}`;
+    expect(
+      es_t("toast.replacedBy", {
+        name: es_t("toast.ref", { type: "dress", name: "" }),
+        subject: "dress",
+        list,
+      }),
+    ).toBe("el vestido ha sustituido a la camiseta y el pantalón.");
+    expect(es_t("toast.refTo", { type: "dress", name: "" })).toBe("al vestido");
+    expect(
+      es_t("toast.replacedBy", { name: "los vaqueros", subject: "jeans", list: "al vestido" }),
+    ).toBe("los vaqueros han sustituido al vestido.");
+    expect(
+      es_t("toast.jewelryDropped", {
+        max: 3,
+        type: "necklace",
+        name: es_t("toast.ref", { type: "necklace", name: "" }),
+      }),
+    ).toBe("Hasta 3 joyas. Se ha quitado el collar.");
+    expect(es_t("random.missing", { list: es_t("random.slotPlural", { slot: "bag" }) })).toBe(
+      "Todavía no tienes bolsos",
+    );
+    expect(es_t("random.addOne", { slot: "bag" })).toBe("Añadir uno");
+    expect(es_t("toast.ref", { type: "named", name: "la de los domingos" })).toBe(
+      "la de los domingos",
+    );
+  });
+
+  it("textos en inglés", () => {
+    expect(en_t("toast.ref", { type: "tshirt", name: "" })).toBe("the T-shirt");
+    expect(en_t("random.addOne", { slot: "bag" })).toBe("Add one");
+  });
+});

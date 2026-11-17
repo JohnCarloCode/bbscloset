@@ -107,6 +107,7 @@ describe("parseListQuery", () => {
       brand: [],
       color: [],
       tags: [],
+      id: [],
       limit: DEFAULT_PAGE_SIZE,
       count: false,
       ids: false,
@@ -137,6 +138,14 @@ describe("parseListQuery", () => {
   it("varias familias de color: repetidas o con comas", () => {
     expect(parse("color=red,blue&color=multicolor").color).toEqual(["red", "blue", "multicolor"]);
     expect(parse("").color).toEqual([]);
+  });
+
+  it("varios ids: repetidos o con comas; hasta 100 uuid", () => {
+    expect(parse(`id=${UUID},${UUID2}&id=${UUID}`).id).toEqual([UUID, UUID2, UUID]);
+    expect(parse("").id).toEqual([]);
+    expect(() => parse("id=1")).toThrow(expect.objectContaining({ code: "invalid_query" }));
+    const many = Array.from({ length: 101 }, () => UUID).join(",");
+    expect(() => parse(`id=${many}`)).toThrow(expect.objectContaining({ code: "invalid_query" }));
   });
 
   it("varias marcas: solo repetidas (una marca puede llevar comas)", () => {

@@ -346,7 +346,69 @@
     },
     "allReady": "{count, plural, one {# prenda lista para el vestidor} other {# prendas listas para el vestidor}}"
   },
-  "dresser": {},
+  "dresser": {
+    "header": {
+      "actions": "Acciones del outfit",
+      "undo": "Deshacer",
+      "redo": "Rehacer",
+      "saveFavorite": "Guardar en favoritos",
+      "saveImage": "Guardar como imagen"
+    },
+    "canvas": {
+      "label": "Outfit: {list}",
+      "emptyLabel": "Lienzo vacío",
+      "selectionLabel": "Acciones de {name}",
+      "bringForward": "Traer delante",
+      "sendBackward": "Enviar atrás",
+      "remove": "Quitar",
+      "lock": "Bloquear {name}",
+      "unlock": "Desbloquear {name}",
+      "lockedHint": "Bloqueada: Sustituir la mantiene",
+      "unlockedHint": "Bloquear para que Sustituir no la cambie",
+      "autoArrange": "Colocación automática",
+      "autoArrangeHint": "Descarta los ajustes manuales y recoloca las prendas",
+      "emptyTitle": "Un lienzo en blanco",
+      "emptyBody": "Toca una prenda de abajo o prueba Outfit aleatorio.",
+      "closetEmptyTitle": "Tu armario está vacío",
+      "addGarment": "Añadir una prenda"
+    },
+    "panel": {
+      "title": "Tu armario",
+      "showGarments": "Ver prendas",
+      "seeAll": "Ver todo",
+      "seeAllCount": "Ver todo ({count})",
+      "showLess": "Mostrar menos",
+      "handleShow": "Ver prendas",
+      "handleExpand": "Ver todas las prendas",
+      "handleCollapse": "Mostrar menos",
+      "categories": "Categorías",
+      "category": "Categoría: {label}, {count, plural, one {# prenda} other {# prendas}}",
+      "categoryOption": "{label}, {count, plural, one {# prenda} other {# prendas}}",
+      "grid": "Prendas: {label}",
+      "empty": "Todavía no tienes {slot, select, base_layer {capas base} mid_layer {capas medias} outer_layer {capas exteriores} bottom {partes inferiores} full_body {prendas de cuerpo entero} footwear {calzado} bag {bolsos} jewelry {joyas} accessories {accesorios} other {prendas}} en uso.",
+      "closetEmpty": "Tu armario está vacío.",
+      "addOne": "Añadir una",
+      "loadError": "No se han podido cargar las prendas.",
+      "loadingMore": "Cargando más prendas…"
+    },
+    "random": {
+      "substitute": "Sustituir",
+      "randomOutfit": "Outfit aleatorio",
+      "settings": "Categorías del outfit aleatorio",
+      "settingsHint": "El outfit aleatorio coge una prenda de cada:",
+      "saveError": "No se han podido guardar las categorías. Vuelve a intentarlo.",
+      "loadError": "No se han podido cargar las prendas. Vuelve a intentarlo.",
+      "slotPlural": "{slot, select, base_layer {capas base} mid_layer {capas medias} outer_layer {capas exteriores} bottom {partes inferiores} full_body {prendas de cuerpo entero} footwear {calzado} bag {bolsos} jewelry {joyas} accessories {accesorios} other {prendas}}",
+      "missing": "Todavía no tienes {list}",
+      "addOne": "{slot, select, base_layer {Añadir una} mid_layer {Añadir una} outer_layer {Añadir una} bottom {Añadir una} full_body {Añadir una} footwear {Añadir uno} bag {Añadir uno} jewelry {Añadir una} accessories {Añadir uno} many {Añadir una prenda} other {Añadir una}}"
+    },
+    "toast": {
+      "ref": "{type, select, tshirt {la camiseta} shirt {la camisa} top {el top} bodysuit {el body} sweater {el jersey} sweatshirt {la sudadera} cardigan {el cárdigan} vest {el chaleco} jacket {la chaqueta} coat {el abrigo} bomber {la cazadora} trench {la gabardina} trousers {el pantalón} jeans {los vaqueros} skirt {la falda} shorts {el short} dress {el vestido} jumpsuit {el mono} sneakers {las zapatillas} boots {las botas} sandals {las sandalias} heels {los tacones} handbag {el bolso de mano} backpack {la mochila} crossbody {la bandolera} necklace {el collar} earrings {los pendientes} ring {el anillo} bracelet {la pulsera} hat {el gorro} glasses {las gafas} belt {el cinturón} scarf {la bufanda} other {{name}}}",
+      "refTo": "{type, select, tshirt {a la camiseta} shirt {a la camisa} top {al top} bodysuit {al body} sweater {al jersey} sweatshirt {a la sudadera} cardigan {al cárdigan} vest {al chaleco} jacket {a la chaqueta} coat {al abrigo} bomber {a la cazadora} trench {a la gabardina} trousers {al pantalón} jeans {a los vaqueros} skirt {a la falda} shorts {al short} dress {al vestido} jumpsuit {al mono} sneakers {a las zapatillas} boots {a las botas} sandals {a las sandalias} heels {a los tacones} handbag {al bolso de mano} backpack {a la mochila} crossbody {a la bandolera} necklace {al collar} earrings {a los pendientes} ring {al anillo} bracelet {a la pulsera} hat {al gorro} glasses {a las gafas} belt {al cinturón} scarf {a la bufanda} other {a {name}}}",
+      "replacedBy": "{name} {subject, select, jeans {han} sneakers {han} boots {han} sandals {han} heels {han} earrings {han} glasses {han} other {ha}} sustituido {list}.",
+      "jewelryDropped": "Hasta {max, plural, one {# joya} other {# joyas}}. {type, select, earrings {Se han quitado} other {Se ha quitado}} {name}."
+    }
+  },
   "favorites": {
     "savedCount": "{count, plural, =0 {Ningún outfit guardado} one {# outfit guardado} other {# outfits guardados}}",
     "outfitTitle": "Outfit"

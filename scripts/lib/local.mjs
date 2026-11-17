@@ -90,18 +90,143 @@ export function samplePhotos() {
     .map((f) => join(dir, f));
 }
 
-/**
- * WebP pequeño (lado mayor `size`) a partir de una foto. Usa `sharp`, que
- * llega con Next.js (dependencia opcional para optimizar imágenes).
- */
-export async function webpFrom(photoPath, size) {
-  let sharp;
+async function loadSharp() {
   try {
-    sharp = (await import("sharp")).default;
+    return (await import("sharp")).default;
   } catch {
     throw new Error("Hace falta `sharp` (viene con next en node_modules) para generar los WebP");
   }
-  return sharp(photoPath).resize(size, size, { fit: "inside" }).webp({ quality: 70 }).toBuffer();
+}
+
+/**
+ * Quita el fondo casi liso de una foto de prueba: estima su color con los
+ * píxeles del borde, rellena por inundación desde los bordes lo que se le
+ * parece (distancia RGB < `tolerance`), se queda con la mayor mancha que
+ * queda (fuera marcas de agua), suaviza 1 px el borde del alfa y recorta a
+ * su caja con un pequeño margen. Devuelve un PNG RGBA.
+ */
+export async function removeBackground(photoPath, { tolerance = 36, margin = 8 } = {}) {
+  const sharp = await loadSharp();
+  const { data, info } = await sharp(photoPath)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const { width: w, height: h } = info;
+  const n = w * h;
+
+  // Color de fondo: mediana por canal de los píxeles del borde.
+  const border = [];
+  for (let x = 0; x < w; x++) border.push(x, (h - 1) * w + x);
+  for (let y = 1; y < h - 1; y++) border.push(y * w, y * w + w - 1);
+  const bg = [0, 1, 2].map((c) => {
+    const v = border.map((i) => data[i * 4 + c]).sort((a, b) => a - b);
+    return v[v.length >> 1];
+  });
+  const tol2 = tolerance * tolerance;
+  const isBg = (i) => {
+    const dr = data[i * 4] - bg[0];
+    const dg = data[i * 4 + 1] - bg[1];
+    const db = data[i * 4 + 2] - bg[2];
+    return dr * dr + dg * dg + db * db < tol2;
+  };
+
+  // Relleno por inundación desde el borde (0 = sin visitar, 1 = fondo).
+  const mask = new Uint8Array(n);
+  const stack = border.filter(isBg);
+  for (const i of stack) mask[i] = 1;
+  while (stack.length) {
+    const i = stack.pop();
+    const x = i % w;
+    for (const j of [i - w, i + w, x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1]) {
+      if (j >= 0 && j < n && !mask[j] && isBg(j)) {
+        mask[j] = 1;
+        stack.push(j);
+      }
+    }
+  }
+
+  // Mayor componente conexa del primer plano (2 = elegida).
+  const label = new Int32Array(n);
+  let best = 0;
+  let bestSize = 0;
+  let next = 0;
+  for (let s = 0; s < n; s++) {
+    if (mask[s] || label[s]) continue;
+    next++;
+    let size = 0;
+    const st = [s];
+    label[s] = next;
+    while (st.length) {
+      const i = st.pop();
+      size++;
+      const x = i % w;
+      for (const j of [i - w, i + w, x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1]) {
+        if (j >= 0 && j < n && !mask[j] && !label[j]) {
+          label[j] = next;
+          st.push(j);
+        }
+      }
+    }
+    if (size > bestSize) {
+      bestSize = size;
+      best = next;
+    }
+  }
+
+  const alpha = Buffer.alloc(n);
+  let x0 = w,
+    y0 = h,
+    x1 = -1,
+    y1 = -1;
+  for (let i = 0; i < n; i++) {
+    if (label[i] !== best || !best) continue;
+    alpha[i] = 255;
+    const x = i % w;
+    const y = (i - x) / w;
+    if (x < x0) x0 = x;
+    if (x > x1) x1 = x;
+    if (y < y0) y0 = y;
+    if (y > y1) y1 = y;
+  }
+  if (x1 < 0) return sharp(photoPath).png().toBuffer(); // nada que separar
+
+  // Alfa suavizado ~1 px y unido al RGB original.
+  const softAlpha = await sharp(alpha, { raw: { width: w, height: h, channels: 1 } })
+    .blur(0.8)
+    .extractChannel(0)
+    .raw()
+    .toBuffer();
+  const rgba = Buffer.from(data);
+  for (let i = 0; i < n; i++) rgba[i * 4 + 3] = softAlpha[i];
+
+  const left = Math.max(0, x0 - margin);
+  const top = Math.max(0, y0 - margin);
+  return sharp(rgba, { raw: { width: w, height: h, channels: 4 } })
+    .extract({
+      left,
+      top,
+      width: Math.min(w, x1 + margin + 1) - left,
+      height: Math.min(h, y1 + margin + 1) - top,
+    })
+    .png()
+    .toBuffer();
+}
+
+// Recortes ya calculados por foto (cada foto se repite varias veces).
+const cutouts = new Map();
+
+/**
+ * WebP pequeño (lado mayor `size`) con fondo transparente a partir de una
+ * foto. Usa `sharp`, que llega con Next.js (dependencia opcional para
+ * optimizar imágenes).
+ */
+export async function webpFrom(photoPath, size) {
+  const sharp = await loadSharp();
+  if (!cutouts.has(photoPath)) cutouts.set(photoPath, await removeBackground(photoPath));
+  return sharp(cutouts.get(photoPath))
+    .resize(size, size, { fit: "inside" })
+    .webp({ quality: 70, alphaQuality: 90 })
+    .toBuffer();
 }
 
 /** Sube un archivo a una URL firmada de subida (lo mismo que hará el navegador). */

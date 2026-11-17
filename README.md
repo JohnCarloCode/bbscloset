@@ -38,7 +38,7 @@ node scripts/seed-garments.mjs 30 --user 2  # para test2@bbscloset.test
 node scripts/seed-garments.mjs --clean    # borra todas las prendas del usuario (archivos y filas)
 ```
 
-Crea las prendas por la API, como la app: reserva ids, sube recorte y miniatura WebP generados (con `sharp`, que viene con Next) desde `pruebas-fotos/streetwear/` (fuera del repo) y llama a `POST /api/garments`. `--clean` no borra las etiquetas (aún no hay API para eso); para dejarlas a cero: `psql postgresql://postgres:postgres@127.0.0.1:55622/postgres -c "delete from tags"`.
+Crea las prendas por la API, como la app: reserva ids, sube recorte y miniatura WebP con transparencia generados (con `sharp`, que viene con Next) desde `pruebas-fotos/streetwear/` (fuera del repo): quita el fondo gris casi liso por inundación desde los bordes, se queda con la mayor mancha y recorta a su caja y llama a `POST /api/garments`. `--clean` no borra las etiquetas (aún no hay API para eso); para dejarlas a cero: `psql postgresql://postgres:postgres@127.0.0.1:55622/postgres -c "delete from tags"`.
 
 Tests de integración de la API (contra el mismo local; `npm test` normal los salta):
 

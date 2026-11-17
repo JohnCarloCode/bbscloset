@@ -1,7 +1,7 @@
 // /api/garments
 //   GET  → listado del catálogo con filtros (lib/api/garments.ts, parseListQuery):
 //          archived, slot, type (varios), brand (varias, en O), color (varias, en O), tags (varios, en Y),
-//          cursor, limit (24; máx. 100), include=cutout.
+//          id (varios, en O), cursor, limit (24; máx. 100), include=cutout.
 //          · normal → { items, nextCursor } (GarmentListResponse)
 //          · count=true o limit=0 → { count } (botón "Ver N prendas")
 //          · ids=true → { ids } con los filtros, sin paginar ("Seleccionar todo")
