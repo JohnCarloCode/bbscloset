@@ -1,5 +1,25 @@
 # bb's closet — Próximos pasos
 
+## Estado del despliegue (24-11-2026)
+
+Fases 1–7 construidas en `develop` (ver [informe-noche.md](informe-noche.md)), pero **solo funcionan en local**. Estado de los entornos gratuitos:
+
+- **Supabase** (`pongfseghyxvagviamau`, plan gratuito, Frankfurt): sano, con las migraciones 0001–0007. **Faltan 0008 y 0009.**
+- **Vercel** (proyecto `bbscloset`, Hobby): conectado al repo, con preview de `develop`. **Sin variables de entorno.**
+
+**Falta para tener el entorno de desarrollo subido** (lo hace John: Claude no puede introducir claves ni crear tokens):
+
+1. En Vercel → *Settings → Environment Variables*, añadir en *Production* y *Preview*:
+   - `NEXT_PUBLIC_SUPABASE_URL` = `https://pongfseghyxvagviamau.supabase.co`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` = la anon key (la pública, no la `service_role`).
+2. Aplicar las migraciones nuevas: `supabase login`, `supabase link --project-ref pongfseghyxvagviamau` (pide la contraseña de la BD) y `supabase db push`. Los comandos de login y link los ejecuta John; el `db push` puede hacerlo Claude.
+3. Redeploy del preview de `develop` para que coja las variables.
+4. Supabase → *Authentication → URL Configuration*: añadir la URL del preview y `/reset-password` en *Redirect URLs*; pegar la plantilla de email de recuperar contraseña (`supabase/README.md`).
+5. Crear un usuario de prueba (*Authentication → Users → Add user*, "auto confirm").
+6. Comprobar en el preview: `/login` carga y `/api/me` da 401.
+
+El resto de pendientes (pruebas en móvil, fotos de prueba, licencia AGPL, fase 8) está en [informe-noche.md](informe-noche.md).
+
 **Estado a 14-11-2026:** documentación cerrada (spec v0.7, DESIGN, [screens.md](screens.md), architecture, database) y prototipo visual al día en `design/prototype/` (copia del artifact *BB's closet mobile prototype*). Prueba del recorte de fondo hecha en `pruebas/recorte/`. Nada de la app está construido todavía.
 
 **Cambios del 14-11-2026:**
